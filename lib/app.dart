@@ -9,11 +9,11 @@ class ScoreLivePro extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       // 1. Define the design size for screen adaptation
-      designSize: const Size(375, 812),
+      designSize: const Size(390, 851),
       minTextAdapt: true,
       splitScreenMode: true,
 
-      // 2. The builder returns the root widget (MaterialApp)
+    
       builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
