@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/views/splash_screen/splash_screen.dart';
@@ -13,11 +14,13 @@ class ScoreLivePro extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
 
-    
       builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: "Score Live Pro",
+          localizationsDelegates: context.localizationDelegates,
+          supportedLocales: context.supportedLocales,
+          locale: context.locale,
           theme: ThemeData(),
           home: child,
         );

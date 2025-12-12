@@ -26,15 +26,15 @@ class AppStrings {
 
   // ==================== Splash & Onboarding ====================
   static const String splashLoading = "Loading...";
-  static const String onboardingTitle1 = "Live Scores";
-  static const String onboardingTitle2 = "Real-time Updates";
-  static const String onboardingTitle3 = "Stay Connected";
+  static const String onboardingTitle1 = "Real-Time Scores";
+  static const String onboardingTitle2 = "Lightning Fast Notifications";
+  static const String onboardingTitle3 = "Personalized Favorites";
   static const String onboardingDescription1 =
-      "Get live scores and updates from your favorite sports";
+      "Get live updates from matches around the world instantly";
   static const String onboardingDescription2 =
-      "Real-time match updates and notifications";
+      "Never miss a goal, card, or important match event";
   static const String onboardingDescription3 =
-      "Follow teams, leagues, and never miss a moment";
+      "Follow your favorite teams and leagues to stay updated";
   static const String skip = "Skip";
   static const String next = "Next";
   static const String getStarted = "Get Started";
