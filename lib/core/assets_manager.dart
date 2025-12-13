@@ -10,7 +10,7 @@ class ImageAssets {
   static const String onboadiing1 = "$imagePath/onboarding1_bg.png";
   static const String onboadiing2 = "$imagePath/onboarding2_bg.png";
   static const String onboadiing3 = "$imagePath/onboarding3_bg.png";
-
+  static const String home_bg = '$imagePath/home_bg.jpg';
 }
 
 class IconAssets {}

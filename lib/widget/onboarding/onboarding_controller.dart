@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:scorelivepro/views/main_navigation/main_navigation_screen.dart';
 import 'package:scorelivepro/views/splash_screen/onboading_screens/onboading_screen1.dart';
 import 'package:scorelivepro/views/splash_screen/onboading_screens/onboading_screen2.dart';
 import 'package:scorelivepro/views/splash_screen/onboading_screens/onboading_screen3.dart';
-import 'package:scorelivepro/views/home_views/home_screen.dart';
 
 /// Controller for managing onboarding screen navigation
 class OnboardingController {
@@ -16,22 +16,22 @@ class OnboardingController {
     );
   }
 
-  /// Skip onboarding and go to home
+  /// Skip onboarding and go to main navigation
   static void skipOnboarding(BuildContext context) {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (_) => const HomeScreen(),
+        builder: (_) => const MainNavigationScreen(),
       ),
     );
   }
 
-  /// Complete onboarding and go to home
+  /// Complete onboarding and go to main navigation
   static void completeOnboarding(BuildContext context) {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (_) => const HomeScreen(),
+        builder: (_) => const MainNavigationScreen(),
       ),
     );
   }
