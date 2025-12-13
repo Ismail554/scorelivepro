@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:scorelivepro/views/home_views/live_mathches/live_match_details_screen.dart';
 import 'package:scorelivepro/views/splash_screen/splash_screen.dart';
 
 class ScoreLivePro extends StatelessWidget {
@@ -25,7 +26,7 @@ class ScoreLivePro extends StatelessWidget {
           home: child,
         );
       },
-      child: const SplashScreen(),
+      child: const LiveMatchDetailsScreen(),
     );
   }
 }

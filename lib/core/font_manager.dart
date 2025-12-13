@@ -102,10 +102,10 @@ class FontManager {
   /// Heading 3 - Subsection headings
   static TextStyle heading3({
     Color color = mainTextColor,
-    double? fontSize,
+    double fontSize = 20,
   }) =>
       GoogleFonts.poppins(
-        fontSize: (fontSize ?? 20).sp,
+        fontSize: fontSize.sp,
         fontWeight: w600,
         color: color,
         letterSpacing: 0.0,
@@ -115,11 +115,11 @@ class FontManager {
   /// Heading 4 - Small headings
   static TextStyle heading4({
     Color color = mainTextColor,
-    double? fontSize,
+    double fontSize = 16,
   }) =>
       GoogleFonts.poppins(
-        fontSize: (fontSize ?? 18).sp,
-        fontWeight: w600,
+        fontSize: fontSize,
+        fontWeight: w500,
         color: color,
         letterSpacing: 0.0,
         height: 1.4,

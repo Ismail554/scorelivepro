@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 /// App Strings for ScoreLivePro
 /// Supports 6 languages: English, Spanish, French, Arabic, Portuguese, German
 ///
@@ -84,6 +86,11 @@ class AppStrings {
       "Check your email for password reset instructions";
 
   // ==================== Home Screen ====================
+
+  static const String welcome_back = "Welcome Back";
+  static const String date_today = "Sunday, 25 Dec 2025";
+
+  /// top are newly added
   static const String home = "Home";
   static const String liveMatches = "Live Matches";
   static const String upcomingMatches = "Upcoming Matches";
@@ -201,6 +208,8 @@ class AppStrings {
   static const String referee = "Referee";
   static const String attendance = "Attendance";
   static const String lineups = "Lineups";
+  static const String timeline = "Timeline";
+  static const String commentary = "Commentary";
   static const String substitutes = "Substitutes";
   static const String events = "Events";
   static const String goal = "Goal";
