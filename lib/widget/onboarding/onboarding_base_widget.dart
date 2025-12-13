@@ -72,15 +72,15 @@ class OnboardingBaseWidget extends StatelessWidget {
                     ),
                   ),
 
-                  AppSpacing.h48,
+                  // AppSpacing.h48,
+                  // Pagination Dots
+                  _buildPaginationDots(),
+                  AppSpacing.h32,
 
                   // Navigation Button
                   _buildNavigationButton(),
 
                   AppSpacing.h32,
-
-                  // Pagination Dots
-                  _buildPaginationDots(),
 
                   AppSpacing.h40,
                 ],
