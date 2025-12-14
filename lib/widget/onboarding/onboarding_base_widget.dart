@@ -56,33 +56,34 @@ class OnboardingBaseWidget extends StatelessWidget {
 
                   AppSpacing.h32,
 
-                  Container(
-                    width: double.maxFinite,
-                    height: 140.h,
-                    child: Column(
-                      children: [
-                        // Title
-                        _buildTitle(),
+                  Padding(
+                    padding: const EdgeInsets.all(22.0),
+                    child: Container(
+                      width: double.maxFinite,
+                      height: 140.h,
+                      child: Column(
+                        children: [
+                          // Title
+                          _buildTitle(),
 
-                        AppSpacing.h16,
+                          AppSpacing.h16,
 
-                        // Description
-                        _buildDescription(),
-                      ],
+                          // Description
+                          _buildDescription(),
+                        ],
+                      ),
                     ),
                   ),
 
-                  // AppSpacing.h48,
+                  // AppSpacing.h32,
                   // Pagination Dots
                   _buildPaginationDots(),
-                  AppSpacing.h32,
+                  AppSpacing.h64,
 
                   // Navigation Button
                   _buildNavigationButton(),
 
                   AppSpacing.h32,
-
-                  AppSpacing.h40,
                 ],
               ),
             ),
@@ -108,7 +109,7 @@ class OnboardingBaseWidget extends StatelessWidget {
         // Dark Overlay with alpha (matching Figma - dark overlay on images)
         Container(
           color:
-              AppColors.black.withOpacity(0.8), // Dark overlay to match Figma
+              AppColors.black.withOpacity(0.4), // Dark overlay to match Figma
         ),
       ],
     );
@@ -166,6 +167,18 @@ class OnboardingBaseWidget extends StatelessWidget {
         style: FontManager.heading1(
           fontSize: 28,
           color: AppColors.white,
+        ).copyWith(
+          // Use copyWith to add or override properties on the existing style
+          shadows: [
+            Shadow(
+              // The color of the shadow
+              color: AppColors.black.withOpacity(0.9),
+              // The offset (x, y) of the shadow from the text
+              offset: Offset(6.0, 8.0),
+              // The blur radius of the shadow
+              blurRadius: 8.0,
+            ),
+          ],
         ),
       ),
     );
@@ -174,12 +187,12 @@ class OnboardingBaseWidget extends StatelessWidget {
   /// Description text
   Widget _buildDescription() {
     return Padding(
-      padding: AppPadding.h32,
+      padding: AppPadding.h40,
       child: Text(
         description,
         textAlign: TextAlign.center,
         style: FontManager.bodyMedium(
-          fontSize: 16,
+          fontSize: 14.sp,
           color: AppColors.white.withOpacity(0.9),
         ),
       ),
@@ -191,7 +204,7 @@ class OnboardingBaseWidget extends StatelessWidget {
     return Padding(
       padding: AppPadding.h24,
       child: SizedBox(
-        width: double.infinity,
+        width: 130.h,
         height: 56.h,
         child: ElevatedButton(
           onPressed: onNext,
