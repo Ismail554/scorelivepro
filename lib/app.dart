@@ -26,7 +26,7 @@ class ScoreLivePro extends StatelessWidget {
           home: child,
         );
       },
-      child: const LiveMatchDetailsScreen(),
+      child: const SplashScreen(),
     );
   }
 }

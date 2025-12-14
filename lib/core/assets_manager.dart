@@ -13,7 +13,9 @@ class ImageAssets {
   static const String home_bg = '$imagePath/home_bg.jpg';
 }
 
-class IconAssets {}
+class IconAssets {
+  static const String app_logo = "$iconPath/app_logo.png";
+}
 
 class JsonAssets {}
 
