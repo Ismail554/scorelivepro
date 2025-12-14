@@ -25,6 +25,7 @@ class AppStrings {
   static const String retry = "Retry";
   static const String noData = "No data available";
   static const String noInternet = "No internet connection";
+  static const String changed = "changed";
 
   // ==================== Splash & Onboarding ====================
   static const String splashLoading = "Loading...";
@@ -176,6 +177,13 @@ class AppStrings {
 
   // ==================== Settings ====================
   static const String settings = "Settings";
+  static const String account = "ACCOUNT";
+  static const String preferences = "PREFERENCES";
+  static const String aboutSection = "ABOUT";
+  static const String loginSignUp = "Login / Sign Up";
+  static const String syncFavorites = "Sync favorites across devices";
+  static const String enabled = "Enabled";
+  static const String disabled = "Disabled";
   static const String profile = "Profile";
   static const String editProfile = "Edit Profile";
   static const String language = "Language";
@@ -191,7 +199,10 @@ class AppStrings {
   static const String lightMode = "Light Mode";
   static const String systemDefault = "System Default";
   static const String about = "About";
+  static const String appInfo = "App Info";
   static const String version = "Version";
+  static const String versionNumber = "Version 1.0.0";
+  static const String privacyAndTerms = "Privacy & Terms";
   static const String privacyPolicy = "Privacy Policy";
   static const String termsOfService = "Terms of Service";
   static const String help = "Help";
