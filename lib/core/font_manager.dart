@@ -147,7 +147,7 @@ class FontManager {
   }) =>
       GoogleFonts.inter(
         fontSize: (fontSize ?? 16).sp,
-        fontWeight: w400,
+        fontWeight: w600,
         color: color,
         letterSpacing: 0.0,
         height: 1.5,

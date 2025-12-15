@@ -6,6 +6,8 @@ import 'package:scorelivepro/core/app_spacing.dart';
 import 'package:scorelivepro/core/app_strings.dart';
 import 'package:scorelivepro/core/assets_manager.dart';
 import 'package:scorelivepro/core/font_manager.dart';
+import 'package:scorelivepro/widget/home/all_matches/widget_lineups.dart';
+import 'package:scorelivepro/widget/home/all_matches/widget_match_information.dart';
 import 'package:scorelivepro/widget/mini_widget/mw_notification_bell.dart';
 import 'package:scorelivepro/widget/navigation/transparent_tab_bar.dart';
 
@@ -35,7 +37,7 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bgColor,
+      backgroundColor: AppColors.white,
       body: SizedBox(
         height: double.maxFinite,
         width: double.maxFinite,
@@ -324,12 +326,18 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
       padding: AppPadding.h16,
       child: Column(
         children: [
+          AppSpacing.h12,
           // Timeline events will go here
           _buildTimelineEvent("78'", "Bukayo Saka", "Goal"),
           AppSpacing.h16,
           _buildTimelineEvent("65'", "Yellow Card", "Player Name"),
           AppSpacing.h16,
           _buildTimelineEvent("45'", "Half Time", ""),
+          AppSpacing.h16,
+          WidgetMatchInformation(
+              stadium: "Eihad Stadium",
+              referee: "Farhan Shahriar",
+              attendance: "512,800")
         ],
       ),
     );
@@ -337,32 +345,74 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
 
   /// Lineups Tab Content
   Widget _buildLineupsTab() {
+    // Sample lineup data for Manchester City
+    final manCityPlayers = [
+      const Player(number: "31", name: "Ederson", position: "GK"),
+      const Player(number: "2", name: "Kyle Walker", position: "RB"),
+      const Player(number: "3", name: "Rúben Dias", position: "CB"),
+      const Player(number: "6", name: "Nathan Aké", position: "CB"),
+      const Player(number: "5", name: "John Stones", position: "LB"),
+      const Player(number: "16", name: "Rodri", position: "CM"),
+      const Player(number: "17", name: "Kevin De Bruyne", position: "CM"),
+      const Player(number: "20", name: "Bernardo Silva", position: "CM"),
+      const Player(number: "47", name: "Phil Foden", position: "RW"),
+      const Player(number: "9", name: "Erling Haaland", position: "ST"),
+      const Player(number: "10", name: "Jack Grealish", position: "LW"),
+    ];
+
+    // Sample lineup data for Arsenal
+    final arsenalPlayers = [
+      const Player(number: "1", name: "Aaron Ramsdale", position: "GK"),
+      const Player(number: "4", name: "Ben White", position: "RB"),
+      const Player(number: "6", name: "Gabriel Magalhães", position: "CB"),
+      const Player(number: "2", name: "William Saliba", position: "CB"),
+      const Player(number: "3", name: "Kieran Tierney", position: "LB"),
+      const Player(number: "5", name: "Thomas Partey", position: "CM"),
+      const Player(number: "8", name: "Martin Ødegaard", position: "CM"),
+      const Player(number: "41", name: "Declan Rice", position: "CM"),
+      const Player(number: "7", name: "Bukayo Saka", position: "RW"),
+      const Player(number: "9", name: "Gabriel Jesus", position: "ST"),
+      const Player(number: "11", name: "Gabriel Martinelli", position: "LW"),
+    ];
+
     return SingleChildScrollView(
       padding: AppPadding.h16,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Home Team Lineup
-          Text(
-            "Manchester City",
-            style: FontManager.heading3(),
-          ),
-          AppSpacing.h16,
-          // Lineup items will go here
-          _buildLineupItem("GK", "Player Name"),
-          _buildLineupItem("DEF", "Player Name"),
-          // ... more lineup items
+      child: Container(
+        padding: EdgeInsets.only(bottom: 16.h, top: 8.h),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AppSpacing.h12,
 
-          AppSpacing.h32,
+            // Home Team Lineup (Manchester City)
+            TeamLineupCard(
+              teamName: "Manchester City",
+              formation: "4-3-3",
+              players: manCityPlayers,
+            ),
 
-          // Away Team Lineup
-          Text(
-            "Arsenal",
-            style: FontManager.heading3(),
-          ),
-          AppSpacing.h16,
-          // Lineup items will go here
-        ],
+            AppSpacing.h32,
+
+            // Away Team Lineup (Arsenal)
+            TeamLineupCard(
+              teamName: "Arsenal",
+              formation: "4-3-3",
+              players: arsenalPlayers,
+            ),
+
+            AppSpacing.h24,
+
+            // Match Information
+            WidgetMatchInformation(
+              stadium: "Etihad Stadium",
+              referee: "Farhan Shahriar",
+              attendance: "53,400",
+            ),
+
+            AppSpacing.h16,
+          ],
+        ),
       ),
     );
   }
@@ -371,16 +421,47 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
   Widget _buildStatsTab() {
     return SingleChildScrollView(
       padding: AppPadding.h16,
-      child: Column(
-        children: [
-          // Possession
-          _buildStatRow("Possession", 54, 46),
-          AppSpacing.h24,
-          // Shots
-          _buildStatRow("Shots", 12, 8),
-          AppSpacing.h24,
-          // More stats...
-        ],
+      child: Container(
+        padding: EdgeInsets.only(bottom: 16.h, top: 8.h),
+        child: Column(
+          children: [
+            AppSpacing.h12,
+
+            // Possession
+            _buildStatRow("Possession", 54, 46),
+            AppSpacing.h16,
+
+            // Shots
+            _buildStatRow("Shots", 14, 10),
+            AppSpacing.h16,
+
+            // Shots on Target
+            _buildStatRow("Shots on Target", 7, 6),
+            AppSpacing.h16,
+
+            // Corners
+            _buildStatRow("Corners", 6, 5),
+            AppSpacing.h16,
+
+            // Fouls
+            _buildStatRow("Fouls", 8, 10),
+            AppSpacing.h16,
+
+            // Yellow Cards
+            _buildStatRow("Yellow Cards", 0, 1),
+
+            AppSpacing.h24,
+
+            // Match Information
+            WidgetMatchInformation(
+              stadium: "Etihad Stadium",
+              referee: "Farhan Shahriar",
+              attendance: "53,400",
+            ),
+
+            AppSpacing.h16,
+          ],
+        ),
       ),
     );
   }
@@ -407,9 +488,15 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
   }
 
   /// Timeline Event Item
-  Widget _buildTimelineEvent(String minute, String player, String event) {
+  Widget _buildTimelineEvent(
+    String minute,
+    String player,
+    String event,
+  ) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        /// Minute
         Text(
           minute,
           style: FontManager.bodyMedium(
@@ -417,107 +504,168 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
             color: AppColors.textSecondary,
           ),
         ),
-        AppSpacing.w16,
+
+        AppSpacing.w12,
+
+        /// Event Card
         Expanded(
-          child: Text(
-            "$player - $event",
-            style: FontManager.bodyMedium(),
+          child: Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: 12.w,
+              vertical: 14.h,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12.r),
+              border: Border.all(
+                color: Colors.grey.shade300,
+              ),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                /// Icon
+                Icon(
+                  Icons.sports_soccer_rounded,
+                  size: 18.sp,
+                  // color: AppColors.white,
+                ),
+
+                AppSpacing.w8,
+
+                /// Text content
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      /// Player name
+                      Text(
+                        player,
+                        style: FontManager.bodyMedium(
+                          fontSize: 14,
+                        ),
+                      ),
+
+                      SizedBox(height: 2.h),
+
+                      /// Event description
+                      Text(
+                        event,
+                        style: FontManager.bodySmall(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ],
     );
   }
 
-  /// Lineup Item
-  Widget _buildLineupItem(String position, String playerName) {
-    return Padding(
-      padding: AppPadding.v8,
-      child: Row(
-        children: [
-          Container(
-            width: 40.w,
-            padding: AppPadding.r8,
-            decoration: BoxDecoration(
-              color: AppColors.primaryColor.withOpacity(0.1),
-              borderRadius: AppPadding.c4,
-            ),
-            child: Text(
-              position,
-              style: FontManager.labelSmall(
-                fontSize: 12,
-                color: AppColors.primaryColor,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          AppSpacing.w12,
-          Expanded(
-            child: Text(
-              playerName,
-              style: FontManager.bodyMedium(),
-            ),
+  /// Stat Row - Card-based design matching the image
+  Widget _buildStatRow(String statName, int homeValue, int awayValue) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+      decoration: BoxDecoration(
+        color: AppColors.bgTertiary, // Light grey background
+        borderRadius: BorderRadius.circular(12.r),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.cardShadow.withOpacity(0.05),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
-    );
-  }
-
-  /// Stat Row
-  Widget _buildStatRow(String statName, int homeValue, int awayValue) {
-    return Column(
-      children: [
-        Text(
-          statName,
-          style: FontManager.labelMedium(
-            color: AppColors.textSecondary,
+      child: Column(
+        children: [
+          // Stat Name (centered)
+          Text(
+            statName,
+            style: FontManager.labelMedium(
+              color: AppColors.textPrimary,
+              fontSize: 14,
+            ),
           ),
-        ),
-        AppSpacing.h8,
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                "$homeValue%",
-                style: FontManager.heading3(),
-                textAlign: TextAlign.left,
-              ),
-            ),
-            Expanded(
-              child: Text(
-                "$awayValue%",
-                style: FontManager.heading3(),
-                textAlign: TextAlign.right,
-              ),
-            ),
-          ],
-        ),
-        AppSpacing.h8,
-        // Progress bar
-        Row(
-          children: [
-            Expanded(
-              flex: homeValue,
-              child: Container(
-                height: 4.h,
-                decoration: BoxDecoration(
-                  color: AppColors.primaryColor,
-                  borderRadius: AppPadding.c4,
+
+          // Values Row
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // Home Value (left)
+              Text(
+                homeValue.toString(),
+                style: FontManager.heading3(
+                  color: AppColors.textPrimary,
+                  fontSize: 18,
                 ),
               ),
-            ),
-            Expanded(
-              flex: awayValue,
-              child: Container(
-                height: 4.h,
-                decoration: BoxDecoration(
-                  color: AppColors.grey,
-                  borderRadius: AppPadding.c4,
+
+              // Away Value (right)
+              Text(
+                awayValue.toString(),
+                style: FontManager.heading3(
+                  color: AppColors.textPrimary,
+                  fontSize: 18,
                 ),
               ),
-            ),
-          ],
-        ),
-      ],
+            ],
+          ),
+
+          SizedBox(height: 12.h),
+
+          // Progress Bar
+          Row(
+            children: [
+              // Home team progress (orange)
+              Expanded(
+                flex: homeValue == 0 && awayValue == 0
+                    ? 1
+                    : (homeValue == 0 ? 0 : homeValue),
+                child: Container(
+                  height: 6.h,
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryColor, // Orange
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(3.r),
+                      bottomLeft: Radius.circular(3.r),
+                      topRight:
+                          homeValue == 0 ? Radius.circular(3.r) : Radius.zero,
+                      bottomRight:
+                          homeValue == 0 ? Radius.circular(3.r) : Radius.zero,
+                    ),
+                  ),
+                ),
+              ),
+
+              // Away team progress (yellow)
+              Expanded(
+                flex: homeValue == 0 && awayValue == 0
+                    ? 1
+                    : (awayValue == 0 ? 0 : awayValue),
+                child: Container(
+                  height: 6.h,
+                  decoration: BoxDecoration(
+                    color: AppColors.warning, // Yellow
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(3.r),
+                      bottomRight: Radius.circular(3.r),
+                      topLeft:
+                          awayValue == 0 ? Radius.circular(3.r) : Radius.zero,
+                      bottomLeft:
+                          awayValue == 0 ? Radius.circular(3.r) : Radius.zero,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 

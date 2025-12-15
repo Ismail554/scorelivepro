@@ -25,16 +25,18 @@ class ScoreLivePro extends StatelessWidget {
           supportedLocales: context.supportedLocales,
           locale: context.locale,
           theme: ThemeData(
+              scaffoldBackgroundColor: AppColors.white,
+              colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
               elevatedButtonTheme: ElevatedButtonThemeData(
                   style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primaryColor,
-            foregroundColor: AppColors.white,
-            fixedSize: Size.fromHeight(52.h),
-            shape: RoundedRectangleBorder(
-              borderRadius: AppPadding.c12,
-            ),
-            elevation: 0,
-          ))),
+                backgroundColor: AppColors.primaryColor,
+                foregroundColor: AppColors.white,
+                fixedSize: Size.fromHeight(52.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: AppPadding.c12,
+                ),
+                elevation: 0,
+              ))),
           home: child,
         );
       },
