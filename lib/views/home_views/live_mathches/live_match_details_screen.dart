@@ -36,7 +36,7 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.bgColor,
-      body: Container(
+      body: SizedBox(
         height: double.maxFinite,
         width: double.maxFinite,
         child: Column(
