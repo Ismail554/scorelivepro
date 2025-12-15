@@ -225,7 +225,7 @@ class FontManager {
 
   /// General Text - Legacy support
   static TextStyle generalText({
-    double fontSize = 18,
+    double fontSize = 14,
     Color color = hintTextColor,
   }) =>
       bodyLarge(color: color, fontSize: fontSize);

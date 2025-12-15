@@ -1,28 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:scorelivepro/core/app_colors.dart';
+import 'package:scorelivepro/views/notification_views/notification_all_screen.dart';
 
 class NotificationBell extends StatelessWidget {
   final bool hasNotification;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
+  final Color? iconColor;
 
-  const NotificationBell({
+  NotificationBell({
     super.key,
     required this.hasNotification,
-    required this.onTap,
+    this.onTap,
+    this.iconColor,
   });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       borderRadius: BorderRadius.circular(30),
-      onTap: (){
-        
-      },
+      onTap: onTap ??
+          () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const NotificationAllScreen()),
+            );
+          },
       child: Stack(
         children: [
           Icon(
             hasNotification ? Icons.notifications : Icons.notifications_none,
             size: 26,
-            color: Colors.white,
+            // Correct way
+            color: iconColor ?? Colors.white,
           ),
 
           /// 🔴 Small dot
