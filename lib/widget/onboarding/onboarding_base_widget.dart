@@ -203,19 +203,18 @@ class OnboardingBaseWidget extends StatelessWidget {
   Widget _buildNavigationButton() {
     return Padding(
       padding: AppPadding.h24,
-      child: SizedBox(
-        width: 130.h,
-        height: 56.h,
+      child: Expanded(
         child: ElevatedButton(
           onPressed: onNext,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primaryColor,
-            foregroundColor: AppColors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: AppPadding.c12,
-            ),
-            elevation: 0,
-          ),
+          // style: ElevatedButton.styleFrom(
+          //   backgroundColor: AppColors.primaryColor,
+          //   foregroundColor: AppColors.white,
+
+          //   shape: RoundedRectangleBorder(
+          //     borderRadius: AppPadding.c12,
+          //   ),
+          //   elevation: 0,
+          // ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

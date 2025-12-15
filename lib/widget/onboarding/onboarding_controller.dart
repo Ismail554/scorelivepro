@@ -58,7 +58,7 @@ class _OnboardingPageViewState extends State<OnboardingPageView> {
   void _nextPage() {
     if (_currentPage < 2) {
       _pageController.nextPage(
-        duration: const Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 100),
         curve: Curves.easeInOut,
       );
     } else {
@@ -74,6 +74,7 @@ class _OnboardingPageViewState extends State<OnboardingPageView> {
   Widget build(BuildContext context) {
     return PageView(
       controller: _pageController,
+      physics: const NeverScrollableScrollPhysics(), // Disable swipe gestures
       onPageChanged: (index) {
         setState(() {
           _currentPage = index;

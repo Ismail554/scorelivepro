@@ -1,6 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:scorelivepro/core/app_colors.dart';
+import 'package:scorelivepro/core/app_padding.dart';
 import 'package:scorelivepro/views/home_views/live_mathches/live_match_details_screen.dart';
 import 'package:scorelivepro/views/splash_screen/splash_screen.dart';
 
@@ -22,7 +24,17 @@ class ScoreLivePro extends StatelessWidget {
           localizationsDelegates: context.localizationDelegates,
           supportedLocales: context.supportedLocales,
           locale: context.locale,
-          theme: ThemeData(),
+          theme: ThemeData(
+              elevatedButtonTheme: ElevatedButtonThemeData(
+                  style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.primaryColor,
+            foregroundColor: AppColors.white,
+            fixedSize: Size.fromHeight(52.h),
+            shape: RoundedRectangleBorder(
+              borderRadius: AppPadding.c12,
+            ),
+            elevation: 0,
+          ))),
           home: child,
         );
       },
