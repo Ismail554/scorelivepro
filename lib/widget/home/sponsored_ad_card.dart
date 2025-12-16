@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/app_padding.dart';
+import 'package:scorelivepro/core/assets_manager.dart';
 import 'package:scorelivepro/core/font_manager.dart';
 
 /// Sponsored ad card widget for home screen
@@ -26,14 +27,16 @@ class SponsoredAdCard extends StatelessWidget {
         children: [
           // Background soccer ball graphic (placeholder)
           Positioned(
-            right: -20.w,
+            right: -2.w,
             bottom: -20.h,
             child: Opacity(
-              opacity: 0.1,
-              child: Icon(
-                Icons.sports_soccer,
-                size: 120.sp,
-                color: AppColors.white,
+              opacity: 0.7,
+              child: Image.asset(
+                height: 128.h,
+                width: 128.h,
+                IconAssets.soccer_icon,
+                color: Colors.white,
+                fit: BoxFit.contain,
               ),
             ),
           ),

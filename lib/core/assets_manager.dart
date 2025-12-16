@@ -15,6 +15,9 @@ class ImageAssets {
 
 class IconAssets {
   static const String app_logo = "$iconPath/app_logo.png";
+  static const String soccer_icon = "$iconPath/soccer.png";
+  static const String red_card = "$iconPath/red_card.png";
+  static const String yellow_card = "$iconPath/yellow_card.png";
 }
 
 class JsonAssets {}

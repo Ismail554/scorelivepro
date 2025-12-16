@@ -324,21 +324,30 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
   Widget _buildTimelineTab() {
     return SingleChildScrollView(
       padding: AppPadding.h16,
-      child: Column(
-        children: [
-          AppSpacing.h12,
-          // Timeline events will go here
-          _buildTimelineEvent("78'", "Bukayo Saka", "Goal"),
-          AppSpacing.h16,
-          _buildTimelineEvent("65'", "Yellow Card", "Player Name"),
-          AppSpacing.h16,
-          _buildTimelineEvent("45'", "Half Time", ""),
-          AppSpacing.h16,
-          WidgetMatchInformation(
-              stadium: "Eihad Stadium",
-              referee: "Farhan Shahriar",
-              attendance: "512,800")
-        ],
+      child: Container(
+        padding: EdgeInsets.only(bottom: 24.h, top: 8.h),
+        child: Column(
+          children: [
+            AppSpacing.h12,
+            // Timeline events will go here
+            _buildTimelineEvent("18", "Farhan Shahria", "Goal"),
+            AppSpacing.h16,
+            _buildTimelineEvent("25", "Shihab Shahriar", "Goal"),
+            AppSpacing.h16,
+            _buildTimelineEvent("45", "Shihab Shahriar", "Yellow Card"),
+            AppSpacing.h16,
+            _buildTimelineEvent("48", "Ismail Hosen", "Penalty"),
+            AppSpacing.h16,
+            _buildTimelineEvent("65", "Shihab Shahriar", "Yellow Card"),
+            AppSpacing.h16,
+            _buildTimelineEvent("85", "Ismail Hosen", "Red Card"),
+            AppSpacing.h16,
+            WidgetMatchInformation(
+                stadium: "Eihad Stadium",
+                referee: "Farhan Shahriar",
+                attendance: "512,800")
+          ],
+        ),
       ),
     );
   }
@@ -493,12 +502,20 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
     String player,
     String event,
   ) {
+    String iconPath = IconAssets.soccer_icon;
+    // Ekhon check kori onno kichu kina
+    if (event.toLowerCase().contains("yellow")) {
+      iconPath = IconAssets.yellow_card; // Make sure ei asset ta ache
+    } else if (event.toLowerCase().contains("red")) {
+      iconPath = IconAssets.red_card; // Make sure ei asset ta ache
+    }
+    ;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         /// Minute
         Text(
-          minute,
+          "$minute''",
           style: FontManager.bodyMedium(
             fontSize: 14,
             color: AppColors.textSecondary,
@@ -524,13 +541,11 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                /// Icon
-                Icon(
-                  Icons.sports_soccer_rounded,
-                  size: 18.sp,
-                  // color: AppColors.white,
+                Image.asset(
+                  iconPath,
+                  height: 14.h,
+                  width: 14.h,
                 ),
-
                 AppSpacing.w8,
 
                 /// Text content
@@ -571,7 +586,8 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
       decoration: BoxDecoration(
-        color: AppColors.bgTertiary, // Light grey background
+        color: AppColors.white, // Light grey background
+        border: Border.all(width: 1.w, color: Colors.grey.shade300),
         borderRadius: BorderRadius.circular(12.r),
         boxShadow: [
           BoxShadow(
@@ -583,15 +599,6 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
       ),
       child: Column(
         children: [
-          // Stat Name (centered)
-          Text(
-            statName,
-            style: FontManager.labelMedium(
-              color: AppColors.textPrimary,
-              fontSize: 14,
-            ),
-          ),
-
           // Values Row
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -602,6 +609,14 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
                 style: FontManager.heading3(
                   color: AppColors.textPrimary,
                   fontSize: 18,
+                ),
+              ),
+              // Stat Name (centered)
+              Text(
+                statName,
+                style: FontManager.labelMedium(
+                  color: AppColors.textPrimary,
+                  fontSize: 14,
                 ),
               ),
 
@@ -627,7 +642,7 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
                     ? 1
                     : (homeValue == 0 ? 0 : homeValue),
                 child: Container(
-                  height: 6.h,
+                  height: 8.h,
                   decoration: BoxDecoration(
                     color: AppColors.primaryColor, // Orange
                     borderRadius: BorderRadius.only(
@@ -648,7 +663,7 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
                     ? 1
                     : (awayValue == 0 ? 0 : awayValue),
                 child: Container(
-                  height: 6.h,
+                  height: 8.h,
                   decoration: BoxDecoration(
                     color: AppColors.warning, // Yellow
                     borderRadius: BorderRadius.only(
