@@ -6,9 +6,11 @@ import 'package:scorelivepro/core/app_spacing.dart';
 import 'package:scorelivepro/core/app_strings.dart';
 import 'package:scorelivepro/core/assets_manager.dart';
 import 'package:scorelivepro/core/font_manager.dart';
+import 'package:scorelivepro/utils/navigation_helper.dart';
 import 'package:scorelivepro/widget/home/all_matches/widget_lineups.dart';
 import 'package:scorelivepro/widget/home/all_matches/widget_match_information.dart';
 import 'package:scorelivepro/widget/mini_widget/mw_notification_bell.dart';
+import 'package:scorelivepro/widget/navigation/custom_bottom_nav_bar.dart';
 import 'package:scorelivepro/widget/navigation/transparent_tab_bar.dart';
 
 class LiveMatchDetailsScreen extends StatefulWidget {
@@ -38,6 +40,12 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
+      bottomNavigationBar: CustomBottomNavBar(
+        currentIndex: 0, // Matches tab
+        onTap: (index) {
+          NavigationHelper.navigateToMainScreen(context, index);
+        },
+      ),
       body: SizedBox(
         height: double.maxFinite,
         width: double.maxFinite,
@@ -245,18 +253,26 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
               children: [
                 // Team Logo Placeholder
                 Container(
-                  width: 60.w,
-                  height: 60.w,
-                  decoration: BoxDecoration(
-                    color: AppColors.white.withOpacity(0.2),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.sports_soccer,
-                    color: AppColors.white,
-                    size: 30.sp,
-                  ),
-                ),
+                    width: 60.w,
+                    height: 60.w,
+                    decoration: BoxDecoration(
+                      color: AppColors.white.withOpacity(0.2),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Container(
+                      width: 48.w,
+                      height: 48.w, // Square Container keeps it circular
+                      padding: EdgeInsets.all(12
+                          .w), // 🔥 Magic Here! Padding controls the inner image size
+                      decoration: BoxDecoration(
+                        color: AppColors.greyE8.withOpacity(0.5),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Image.asset(
+                        IconAssets.soccer_icon,
+                        fit: BoxFit.contain, // Image won't be cut off
+                      ),
+                    )),
                 AppSpacing.h8,
                 Text(
                   "Man City", // TODO: Get from match data
@@ -291,18 +307,26 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
               children: [
                 // Team Logo Placeholder
                 Container(
-                  width: 60.w,
-                  height: 60.w,
-                  decoration: BoxDecoration(
-                    color: AppColors.white.withOpacity(0.2),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.sports_soccer,
-                    color: AppColors.white,
-                    size: 30.sp,
-                  ),
-                ),
+                    width: 60.w,
+                    height: 60.w,
+                    decoration: BoxDecoration(
+                      color: AppColors.white.withOpacity(0.2),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Container(
+                      width: 48.w,
+                      height: 48.w, // Square Container keeps it circular
+                      padding: EdgeInsets.all(12
+                          .w), // 🔥 Magic Here! Padding controls the inner image size
+                      decoration: BoxDecoration(
+                        color: AppColors.greyE8.withOpacity(0.5),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Image.asset(
+                        IconAssets.soccer_icon,
+                        fit: BoxFit.contain, // Image won't be cut off
+                      ),
+                    )),
                 AppSpacing.h8,
                 Text(
                   "Arsenal", // TODO: Get from match data
