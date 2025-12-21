@@ -19,6 +19,7 @@ class IconAssets {
   static const String soccer_icon = "$iconPath/soccer.png";
   static const String red_card = "$iconPath/red_card.png";
   static const String yellow_card = "$iconPath/yellow_card.png";
+  static const String trophy = "$iconPath/trophy.png";
 }
 
 class JsonAssets {}
@@ -26,4 +27,5 @@ class JsonAssets {}
 class SvgAssets {
   // ✅ General SVG Files
   static const String splash = "$svgPath/splash.svg";
+  static const String logo = "$svgPath/logo.svg";
 }

@@ -129,7 +129,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                   NotificationBell(
                     hasNotification: true,
                     iconColor: AppColors.black,
-                    onTap: () {},
+                    // onTap: () {},
                   ),
                 ],
               ),
