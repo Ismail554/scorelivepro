@@ -163,14 +163,14 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
           // Bottom Message
           Container(
             width: double.maxFinite,
-            margin: AppPadding.h16 + EdgeInsets.only(bottom: 32.h),
+            margin: AppPadding.h16 + EdgeInsets.only(bottom: 42.h),
             padding: AppPadding.r16,
             decoration: BoxDecoration(
               color: AppColors.surfaceVariant,
               borderRadius: AppPadding.c12,
             ),
             child: Text(
-              "Language changes will take effect after restarting the app.",
+              AppStrings.langChangeAlert,
               style: FontManager.bodySmall(
                 fontSize: 12,
                 color: AppColors.textSecondary,

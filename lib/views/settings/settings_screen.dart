@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/font_manager.dart';
+import 'package:scorelivepro/views/settings/app_info_screen.dart';
+import 'package:scorelivepro/views/settings/language_selection_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -78,7 +80,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   title: "Language",
                   subtitle: "English",
                   showChevron: true,
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => LanguageSelectionScreen()));
+                  },
                 ),
               ],
             ),
@@ -94,7 +101,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   title: "App Info",
                   subtitle: "Version 1.0.0",
                   showChevron: true,
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AppInfoScreen()));
+                  },
                 ),
                 _buildDivider(),
                 _buildSettingsTile(

@@ -8,6 +8,9 @@ import 'package:flutter/material.dart';
 /// AppStrings.get(context).appName
 /// ```
 class AppStrings {
+  static const String sponserd = "SPONSORED";
+  static const String upgradeNow ='Upgrade Now';
+  static const String langChangeAlert = "Language changes will take effect after restarting the app.";
   // ==================== General ====================
   static const String appName = "Score Live Pro";
   static const String loading = "Loading...";
