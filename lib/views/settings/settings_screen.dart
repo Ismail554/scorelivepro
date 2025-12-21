@@ -1,14 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/app_colors.dart';
-import 'package:scorelivepro/core/app_padding.dart';
-import 'package:scorelivepro/core/app_spacing.dart';
-import 'package:scorelivepro/core/app_strings.dart';
-import 'package:scorelivepro/core/assets_manager.dart';
 import 'package:scorelivepro/core/font_manager.dart';
-import 'package:scorelivepro/views/settings/language_selection_screen.dart';
-import 'package:scorelivepro/widget/settings/settings_card.dart';
-import 'package:scorelivepro/widget/settings/unified_settings_item.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -23,177 +16,244 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bgColor,
+      backgroundColor: const Color(0xFFF6F6F6), // Light Grey BG like image
       appBar: AppBar(
-        title: Text(
-          AppStrings.settings,
-          style: FontManager.heading2(),
-        ),
-        backgroundColor: AppColors.white,
+        backgroundColor: const Color(0xFFF6F6F6),
         elevation: 0,
+        centerTitle: false, // Title left a hobe image er moto
+        title: Padding(
+          padding: EdgeInsets.only(left: 8.w),
+          child: Text(
+            "Settings",
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 28.sp,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
       ),
       body: SingleChildScrollView(
-        padding: AppPadding.h16,
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ACCOUNT Section
-            SettingsSectionHeader(title: AppStrings.account),
-            UnifiedSettingsItem(
-              icon: Icons.login,
-              title: AppStrings.loginSignUp,
-              subtitle: AppStrings.syncFavorites,
-              onTap: () {
-                // TODO: Navigate to login/signup screen
-              },
+            // 1. ACCOUNT SECTION
+            _buildSectionHeader("ACCOUNT"),
+            _buildSettingsGroup(
+              children: [
+                _buildSettingsTile(
+                  icon: Icons.login,
+                  iconColor: const Color(0xFFFF6B00), // Orange Icon
+                  iconBgColor: const Color(0xFFFFF1EB), // Light Orange BG
+                  title: "Login / Sign Up",
+                  subtitle: "Sync favorites across devices",
+                  showChevron: true,
+                  onTap: () {},
+                ),
+              ],
             ),
 
-            AppSpacing.h24,
+            SizedBox(height: 24.h),
 
-            // PREFERENCES Section
-            SettingsSectionHeader(title: AppStrings.preferences),
-
-            // Notifications Toggle
-            UnifiedSettingsItem(
-              icon: Icons.notifications_outlined,
-              title: AppStrings.notifications,
-              subtitle: _notificationsEnabled
-                  ? AppStrings.enabled
-                  : AppStrings.disabled,
-              toggleValue: _notificationsEnabled,
-              onToggleChanged: (value) {
-                setState(() {
-                  _notificationsEnabled = value;
-                });
-              },
+            // 2. PREFERENCES SECTION
+            _buildSectionHeader("PREFERENCES"),
+            _buildSettingsGroup(
+              children: [
+                _buildSettingsTile(
+                  icon: Icons.notifications_outlined,
+                  title: "Notifications",
+                  subtitle: "Enabled",
+                  isSwitch: true,
+                  switchValue: _notificationsEnabled,
+                  onToggle: (val) {
+                    setState(() {
+                      _notificationsEnabled = val;
+                    });
+                  },
+                ),
+                _buildDivider(), // Line between items
+                _buildSettingsTile(
+                  icon: Icons.language,
+                  title: "Language",
+                  subtitle: "English",
+                  showChevron: true,
+                  onTap: () {},
+                ),
+              ],
             ),
 
-            AppSpacing.h12,
+            SizedBox(height: 24.h),
 
-            // Language
-            UnifiedSettingsItem(
-              icon: Icons.language_outlined,
-              title: AppStrings.language,
-              subtitle: AppStrings.english, // TODO: Get current language
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const LanguageSelectionScreen(),
+            // 3. ABOUT SECTION
+            _buildSectionHeader("ABOUT"),
+            _buildSettingsGroup(
+              children: [
+                _buildSettingsTile(
+                  icon: Icons.info_outline,
+                  title: "App Info",
+                  subtitle: "Version 1.0.0",
+                  showChevron: true,
+                  onTap: () {},
+                ),
+                _buildDivider(),
+                _buildSettingsTile(
+                  icon: Icons.lock_outline,
+                  title: "Privacy & Terms",
+                  showChevron: true,
+                  onTap: () {},
+                ),
+              ],
+            ),
+
+            SizedBox(height: 40.h),
+
+            // 4. BRANDING & LOGO
+            Center(
+              child: Column(
+                children: [
+                  Container(
+                    width: 60.w,
+                    height: 60.w,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFF6B00), // Orange Brand Color
+                      borderRadius: BorderRadius.circular(16.r),
+                    ),
+                    child: Icon(Icons.emoji_events,
+                        color: Colors.white,
+                        size: 30.sp), // Placeholder for Logo Asset
                   ),
-                );
-              },
+                  SizedBox(height: 12.h),
+                  Text(
+                    "ScoreLivePRO",
+                    style:
+                        TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600),
+                  ),
+                  SizedBox(height: 4.h),
+                  Text(
+                    "Real-Time Football Scores & News",
+                    style: TextStyle(fontSize: 12.sp, color: Colors.grey),
+                  ),
+                  SizedBox(height: 4.h),
+                  Text(
+                    "© 2025 ScoreLivePRO",
+                    style: TextStyle(fontSize: 11.sp, color: Colors.grey),
+                  ),
+                ],
+              ),
             ),
 
-            AppSpacing.h24,
+            SizedBox(height: 24.h),
 
-            // ABOUT Section
-            SettingsSectionHeader(title: AppStrings.aboutSection),
-
-            // App Info
-            UnifiedSettingsItem(
-              icon: Icons.info_outline,
-              title: AppStrings.appInfo,
-              subtitle: AppStrings.versionNumber,
-              onTap: () {
-                // TODO: Show app info dialog
-              },
+            // 5. DISCLAIMER BOX (Grey Box at bottom)
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(16.w),
+              decoration: BoxDecoration(
+                color: const Color(0xFFEBEBF0), // Darker grey for disclaimer
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: Text(
+                "ScoreLivePRO is not meant for collecting PII or securing sensitive data. This app is designed for entertainment and informational purposes only.",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 11.sp, color: Colors.grey[600], height: 1.4),
+              ),
             ),
-
-            AppSpacing.h12,
-
-            // Privacy & Terms
-            UnifiedSettingsItem(
-              icon: Icons.lock_outline,
-              title: AppStrings.privacyAndTerms,
-              onTap: () {
-                // TODO: Navigate to privacy & terms
-              },
-            ),
-
-            AppSpacing.h40,
-
-            // App Branding
-            _buildAppBranding(),
-
-            AppSpacing.h24,
-
-            // Disclaimer
-            _buildDisclaimer(),
-
-            AppSpacing.h32,
+            SizedBox(height: 40.h),
           ],
         ),
       ),
     );
   }
 
-  /// App Branding Widget
-  Widget _buildAppBranding() {
-    return Center(
-      child: Column(
-        children: [
-          // App Icon/Logo
-          Container(
-            width: 64.w,
-            height: 64.w,
-            decoration: BoxDecoration(
-              color: AppColors.primaryColor,
-              borderRadius: AppPadding.c12,
-            ),
-            child: Image.asset(IconAssets.app_logo),
-          ),
+  // --- Helper Widgets ---
 
-          SizedBox(height: 16.h),
-
-          // App Name
-          Text(
-            AppStrings.appName,
-            style: FontManager.heading2(
-              fontSize: 20,
-              color: AppColors.textPrimary,
-            ),
-          ),
-
-          SizedBox(height: 8.h),
-
-          // Tagline
-          Text(
-            "Real-Time Football Scores & News",
-            style: FontManager.bodyMedium(
-              fontSize: 14,
-              color: AppColors.textTertiary,
-            ),
-            textAlign: TextAlign.center,
-          ),
-
-          SizedBox(height: 8.h),
-
-          // Copyright
-          Text(
-            "© 2025 ScoreLivePRO",
-            style: FontManager.bodySmall(
-              fontSize: 12,
-              color: AppColors.textTertiary,
-            ),
-          ),
-        ],
+  // Header Text (ACCOUNT, PREFERENCES...)
+  Widget _buildSectionHeader(String title) {
+    return Padding(
+      padding: EdgeInsets.only(left: 12.w, bottom: 8.h),
+      child: Text(
+        title,
+        style: TextStyle(
+          color: Colors.grey[600],
+          fontSize: 12.sp,
+          fontWeight: FontWeight.w500,
+          letterSpacing: 1.0,
+        ),
       ),
     );
   }
 
-  /// Disclaimer Widget
-  Widget _buildDisclaimer() {
-    return SettingsCard(
-      padding: AppPadding.r16,
-      child: Text(
-        "ScoreLivePRO is not meant for collecting PII or securing sensitive data. This app is designed for entertainment and informational purposes only.",
-        style: FontManager.bodySmall(
-          fontSize: 12,
-          color: AppColors.textTertiary,
-        ),
-        textAlign: TextAlign.center,
+  // White Card Container that holds the items
+  Widget _buildSettingsGroup({required List<Widget> children}) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12.r),
+        border:
+            Border.all(color: Colors.grey.withOpacity(0.1)), // Subtle border
       ),
+      child: Column(children: children),
+    );
+  }
+
+  // Divider Line inside the group
+  Widget _buildDivider() {
+    return Divider(
+        height: 1, thickness: 0.5, indent: 56.w, color: Colors.grey[300]);
+  }
+
+  // Single Row Item (The actual Tile)
+  Widget _buildSettingsTile({
+    required IconData icon,
+    required String title,
+    String? subtitle,
+    Color iconColor = const Color(0xFF1C1C1E), // Default Black/Grey
+    Color iconBgColor = const Color(0xFFF2F2F7), // Default Light Grey
+    bool showChevron = false,
+    bool isSwitch = false,
+    bool switchValue = false,
+    Function(bool)? onToggle,
+    VoidCallback? onTap,
+  }) {
+    return ListTile(
+      onTap: isSwitch ? () => onToggle?.call(!switchValue) : onTap,
+      contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 2.h),
+      // Circular Icon
+      leading: Container(
+        width: 36.w,
+        height: 36.w,
+        decoration: BoxDecoration(
+          color: iconBgColor,
+          shape: BoxShape.circle,
+        ),
+        child: Icon(icon, color: iconColor, size: 20.sp),
+      ),
+      // Title & Subtitle
+      title: Text(
+        title,
+        style: TextStyle(
+            fontSize: 16.sp, fontWeight: FontWeight.w500, color: Colors.black),
+      ),
+      subtitle: subtitle != null
+          ? Text(
+              subtitle,
+              style: TextStyle(fontSize: 12.sp, color: Colors.grey[600]),
+            )
+          : null,
+      // Right Side Widget (Switch or Arrow)
+      trailing: isSwitch
+          ? Switch(
+              value: switchValue,
+              activeColor: Colors.white,
+              activeTrackColor: const Color(0xFFFF6B00), // Orange Switch
+              onChanged: onToggle,
+            )
+          : (showChevron
+              ? Icon(Icons.arrow_forward_ios_rounded,
+                  size: 16.sp, color: Colors.grey[400])
+              : null),
     );
   }
 }

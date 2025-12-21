@@ -8,14 +8,25 @@ import 'package:scorelivepro/widget/navigation/custom_bottom_nav_bar.dart';
 
 /// Main Navigation Screen with Bottom Navigation Bar
 class MainNavigationScreen extends StatefulWidget {
-  const MainNavigationScreen({super.key});
+  final int? initialIndex;
+
+  const MainNavigationScreen({
+    super.key,
+    this.initialIndex,
+  });
 
   @override
   State<MainNavigationScreen> createState() => _MainNavigationScreenState();
 }
 
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
-  int _currentIndex = 0;
+  late int _currentIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentIndex = widget.initialIndex ?? 0;
+  }
 
   // List of screens
   final List<Widget> _screens = [

@@ -4,9 +4,11 @@ import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/app_strings.dart';
 import 'package:scorelivepro/core/font_manager.dart';
 import 'package:scorelivepro/models/fake_data/live_match_details_fake_data.dart';
+import 'package:scorelivepro/utils/navigation_helper.dart';
 import 'package:scorelivepro/widget/home/match_card.dart';
 import 'package:scorelivepro/widget/home/sponsored_ad_card.dart';
 import 'package:scorelivepro/widget/mini_widget/mw_notification_bell.dart';
+import 'package:scorelivepro/widget/navigation/custom_bottom_nav_bar.dart';
 
 class LiveMatchesScreen extends StatefulWidget {
   const LiveMatchesScreen({super.key});
@@ -55,6 +57,12 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
             ),
           ),
         ],
+      ),
+      bottomNavigationBar: CustomBottomNavBar(
+        currentIndex: 0, // Matches tab
+        onTap: (index) {
+          NavigationHelper.navigateToMainScreen(context, index);
+        },
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
