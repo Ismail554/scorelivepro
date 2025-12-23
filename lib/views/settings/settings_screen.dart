@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:scorelivepro/core/app_colors.dart';
-import 'package:scorelivepro/core/font_manager.dart';
+import 'package:scorelivepro/core/app_strings.dart';
 import 'package:scorelivepro/views/settings/app_info_screen.dart';
 import 'package:scorelivepro/views/settings/language_selection_screen.dart';
 
@@ -26,7 +25,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         title: Padding(
           padding: EdgeInsets.only(left: 8.w),
           child: Text(
-            "Settings",
+            AppStrings.settings,
             style: TextStyle(
               color: Colors.black,
               fontSize: 28.sp,
@@ -41,7 +40,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // 1. ACCOUNT SECTION
-            _buildSectionHeader("ACCOUNT"),
+            _buildSectionHeader(AppStrings.account),
             _buildSettingsGroup(
               children: [
                 _buildSettingsTile(
@@ -49,7 +48,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   iconColor: const Color(0xFFFF6B00), // Orange Icon
                   iconBgColor: const Color(0xFFFFF1EB), // Light Orange BG
                   title: "Login / Sign Up",
-                  subtitle: "Sync favorites across devices",
+                  subtitle: AppStrings.syncFavorites,
                   showChevron: true,
                   onTap: () {},
                 ),
@@ -59,13 +58,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
             SizedBox(height: 24.h),
 
             // 2. PREFERENCES SECTION
-            _buildSectionHeader("PREFERENCES"),
+            _buildSectionHeader(AppStrings.preferences),
             _buildSettingsGroup(
               children: [
                 _buildSettingsTile(
                   icon: Icons.notifications_outlined,
-                  title: "Notifications",
-                  subtitle: "Enabled",
+                  title: AppStrings.notifications,
+                  subtitle: AppStrings.enabled,
                   isSwitch: true,
                   switchValue: _notificationsEnabled,
                   onToggle: (val) {
@@ -93,12 +92,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
             SizedBox(height: 24.h),
 
             // 3. ABOUT SECTION
-            _buildSectionHeader("ABOUT"),
+            _buildSectionHeader(AppStrings.about),
             _buildSettingsGroup(
               children: [
                 _buildSettingsTile(
                   icon: Icons.info_outline,
-                  title: "App Info",
+                  title: AppStrings.appInfo,
                   subtitle: "Version 1.0.0",
                   showChevron: true,
                   onTap: () {
@@ -111,7 +110,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 _buildDivider(),
                 _buildSettingsTile(
                   icon: Icons.lock_outline,
-                  title: "Privacy & Terms",
+                  title: AppStrings.termsOfService,
                   showChevron: true,
                   onTap: () {},
                 ),
@@ -137,18 +136,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   SizedBox(height: 12.h),
                   Text(
-                    "ScoreLivePRO",
+                    AppStrings.appName,
                     style:
                         TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600),
                   ),
                   SizedBox(height: 4.h),
                   Text(
-                    "Real-Time Football Scores & News",
+                    AppStrings.realScoreNews,
                     style: TextStyle(fontSize: 12.sp, color: Colors.grey),
                   ),
                   SizedBox(height: 4.h),
                   Text(
-                    "© 2025 ScoreLivePRO",
+                    AppStrings.copywrite,
                     style: TextStyle(fontSize: 11.sp, color: Colors.grey),
                   ),
                 ],
@@ -166,7 +165,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 borderRadius: BorderRadius.circular(12.r),
               ),
               child: Text(
-                "ScoreLivePRO is not meant for collecting PII or securing sensitive data. This app is designed for entertainment and informational purposes only.",
+                AppStrings.infoDesc,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontSize: 11.sp, color: Colors.grey[600], height: 1.4),
