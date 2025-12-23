@@ -11,6 +11,9 @@ class AppStrings {
   static const String sponserd = "SPONSORED";
   static const String upgradeNow ='Upgrade Now';
   static const String langChangeAlert = "Language changes will take effect after restarting the app.";
+  static const String realScoreNews = "Real-Time Football Scores & News";
+  static const String copywrite = "© 2025 ScoreLivePRO";
+  static const String infoDesc = "ScoreLivePRO is not meant for collecting PII or securing sensitive data. This app is designed for entertainment and informational purposes only.";
   // ==================== General ====================
   static const String appName = "Score Live Pro";
   static const String loading = "Loading...";
