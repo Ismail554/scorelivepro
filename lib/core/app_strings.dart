@@ -159,6 +159,7 @@ class AppStrings {
   static const String favorites = "Favorites";
   static const String myFavorites = "My Favorites";
   static const String favoriteTeams = "Favorite Teams";
+  static const String browseTeams = "Browse Teams";
   static const String favoriteLeagues = "Favorite Leagues";
   static const String addToFavorites = "Add to Favorites";
   static const String removeFromFavorites = "Remove from Favorites";

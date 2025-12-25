@@ -4,6 +4,7 @@ import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/app_spacing.dart';
 import 'package:scorelivepro/core/app_strings.dart';
 import 'package:scorelivepro/core/font_manager.dart';
+import 'package:scorelivepro/views/favorites_views/favorites_teams_screen.dart';
 import 'package:scorelivepro/widget/favorites/widget_favorite_league_card.dart';
 import 'package:scorelivepro/widget/favorites/widget_favorite_team_card.dart';
 import 'package:scorelivepro/widget/favorites/widget_sync_favorites_card.dart';
@@ -196,7 +197,11 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            // TODO: Navigate to add team screen
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        FavoritesTeamsScreen()));
                           },
                           child: Text(
                             "+ Add Team",

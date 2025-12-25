@@ -4,21 +4,19 @@ import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/assets_manager.dart';
 import 'package:scorelivepro/core/font_manager.dart';
 
-/// Favorite team card widget
-class FavoriteTeamCard extends StatelessWidget {
+/// Team browse card widget for Browse Teams screen
+class TeamBrowseCard extends StatelessWidget {
   final String teamName;
   final String leagueName;
-  final bool notificationsEnabled;
-  final VoidCallback? onNotificationToggle;
-  final VoidCallback? onDelete;
+  final bool isFavorited;
+  final VoidCallback? onFavoriteToggle;
 
-  const FavoriteTeamCard({
+  const TeamBrowseCard({
     super.key,
     required this.teamName,
     required this.leagueName,
-    this.notificationsEnabled = true,
-    this.onNotificationToggle,
-    this.onDelete,
+    this.isFavorited = false,
+    this.onFavoriteToggle,
   });
 
   @override
@@ -28,8 +26,11 @@ class FavoriteTeamCard extends StatelessWidget {
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: AppColors.white,
-        border: Border.all(color: Colors.grey.shade100, width: 1.w),
         borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(
+          color: AppColors.greyE8,
+          width: 1.w,
+        ),
         boxShadow: [
           BoxShadow(
             color: AppColors.cardShadow.withOpacity(0.05),
@@ -40,7 +41,7 @@ class FavoriteTeamCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // Team Logo (circular placeholder)
+          // Team Logo (circular)
           Container(
             width: 48.w,
             height: 48.w,
@@ -81,40 +82,21 @@ class FavoriteTeamCard extends StatelessWidget {
             ),
           ),
 
-          // Notification Bell Icon
+          // Favorite/Add Button
           GestureDetector(
-            onTap: onNotificationToggle,
+            onTap: onFavoriteToggle,
             child: Container(
               width: 40.w,
               height: 40.w,
               decoration: BoxDecoration(
-                color: notificationsEnabled
+                color: isFavorited
                     ? AppColors.primaryColor.withOpacity(0.1)
                     : Colors.transparent,
                 borderRadius: BorderRadius.circular(12.r),
               ),
               child: Icon(
-                notificationsEnabled
-                    ? Icons.notifications_active
-                    : Icons.notifications_off,
-                color: notificationsEnabled
-                    ? AppColors.primaryColor
-                    : AppColors.grey,
-                size: 24.sp,
-              ),
-            ),
-          ),
-
-          SizedBox(width: 8.w),
-
-          // Delete Icon
-          GestureDetector(
-            onTap: onDelete,
-            child: Container(
-              padding: EdgeInsets.all(8.w),
-              child: Icon(
-                Icons.delete_outline,
-                color: AppColors.grey,
+                isFavorited ? Icons.favorite : Icons.add,
+                color: isFavorited ? AppColors.primaryColor : AppColors.grey,
                 size: 24.sp,
               ),
             ),
