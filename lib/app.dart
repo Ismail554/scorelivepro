@@ -31,7 +31,7 @@ class ScoreLivePro extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primaryColor,
                 foregroundColor: AppColors.white,
-                fixedSize: Size.fromHeight(52.h),
+                fixedSize: Size.fromHeight(62.h),
                 shape: RoundedRectangleBorder(
                   borderRadius: AppPadding.c12,
                 ),

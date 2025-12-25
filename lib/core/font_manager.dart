@@ -261,9 +261,9 @@ class FontManager {
 
   /// Button Text - Legacy support
   static TextStyle buttonText({
-    double fontSize = 16,
+    double fontSize = 14,
     Color color = Colors.white,
-    double height = 1.4,
+    double height = 1,
   }) =>
       labelLarge(
         color: color,
