@@ -34,7 +34,10 @@ class _FavoritesTeamsScreenState extends State<FavoritesTeamsScreen> {
 
   // Sample team data
   final List<BrowseTeam> _allTeams = [
-    BrowseTeam(teamName: 'Manchester City', leagueName: 'Premier League', isFavorited: true),
+    BrowseTeam(
+        teamName: 'Manchester City',
+        leagueName: 'Premier League',
+        isFavorited: true),
     BrowseTeam(teamName: 'Arsenal', leagueName: 'Premier League'),
     BrowseTeam(teamName: 'Liverpool', leagueName: 'Premier League'),
     BrowseTeam(teamName: 'Chelsea', leagueName: 'Premier League'),
@@ -42,13 +45,15 @@ class _FavoritesTeamsScreenState extends State<FavoritesTeamsScreen> {
     BrowseTeam(teamName: 'Manchester United', leagueName: 'Premier League'),
     BrowseTeam(teamName: 'Newcastle United', leagueName: 'Premier League'),
     BrowseTeam(teamName: 'Brighton', leagueName: 'Premier League'),
-    BrowseTeam(teamName: 'Real Madrid', leagueName: 'La Liga', isFavorited: true),
+    BrowseTeam(
+        teamName: 'Real Madrid', leagueName: 'La Liga', isFavorited: true),
     BrowseTeam(teamName: 'Barcelona', leagueName: 'La Liga'),
     BrowseTeam(teamName: 'Atletico Madrid', leagueName: 'La Liga'),
     BrowseTeam(teamName: 'Sevilla', leagueName: 'La Liga'),
     BrowseTeam(teamName: 'Real Sociedad', leagueName: 'La Liga'),
     BrowseTeam(teamName: 'Villarreal', leagueName: 'La Liga'),
-    BrowseTeam(teamName: 'Inter Milan', leagueName: 'Serie A', isFavorited: true),
+    BrowseTeam(
+        teamName: 'Inter Milan', leagueName: 'Serie A', isFavorited: true),
     BrowseTeam(teamName: 'AC Milan', leagueName: 'Serie A'),
     BrowseTeam(teamName: 'Juventus', leagueName: 'Serie A'),
     BrowseTeam(teamName: 'Napoli', leagueName: 'Serie A'),
@@ -71,14 +76,18 @@ class _FavoritesTeamsScreenState extends State<FavoritesTeamsScreen> {
 
     // Filter by category
     if (_selectedCategory != 'All') {
-      filtered = filtered.where((team) => team.leagueName == _selectedCategory).toList();
+      filtered = filtered
+          .where((team) => team.leagueName == _selectedCategory)
+          .toList();
     }
 
     // Filter by search query
     final searchQuery = _searchController.text;
     if (searchQuery.isNotEmpty) {
       filtered = filtered.where((team) {
-        return team.teamName.toLowerCase().contains(searchQuery.toLowerCase()) ||
+        return team.teamName
+                .toLowerCase()
+                .contains(searchQuery.toLowerCase()) ||
             team.leagueName.toLowerCase().contains(searchQuery.toLowerCase());
       }).toList();
     }
