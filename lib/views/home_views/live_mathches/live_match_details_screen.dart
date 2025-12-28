@@ -86,7 +86,7 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
                   _buildTimelineTab(),
                   _buildLineupsTab(),
                   _buildStatsTab(),
-                  _buildCommentaryTab(),
+                  // _buildCommentaryTab(),
                 ],
               ),
             ),
