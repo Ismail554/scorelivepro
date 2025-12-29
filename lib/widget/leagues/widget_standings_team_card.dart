@@ -4,6 +4,7 @@ import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/app_spacing.dart';
 import 'package:scorelivepro/core/assets_manager.dart';
 import 'package:scorelivepro/core/font_manager.dart';
+import 'package:scorelivepro/views/league_views/standing_details/detailed_standings_screen.dart';
 
 class StandingsTeamCard extends StatelessWidget {
   final int rank;
@@ -46,7 +47,27 @@ class StandingsTeamCard extends StatelessWidget {
         ? Colors.green
         : (goalDifference < 0 ? Colors.red : AppColors.textPrimary);
 
-    return Container(
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetailedStandingsScreen(
+              teamName: teamName,
+              rank: rank,
+              points: points,
+              played: played,
+              wins: wins,
+              draws: draws,
+              losses: losses,
+              goalsFor: goalsFor,
+              goalsAgainst: goalsAgainst,
+              goalDifference: goalDifference,
+            ),
+          ),
+        );
+      },
+      child: Container(
       margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
       decoration: BoxDecoration(
@@ -158,6 +179,7 @@ class StandingsTeamCard extends StatelessWidget {
             ],
           ),
         ],
+      ),
       ),
     );
   }
