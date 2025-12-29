@@ -12,9 +12,25 @@ import 'package:scorelivepro/widget/home/all_matches/widget_match_information.da
 import 'package:scorelivepro/widget/mini_widget/mw_notification_bell.dart';
 import 'package:scorelivepro/widget/navigation/custom_bottom_nav_bar.dart';
 import 'package:scorelivepro/widget/navigation/transparent_tab_bar.dart';
+import 'package:scorelivepro/widget/home/match_card.dart';
 
 class LiveMatchDetailsScreen extends StatefulWidget {
-  const LiveMatchDetailsScreen({super.key});
+  final String? leagueName;
+  final String? homeTeamName;
+  final String? awayTeamName;
+  final String? score;
+  final String? timeInfo;
+  final MatchStatus? matchStatus;
+
+  const LiveMatchDetailsScreen({
+    super.key,
+    this.leagueName,
+    this.homeTeamName,
+    this.awayTeamName,
+    this.score,
+    this.timeInfo,
+    this.matchStatus,
+  });
 
   @override
   State<LiveMatchDetailsScreen> createState() => _LiveMatchDetailsScreenState();
@@ -27,7 +43,7 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -163,7 +179,7 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
 
               // League Name
               Text(
-                "Premier League", // TODO: Get from match data
+                widget.leagueName ?? "Premier League",
                 style: FontManager.heading3(
                   fontSize: 18,
                   color: AppColors.white,
@@ -209,10 +225,11 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
 
   /// Live Indicator Badge
   Widget _buildLiveIndicator() {
+    final isFinished = widget.matchStatus == MatchStatus.finished;
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
       decoration: BoxDecoration(
-        color: AppColors.warning, // Yellow for LIVE
+        color: isFinished ? AppColors.finishedMatch : AppColors.warning,
         borderRadius: BorderRadius.circular(20.r),
       ),
       child: Row(
@@ -229,7 +246,11 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
           ),
           AppSpacing.w8,
           Text(
-            "LIVE - 78'", // TODO: Get from match data
+            widget.matchStatus == MatchStatus.finished
+                ? "FT"
+                : widget.matchStatus == MatchStatus.halfTime
+                    ? "HT - ${widget.timeInfo ?? "45'"}"
+                    : "LIVE - ${widget.timeInfo ?? "78'"}",
             style: FontManager.labelMedium(
               fontSize: 12,
               color: AppColors.white,
@@ -275,7 +296,7 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
                     )),
                 AppSpacing.h8,
                 Text(
-                  "Man City", // TODO: Get from match data
+                  widget.homeTeamName ?? "Man City",
                   style: FontManager.bodyMedium(
                     fontSize: 14,
                     color: AppColors.white,
@@ -291,7 +312,7 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
             child: Column(
               children: [
                 Text(
-                  "2 - 2", // TODO: Get from match data
+                  widget.score ?? "2 - 2",
                   style: FontManager.matchScore(
                     fontSize: 34.sp,
                     color: AppColors.white,
@@ -329,7 +350,7 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
                     )),
                 AppSpacing.h8,
                 Text(
-                  "Arsenal", // TODO: Get from match data
+                  widget.awayTeamName ?? "Arsenal",
                   style: FontManager.bodyMedium(
                     fontSize: 14,
                     color: AppColors.white,
@@ -500,6 +521,8 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
   }
 
   /// Commentary Tab Content
+  /// Note: Currently unused but kept for future implementation
+  // ignore: unused_element
   Widget _buildCommentaryTab() {
     return SingleChildScrollView(
       padding: AppPadding.h16,

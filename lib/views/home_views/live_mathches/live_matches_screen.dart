@@ -10,6 +10,7 @@ import 'package:scorelivepro/widget/home/match_card.dart';
 import 'package:scorelivepro/widget/home/sponsored_ad_card.dart';
 import 'package:scorelivepro/widget/mini_widget/mw_notification_bell.dart';
 import 'package:scorelivepro/widget/navigation/custom_bottom_nav_bar.dart';
+import 'package:scorelivepro/views/home_views/live_mathches/live_match_details_screen.dart';
 
 class LiveMatchesScreen extends StatefulWidget {
   const LiveMatchesScreen({super.key});
@@ -181,14 +182,47 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
           timeInfo: match.timeInfo,
           status: match.status,
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const HomeLineupsScreen()),
-            );
+            _navigateToMatchScreen(context, match);
           },
         );
       },
     );
+  }
+
+  /// Navigate to appropriate screen based on match status
+  void _navigateToMatchScreen(BuildContext context, LiveMatchFakeModel match) {
+    final score = match.homeScore != null && match.awayScore != null
+        ? '${match.homeScore}-${match.awayScore}'
+        : null;
+
+    if (match.status == MatchStatus.upcoming) {
+      // Navigate to lineups screen for upcoming matches
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HomeLineupsScreen(
+            leagueName: match.leagueName,
+            homeTeamName: match.homeTeam,
+            awayTeamName: match.awayTeam,
+            matchStatus: 'Upcoming',
+          ),
+        ),
+      );
+    } else {
+      // Navigate to live match details screen for live and finished matches
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => LiveMatchDetailsScreen(
+            leagueName: match.leagueName,
+            homeTeamName: match.homeTeam,
+            awayTeamName: match.awayTeam,
+            score: score,
+            timeInfo: match.timeInfo,
+            matchStatus: match.status,
+          ),
+        ),
+      );
+    }
   }
 }

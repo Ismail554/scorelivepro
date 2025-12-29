@@ -18,6 +18,7 @@ class AppSpacing {
   static SizedBox h26 = SizedBox(height: 26.h);
   static SizedBox h28 = SizedBox(height: 28.h);
   static SizedBox h32 = SizedBox(height: 32.h);
+  static SizedBox h34 = SizedBox(height: 34.h);
   static SizedBox h36 = SizedBox(height: 36.h);
   static SizedBox h38 = SizedBox(height: 38.h);
   static SizedBox h40 = SizedBox(height: 40.h);

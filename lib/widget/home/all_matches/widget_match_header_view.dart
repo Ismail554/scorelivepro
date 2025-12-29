@@ -32,7 +32,7 @@ class WidgetMatchHeaderView extends StatelessWidget {
   Widget build(BuildContext context) {
     // 2. Main Structure (The Billboard Frame)
     return SizedBox(
-      height: 270.h,
+      height: 220.h,
       width: double.maxFinite,
       child: Stack(
         children: [
@@ -88,11 +88,11 @@ class WidgetMatchHeaderView extends StatelessWidget {
             children: [
               // Back Button
               IconButton(
-                  icon: const Icon(Icons.arrow_back, color: AppColors.white),
-                  onPressed: () {
-                    Navigator.pop(context, true);
-                  } // Using callback
-                  ),
+                icon: const Icon(Icons.arrow_back, color: AppColors.white),
+                onPressed: () {
+                  Navigator.pop(context, true);
+                }, // Using callback
+              ),
 
               // League Name
               Text(
@@ -115,22 +115,19 @@ class WidgetMatchHeaderView extends StatelessWidget {
     );
   }
 
+  // 🔥 FIXED PART HERE
   Widget _buildMatchOverview() {
     return Positioned(
       bottom: 0,
-      top: 48,
       left: 0,
       right: 0,
+      // 'top: 60.h' remove kora hoyeche jate overflow na hoy
       child: Padding(
-        padding: EdgeInsets.only(bottom: 60.h),
+        padding: EdgeInsets.only(bottom: 30.h), // padding adjusted
         child: Column(
+          mainAxisSize: MainAxisSize.min, // Content onujayi height nebe
           children: [
-            AppSpacing.h38,
-
-            // Live Indicator
-            _buildLiveIndicator(),
-
-            AppSpacing.h2,
+            // AppSpacing remove kora hoyeche, spacing er dorkar nai ekhane
 
             // Teams and Score
             _buildScoreboard(),
@@ -140,6 +137,7 @@ class WidgetMatchHeaderView extends StatelessWidget {
     );
   }
 
+  // Note: Ei widget ta use kora hoyni, but future e lagle use korte paro
   Widget _buildLiveIndicator() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
@@ -191,6 +189,7 @@ class WidgetMatchHeaderView extends StatelessWidget {
                     color: AppColors.white,
                   ),
                 ),
+                // Jodi match status (Live/Time) dekhate chao, _buildLiveIndicator() ekhane call korte paro
               ],
             ),
           ),
@@ -208,26 +207,26 @@ class WidgetMatchHeaderView extends StatelessWidget {
       child: Column(
         children: [
           Container(
-              width: 60.w,
-              height: 60.w,
+            width: 60.w,
+            height: 60.w,
+            decoration: BoxDecoration(
+              color: AppColors.white.withOpacity(0.2),
+              shape: BoxShape.circle,
+            ),
+            child: Container(
+              width: 48.w,
+              height: 48.w,
+              padding: EdgeInsets.all(12.w),
               decoration: BoxDecoration(
-                color: AppColors.white.withOpacity(0.2),
+                color: AppColors.greyE8.withOpacity(0.5),
                 shape: BoxShape.circle,
               ),
-              child: Container(
-                width: 48.w,
-                height: 48.w,
-                padding: EdgeInsets.all(12.w),
-                decoration: BoxDecoration(
-                  color: AppColors.greyE8.withOpacity(0.5),
-                  shape: BoxShape.circle,
-                ),
-                child: Image.asset(
-                  IconAssets
-                      .soccer_icon, // Keeping icon static for now, or pass as var
-                  fit: BoxFit.contain,
-                ),
-              )),
+              child: Image.asset(
+                IconAssets.soccer_icon, // Keeping icon static for now
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
           AppSpacing.h8,
           Text(
             teamName,
@@ -236,6 +235,8 @@ class WidgetMatchHeaderView extends StatelessWidget {
               color: AppColors.white,
             ),
             textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),
