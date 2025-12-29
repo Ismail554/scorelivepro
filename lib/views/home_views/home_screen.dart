@@ -10,8 +10,6 @@ import 'package:scorelivepro/widget/home/quick_action_card.dart';
 import 'package:scorelivepro/widget/home/section_header.dart';
 import 'package:scorelivepro/widget/home/sponsored_ad_card.dart';
 import 'package:scorelivepro/widget/mini_widget/mw_notification_bell.dart';
-import 'package:scorelivepro/views/home_views/live_mathches/live_match_details_screen.dart';
-import 'package:scorelivepro/views/home_views/live_mathches/lineups_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -111,21 +109,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         awayScore: 1,
                         timeInfo: "67'",
                         status: MatchStatus.live,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const LiveMatchDetailsScreen(
-                                leagueName: 'Premier League',
-                                homeTeamName: 'Manchester United',
-                                awayTeamName: 'Liverpool',
-                                score: '2-1',
-                                timeInfo: "67'",
-                                matchStatus: MatchStatus.live,
-                              ),
-                            ),
-                          );
-                        },
                       ),
                       MatchCard(
                         leagueName: 'La Liga',
@@ -136,19 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         timeInfo: "45+2'",
                         status: MatchStatus.halfTime,
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const LiveMatchDetailsScreen(
-                                leagueName: 'La Liga',
-                                homeTeamName: 'Real Madrid',
-                                awayTeamName: 'Barcelona',
-                                score: '1-1',
-                                timeInfo: "45+2'",
-                                matchStatus: MatchStatus.halfTime,
-                              ),
-                            ),
-                          );
+                          // TODO: Navigate to match details
                         },
                       ),
                       AppSpacing.h8,
@@ -167,17 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         timeInfo: 'Today, 18:30',
                         status: MatchStatus.upcoming,
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const HomeLineupsScreen(
-                                leagueName: 'Bundesliga',
-                                homeTeamName: 'Bayern Munich',
-                                awayTeamName: 'Borussia Dortmund',
-                                matchStatus: 'Upcoming',
-                              ),
-                            ),
-                          );
+                          // TODO: Navigate to match details
                         },
                       ),
                       MatchCard(
@@ -187,17 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         timeInfo: 'Today, 20:45',
                         status: MatchStatus.upcoming,
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const HomeLineupsScreen(
-                                leagueName: 'Ligue 1',
-                                homeTeamName: 'PSG',
-                                awayTeamName: 'Marseille',
-                                matchStatus: 'Upcoming',
-                              ),
-                            ),
-                          );
+                          // TODO: Navigate to match details
                         },
                       ),
                       AppSpacing.h8,

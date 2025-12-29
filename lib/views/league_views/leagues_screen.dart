@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/app_spacing.dart';
 import 'package:scorelivepro/core/app_strings.dart';
 import 'package:scorelivepro/core/font_manager.dart';
 import 'package:scorelivepro/utils/navigation_helper.dart';
+import 'package:scorelivepro/views/league_views/detailed_leagues_screen.dart';
 import 'package:scorelivepro/widget/leagues/widget_league_card.dart';
 import 'package:scorelivepro/widget/leagues/widget_premium_upgrade_card.dart';
 import 'package:scorelivepro/widget/mini_widget/mw_notification_bell.dart';
@@ -297,7 +299,11 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
                         iconLabel: league.iconLabel,
                         flagEmoji: league.flagEmoji,
                         onTap: () {
-                          // TODO: Navigate to league details
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      DetailedLeaguesScreen()));
                         },
                       );
                     },

@@ -8,20 +8,7 @@ import 'package:scorelivepro/widget/home/all_matches/widget_match_header_view.da
 import 'package:scorelivepro/widget/home/all_matches/widget_match_information.dart';
 
 class HomeLineupsScreen extends StatefulWidget {
-  final String? leagueName;
-  final String? homeTeamName;
-  final String? awayTeamName;
-  final String? score;
-  final String? matchStatus;
-
-  const HomeLineupsScreen({
-    super.key,
-    this.leagueName,
-    this.homeTeamName,
-    this.awayTeamName,
-    this.score,
-    this.matchStatus,
-  });
+  const HomeLineupsScreen({super.key});
 
   @override
   State<HomeLineupsScreen> createState() => _LineupsScreenState();
@@ -66,11 +53,11 @@ class _LineupsScreenState extends State<HomeLineupsScreen> {
           //Top Match Header Part
           WidgetMatchHeaderView(
             backgroundImage: ImageAssets.home_bg,
-            leagueName: widget.leagueName ?? 'Match Lineups',
-            matchStatus: widget.matchStatus ?? 'LIVE',
-            homeTeamName: widget.homeTeamName ?? 'Bangladesh',
-            awayTeamName: widget.awayTeamName ?? 'India',
-            score: widget.score ?? '3-2',
+            leagueName: 'Match Lineups',
+            matchStatus: 'LIVE',
+            homeTeamName: 'Bangladesh',
+            awayTeamName: 'India',
+            score: '3-2',
             onNotificationPressed: () {},
           ),
           //Lineups Body Part
