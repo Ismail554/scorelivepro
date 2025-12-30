@@ -43,48 +43,62 @@ class OnboardingBaseWidget extends StatelessWidget {
 
           // Content
           SafeArea(
-            child: Center(
-              child: Column(
-                children: [
-                  // Skip Button
-                  _buildSkipButton(),
+            child: SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: MediaQuery.of(context).size.height -
+                      MediaQuery.of(context).padding.top -
+                      MediaQuery.of(context).padding.bottom,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Top Section
+                    Column(
+                      children: [
+                        // Skip Button
+                        _buildSkipButton(),
 
-                  AppSpacing.h64,
+                        AppSpacing.h64,
 
-                  // Icon
-                  _buildIcon(),
+                        // Icon
+                        _buildIcon(),
 
-                  AppSpacing.h32,
+                        AppSpacing.h32,
 
-                  Padding(
-                    padding: const EdgeInsets.all(22.0),
-                    child: Container(
-                      width: double.maxFinite,
-                      height: 140.h,
-                      child: Column(
-                        children: [
-                          // Title
-                          _buildTitle(),
+                        // Title and Description
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 22.w),
+                          child: Column(
+                            children: [
+                              // Title
+                              _buildTitle(),
 
-                          AppSpacing.h16,
+                              AppSpacing.h16,
 
-                          // Description
-                          _buildDescription(),
-                        ],
-                      ),
+                              // Description
+                              _buildDescription(),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
 
-                  // AppSpacing.h32,
-                  // Pagination Dots
-                  _buildPaginationDots(),
-                  AppSpacing.h64,
+                    // Bottom Section
+                    Column(
+                      children: [
+                        // Pagination Dots
+                        _buildPaginationDots(),
+                        AppSpacing.h64,
 
-                  // Navigation Button
-                  _buildNavigationButton(),
+                        // Navigation Button
+                        _buildNavigationButton(),
 
-                  AppSpacing.h32,
-                ],
+                        AppSpacing.h32,
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -159,27 +173,20 @@ class OnboardingBaseWidget extends StatelessWidget {
 
   /// Title text
   Widget _buildTitle() {
-    return Padding(
-      padding: AppPadding.h24,
-      child: Text(
-        title,
-        textAlign: TextAlign.center,
-        style: FontManager.heading1(
-          fontSize: 28,
-          color: AppColors.white,
-        ).copyWith(
-          // Use copyWith to add or override properties on the existing style
-          shadows: [
-            Shadow(
-              // The color of the shadow
-              color: AppColors.black.withOpacity(0.9),
-              // The offset (x, y) of the shadow from the text
-              offset: Offset(6.0, 8.0),
-              // The blur radius of the shadow
-              blurRadius: 8.0,
-            ),
-          ],
-        ),
+    return Text(
+      title,
+      textAlign: TextAlign.center,
+      style: FontManager.heading1(
+        fontSize: 28,
+        color: AppColors.white,
+      ).copyWith(
+        shadows: [
+          Shadow(
+            color: AppColors.black.withOpacity(0.9),
+            offset: Offset(6.0, 8.0),
+            blurRadius: 8.0,
+          ),
+        ],
       ),
     );
   }
@@ -187,7 +194,7 @@ class OnboardingBaseWidget extends StatelessWidget {
   /// Description text
   Widget _buildDescription() {
     return Padding(
-      padding: AppPadding.h40,
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: Text(
         description,
         textAlign: TextAlign.center,
@@ -203,18 +210,19 @@ class OnboardingBaseWidget extends StatelessWidget {
   Widget _buildNavigationButton() {
     return Padding(
       padding: AppPadding.h24,
-      child: Expanded(
+      child: SizedBox(
+        width: double.infinity,
         child: ElevatedButton(
           onPressed: onNext,
-          // style: ElevatedButton.styleFrom(
-          //   backgroundColor: AppColors.primaryColor,
-          //   foregroundColor: AppColors.white,
-
-          //   shape: RoundedRectangleBorder(
-          //     borderRadius: AppPadding.c12,
-          //   ),
-          //   elevation: 0,
-          // ),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.primaryColor,
+            foregroundColor: AppColors.white,
+            padding: EdgeInsets.symmetric(vertical: 16.h),
+            shape: RoundedRectangleBorder(
+              borderRadius: AppPadding.c12,
+            ),
+            elevation: 0,
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

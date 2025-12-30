@@ -5,6 +5,7 @@ import 'package:scorelivepro/core/app_spacing.dart';
 import 'package:scorelivepro/core/app_strings.dart';
 import 'package:scorelivepro/core/assets_manager.dart';
 import 'package:scorelivepro/core/font_manager.dart';
+import 'package:scorelivepro/views/home_views/live_mathches/live_match_details_screen.dart';
 import 'package:scorelivepro/widget/home/match_card.dart';
 import 'package:scorelivepro/widget/home/quick_action_card.dart';
 import 'package:scorelivepro/widget/home/section_header.dart';
@@ -98,7 +99,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       SectionHeader(
                         title: AppStrings.liveMatches,
                         onSeeAllTap: () {
-                          // TODO: Navigate to live matches screen
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      LiveMatchDetailsScreen()));
                         },
                       ),
                       MatchCard(
