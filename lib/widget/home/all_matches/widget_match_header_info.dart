@@ -10,7 +10,7 @@ class MatchHeaderInfo extends StatelessWidget {
   final String homeTeam;
   final String awayTeam;
   final String score;
-  final String status; // "FT", "LIVE", "HT"
+  final String? status; 
   final String dateTime;
   final String venue;
   final Color statusColor;
@@ -20,7 +20,7 @@ class MatchHeaderInfo extends StatelessWidget {
     required this.homeTeam,
     required this.awayTeam,
     required this.score,
-    required this.status,
+    this.status, // Not required
     required this.dateTime,
     required this.venue,
     this.statusColor = AppColors.finishedMatch,
@@ -34,23 +34,25 @@ class MatchHeaderInfo extends StatelessWidget {
         children: [
           SizedBox(height: 8.h),
 
-          // Status Badge
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-            decoration: BoxDecoration(
-              color: statusColor,
-              borderRadius: BorderRadius.circular(20.r),
-            ),
-            child: Text(
-              status,
-              style: FontManager.labelMedium(
-                fontSize: 12,
-                color: AppColors.white,
+          // --- Updated Section: Conditional Status Badge ---
+          if (status != null) ...[
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+              decoration: BoxDecoration(
+                color: statusColor,
+                borderRadius: BorderRadius.circular(20.r),
+              ),
+              child: Text(
+                status!, // Using ! because we checked for null above
+                style: FontManager.labelMedium(
+                  fontSize: 12,
+                  color: AppColors.white,
+                ),
               ),
             ),
-          ),
-
-          SizedBox(height: 16.h),
+            SizedBox(height: 16.h),
+          ],
+          // ------------------------------------------------
 
           // Teams and Score
           _buildScoreboard(),
@@ -85,18 +87,14 @@ class MatchHeaderInfo extends StatelessWidget {
     );
   }
 
+  // ... rest of your _buildScoreboard and _buildTeamInfo methods remain the same
   Widget _buildScoreboard() {
     return Padding(
       padding: AppPadding.h24,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Home Team
-          Expanded(
-            child: _buildTeamInfo(homeTeam),
-          ),
-
-          // Score
+          Expanded(child: _buildTeamInfo(homeTeam)),
           Expanded(
             child: Text(
               score,
@@ -107,11 +105,7 @@ class MatchHeaderInfo extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ),
-
-          // Away Team
-          Expanded(
-            child: _buildTeamInfo(awayTeam),
-          ),
+          Expanded(child: _buildTeamInfo(awayTeam)),
         ],
       ),
     );
@@ -121,7 +115,6 @@ class MatchHeaderInfo extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        // Team Logo
         Container(
           width: 60.w,
           height: 60.w,
@@ -158,4 +151,3 @@ class MatchHeaderInfo extends StatelessWidget {
     );
   }
 }
-
