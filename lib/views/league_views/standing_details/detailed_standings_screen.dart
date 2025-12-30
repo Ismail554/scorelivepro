@@ -82,8 +82,9 @@ class _DetailedStandingsScreenState extends State<DetailedStandingsScreen>
             Expanded(
               flex: 0,
               child: Stack(
+                alignment: Alignment.bottomCenter, // Aligns tabs to bottom
                 children: [
-                  // Team Header Card
+                  // Team Header Card (Background + Content)
                   _buildTeamHeader(),
 
                   // Transparent Tab Bar (overlaid at bottom)
@@ -123,115 +124,107 @@ class _DetailedStandingsScreenState extends State<DetailedStandingsScreen>
     );
   }
 
-  /// Header with Back Button, League Name, and Notification Bell
-  Widget _buildHeader() {
-    return Positioned(
-      top: 0,
-      left: 0,
-      right: 0,
-      child: SafeArea(
-        child: Padding(
-          padding: AppPadding.h16,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Back Button
-              IconButton(
-                icon: const Icon(
-                  Icons.arrow_back,
-                  color: AppColors.white,
-                ),
-                onPressed: () => Navigator.pop(context),
-              ),
-
-              // League Name Badge
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryColor.withOpacity(0.8),
-                  borderRadius: BorderRadius.circular(20.r),
-                ),
-                child: Text(
-                  "Premier League",
-                  style: FontManager.labelMedium(
-                    fontSize: 12,
-                    color: AppColors.white,
-                  ),
-                ),
-              ),
-
-              // Notification Bell
-              NotificationBell(
-                hasNotification: true,
-                onTap: () {},
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// Match Overview - Teams, Score, Date, Venue
-  Widget _buildMatchOverview() {
-    return Positioned(
-      bottom: 0,
-      top: 88,
-      left: 0,
-      right: 0,
-      child: MatchHeaderInfo(
-        homeTeam: widget.teamName,
-        awayTeam: "Liverpool",
-        score: "2 - 1",
-        dateTime: "Sunday, December 7, 2025 - 16:30",
-        venue: "Etihad Stadium, Manchester",
-        statusColor: AppColors.finishedMatch,
-      ),
-    );
-  }
-
-  /// Team Header Section - Match Style Header
+  /// 🛠️ Fixed: Replaced Positioned with a Column layout
   Widget _buildTeamHeader() {
     return SizedBox(
-      height: 260.h,
+      height: 280.h, // Slightly increased height for better spacing
       width: double.maxFinite,
       child: Stack(
+        fit: StackFit.expand,
         children: [
-          // Stadium Background Image
-          Positioned.fill(
-            child: Image.asset(
-              ImageAssets.home_bg,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return Container(color: AppColors.darkGrey);
-              },
-            ),
+          // 1. Stadium Background Image
+          Image.asset(
+            ImageAssets.home_bg,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return Container(color: AppColors.darkGrey);
+            },
           ),
 
-          // Dark Overlay
-          Positioned.fill(
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.black.withOpacity(0.4),
-                    Colors.black.withOpacity(0.2),
-                  ],
-                ),
+          // 2. Dark Overlay
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black.withOpacity(0.6),
+                  Colors.black.withOpacity(0.4),
+                  Colors.black.withOpacity(
+                      0.7), // Darker at bottom for TabBar readability
+                ],
               ),
             ),
           ),
 
-          // Header (Back Button, League Name, Notification Bell)
-          _buildHeader(),
-          AppSpacing.h40,
-
-          // Match Overview (Teams, Score, Date, Venue)
-          _buildMatchOverview(),
+          // 3. Content Column (Header + Match Info)
+          SafeArea(
+            bottom: false,
+            child: Column(
+              children: [
+                _buildHeader(), // Top Bar
+                const Spacer(), // Pushes content apart dynamically
+                _buildMatchOverview(), // Match Score Info
+                SizedBox(height: 30.h), // Space reserved for the TabBar
+              ],
+            ),
+          ),
         ],
       ),
+    );
+  }
+
+  /// 🛠️ Fixed: Removed Positioned widget
+  Widget _buildHeader() {
+    return Padding(
+      padding: AppPadding.h16.copyWith(top: 10.h),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Back Button
+          IconButton(
+            icon: const Icon(
+              Icons.arrow_back,
+              color: AppColors.white,
+            ),
+            onPressed: () => Navigator.pop(context),
+          ),
+
+          // League Name Badge
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+            decoration: BoxDecoration(
+              color: AppColors.primaryColor.withOpacity(0.8),
+              borderRadius: BorderRadius.circular(20.r),
+            ),
+            child: Text(
+              "Premier League",
+              style: FontManager.labelMedium(
+                fontSize: 12,
+                color: AppColors.white,
+              ),
+            ),
+          ),
+
+          // Notification Bell
+          NotificationBell(
+            hasNotification: true,
+            onTap: () {},
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 🛠️ Fixed: Removed Positioned widget
+  Widget _buildMatchOverview() {
+    return MatchHeaderInfo(
+      homeTeam: widget.teamName,
+      awayTeam: "Liverpool",
+      score: "2 - 1",
+      dateTime: "Sunday, Dec 7, 2025 - 16:30",
+      venue: "Etihad Stadium",
+      statusColor: AppColors.finishedMatch,
     );
   }
 

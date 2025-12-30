@@ -33,6 +33,13 @@ dependencies:
   easy_localization: ^3.0.8
   timezone: ^0.10.1
 
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/app_logo.png"
+  min_sdk_android: 21 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

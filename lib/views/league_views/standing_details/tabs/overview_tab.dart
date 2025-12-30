@@ -6,8 +6,6 @@ import 'package:scorelivepro/core/app_spacing.dart';
 import 'package:scorelivepro/core/font_manager.dart';
 import 'package:scorelivepro/views/league_views/standing_details/models/team_standings_data.dart';
 
-/// Overview Tab Widget
-/// Displays team overview, stats cards, and recent matches
 class OverviewTab extends StatelessWidget {
   final TeamStandingsData teamData;
 
@@ -23,209 +21,191 @@ class OverviewTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AppSpacing.h12,
-
-          // Team Overview Title
-          Text(
-            "Team Overview",
-            style: FontManager.heading3(
-              fontSize: 20,
-              color: AppColors.textPrimary,
-            ),
-          ),
-
           AppSpacing.h16,
-
-          // Summary Text
-          Text(
-            "${teamData.teamName} is currently ranked #${teamData.rank} in the Premier League with ${teamData.points} points. The team has played ${teamData.played} matches, winning ${teamData.wins}, drawing ${teamData.draws}, and losing ${teamData.losses}. They have scored ${teamData.goalsFor} goals and conceded ${teamData.goalsAgainst}, with a goal difference of ${teamData.goalDifference > 0 ? '+' : ''}${teamData.goalDifference}.",
-            style: FontManager.bodyMedium(
-              fontSize: 14,
-              color: AppColors.textSecondary,
-            ),
-          ),
+          // 1. Orange Match Summary Card
+          _buildMatchSummaryCard(),
 
           AppSpacing.h24,
 
-          // Summary Stats Cards
+          // 2. Match Events Section
+          Text(
+            "Match Events",
+            style: FontManager.heading3(
+              fontSize: 16,
+              color: AppColors.textPrimary, // Or Colors.black87
+            ),
+          ),
+          AppSpacing.h12,
+
+          // Events List
+          _buildEventCard(
+            time: "12'",
+            icon: Icons.sports_soccer,
+            iconColor: Colors.black87,
+            title: "Erling Haaland",
+            subtitle: "Assist: Kevin De Bruyne",
+            description: "Right footed shot from the centre of the box",
+          ),
+          AppSpacing.h12,
+          _buildEventCard(
+            time: "23'",
+            icon: Icons.square, // Yellow card look
+            iconColor: Colors.amber,
+            title: "Thomas Partey",
+            subtitle: "Foul on Bernardo Silva",
+            description: "", // No description for this one
+          ),
+
+          // Extra space at bottom
+          AppSpacing.h40,
+        ],
+      ),
+    );
+  }
+
+  /// 🟧 Section 1: The Orange Summary Card
+  Widget _buildMatchSummaryCard() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 16.w),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFF6EC), // Light Orange/Cream BG
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: const Color(0xFFFFE0B2), width: 0.5),
+      ),
+      child: Column(
+        children: [
+          // Header: Icon + "Match Summary"
           Row(
             children: [
-              Expanded(
-                child: _SummaryStatCard(
-                  value: "${teamData.wins}",
-                  label: "Wins",
-                  color: AppColors.success,
+              Container(
+                padding: EdgeInsets.all(6.w),
+                decoration: const BoxDecoration(
+                  color: Color(0xFFFF7D54), // Dark Orange Icon BG
+                  shape: BoxShape.circle,
                 ),
+                child:
+                    const Icon(Icons.assignment, color: Colors.white, size: 16),
               ),
               AppSpacing.w12,
-              Expanded(
-                child: _SummaryStatCard(
-                  value: "${teamData.draws}",
-                  label: "Draws",
-                  color: AppColors.warning,
-                ),
-              ),
-              AppSpacing.w12,
-              Expanded(
-                child: _SummaryStatCard(
-                  value: "${teamData.losses}",
-                  label: "Losses",
-                  color: AppColors.error,
+              Text(
+                "Match Summary",
+                style: FontManager.bodyMedium(
+                  fontSize: 14,
+                  color: const Color(0xFFFF7D54),
                 ),
               ),
             ],
           ),
 
-          AppSpacing.h24,
-
-          // Recent Matches Section
-          Text(
-            "Recent Matches",
-            style: FontManager.heading3(
-              fontSize: 18,
-              color: AppColors.textPrimary,
-            ),
-          ),
-
+          AppSpacing.h16,
+          const Divider(color: Color(0xFFFFE0B2), thickness: 0.5),
           AppSpacing.h16,
 
-          // Recent Matches List
-          _RecentMatchItem(
-            homeTeam: "Manchester City",
-            awayTeam: "Arsenal",
-            homeScore: "2",
-            awayScore: "2",
-            date: "Yesterday",
-          ),
-          AppSpacing.h12,
-          _RecentMatchItem(
-            homeTeam: "Liverpool",
-            awayTeam: teamData.teamName,
-            homeScore: "1",
-            awayScore: "3",
-            date: "3 days ago",
-          ),
-          AppSpacing.h12,
-          _RecentMatchItem(
-            homeTeam: teamData.teamName,
-            awayTeam: "Chelsea",
-            homeScore: "2",
-            awayScore: "0",
-            date: "5 days ago",
-          ),
-
-          AppSpacing.h24,
-        ],
-      ),
-    );
-  }
-}
-
-/// Summary Stat Card Widget
-class _SummaryStatCard extends StatelessWidget {
-  final String value;
-  final String label;
-  final Color color;
-
-  const _SummaryStatCard({
-    required this.value,
-    required this.label,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(
-          color: color.withOpacity(0.3),
-          width: 1.w,
-        ),
-      ),
-      child: Column(
-        children: [
-          Text(
-            value,
-            style: FontManager.heading2(
-              fontSize: 24,
-              color: color,
-            ),
-          ),
-          AppSpacing.h4,
-          Text(
-            label,
-            style: FontManager.bodySmall(
-              fontSize: 12,
-              color: AppColors.textSecondary,
-            ),
+          // Stats Row: Goals | Possession | Goals
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildSingleStat("2", "Home Goals"),
+              _buildSingleStat("58%", "Possession"),
+              _buildSingleStat("1", "Away Goals"),
+            ],
           ),
         ],
       ),
     );
   }
-}
 
-/// Recent Match Item Widget
-class _RecentMatchItem extends StatelessWidget {
-  final String homeTeam;
-  final String awayTeam;
-  final String homeScore;
-  final String awayScore;
-  final String date;
+  Widget _buildSingleStat(String value, String label) {
+    return Column(
+      children: [
+        Text(
+          value,
+          style: FontManager.heading2(
+            fontSize: 22,
+            color: const Color(0xFF1A1A1A),
+          ),
+        ),
+        SizedBox(height: 4.h),
+        Text(
+          label,
+          style: FontManager.bodySmall(
+            fontSize: 12,
+            color: Colors.grey.shade600,
+          ),
+        ),
+      ],
+    );
+  }
 
-  const _RecentMatchItem({
-    required this.homeTeam,
-    required this.awayTeam,
-    required this.homeScore,
-    required this.awayScore,
-    required this.date,
-  });
-
-  @override
-  Widget build(BuildContext context) {
+  /// ⬜ Section 2: The Event Card (Grey Box)
+  Widget _buildEventCard({
+    required String time,
+    required IconData icon,
+    required Color iconColor,
+    required String title,
+    required String subtitle,
+    required String description,
+  }) {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: const Color(0xFFF3F4F8), // Light Grey BG
         borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(
-          color: Colors.grey.shade300,
-          width: 1.w,
-        ),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: Text(
-              "$homeTeam vs $awayTeam",
-              style: FontManager.bodyMedium(
-                fontSize: 14,
-                color: AppColors.textPrimary,
+          // Left Side: Icon & Time
+          Row(
+            children: [
+              Icon(icon, size: 18, color: iconColor),
+              SizedBox(width: 8.w),
+              Text(
+                time,
+                style: FontManager.bodyMedium(
+                  fontSize: 14,
+                  color: Colors.grey.shade700,
+                ),
               ),
-            ),
+            ],
           ),
-          Text(
-            "$homeScore-$awayScore",
-            style: FontManager.heading4(
-              fontSize: 16,
-              color: AppColors.textPrimary,
-            ),
-          ),
-          AppSpacing.w12,
-          Text(
-            date,
-            style: FontManager.bodySmall(
-              fontSize: 12,
-              color: AppColors.textSecondary,
-            ),
+
+          // Spacer to push text to the right
+          const Spacer(),
+
+          // Right Side: Player Info (Right Aligned)
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                title,
+                style: FontManager.heading4(
+                  fontSize: 14,
+                  color: const Color(0xFF1A1A1A),
+                ),
+              ),
+              SizedBox(height: 4.h),
+              Text(
+                subtitle,
+                style: FontManager.bodySmall(
+                  fontSize: 12,
+                  color: Colors.grey.shade600,
+                ),
+              ),
+              if (description.isNotEmpty) ...[
+                SizedBox(height: 6.h),
+                Text(
+                  description,
+                  style: FontManager.bodySmall(
+                    fontSize: 11,
+                    color: Colors.grey.shade500,
+                  ),
+                ),
+              ],
+            ],
           ),
         ],
       ),
     );
   }
 }
-
