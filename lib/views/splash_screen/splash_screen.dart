@@ -19,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void _navigateToOnboarding() {
-    Timer(const Duration(seconds: 4), () {
+    Timer(const Duration(seconds: 2), () {
       if (mounted) {
         OnboardingController.navigateToOnboarding(context);
       }
