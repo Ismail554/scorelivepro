@@ -33,6 +33,7 @@ dependencies:
   easy_localization: ^3.0.8
   timezone: ^0.10.1
   dio: ^5.9.0
+  socket_io_client: ^3.1.4
 
 
 flutter_launcher_icons:
