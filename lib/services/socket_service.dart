@@ -27,7 +27,8 @@ class SocketService {
 
     // Create new socket connection with proper auth format
     socket = IO.io(
-      baseUrl,
+    "wss://api.scorelivepro.it/ws/live/",
+      // baseUrl,
       // "https://marvella-shakier-leon.ngrok-free.dev/socket.io/",
       IO.OptionBuilder()
           .setPath('/socket.io/')
