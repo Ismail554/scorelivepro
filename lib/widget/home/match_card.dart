@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/app_spacing.dart';
 import 'package:scorelivepro/core/font_manager.dart';
-import 'package:scorelivepro/views/home_views/live_mathches/live_match_details_screen.dart';
 
 /// Match status enum
 enum MatchStatus {
@@ -59,14 +58,8 @@ class MatchCard extends StatelessWidget {
 
     return GestureDetector(
       // FIX IS HERE: Check if onTap is provided, otherwise use default navigation
-      onTap: onTap ??
-          () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const LiveMatchDetailsScreen()),
-            );
-          },
+      // FIX IS HERE: Check if onTap is provided, otherwise use default navigation
+      onTap: onTap,
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
         padding: EdgeInsets.all(16.w),

@@ -10,6 +10,9 @@ import 'package:scorelivepro/widget/home/match_card.dart';
 import 'package:scorelivepro/widget/home/quick_action_card.dart';
 import 'package:scorelivepro/widget/home/section_header.dart';
 import 'package:scorelivepro/widget/home/sponsored_ad_card.dart';
+import 'package:scorelivepro/services/socket_service.dart';
+import 'package:scorelivepro/models/live_ws_model.dart';
+import 'package:scorelivepro/utils/match_status_helper.dart';
 import 'package:scorelivepro/widget/mini_widget/mw_notification_bell.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -99,32 +102,61 @@ class _HomeScreenState extends State<HomeScreen> {
                       SectionHeader(
                         title: AppStrings.liveMatches,
                         onSeeAllTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      LiveMatchDetailsScreen()));
+                          // Navigate to LiveMatchesScreen tab 0 (Live)
+                          // Assuming we can switch tab from here via MainNavigation or just push the screen.
+                          // For now, let's just use the MainNavigation to go to Matches tab.
+                          // Ideally this would switch the BottomNavBar index.
+                          // Since we don't have direct access here, we might need a callback or Provider.
+                          // But for now, let's just print or do nothing as passing a dummy match isn't right.
+                          // Or better, navigate to the MainNavigation with index 0.
                         },
                       ),
-                      MatchCard(
-                        leagueName: 'Premier League',
-                        homeTeam: 'Manchester United',
-                        awayTeam: 'Liverpool',
-                        homeScore: 2,
-                        awayScore: 1,
-                        timeInfo: "67'",
-                        status: MatchStatus.live,
-                      ),
-                      MatchCard(
-                        leagueName: 'La Liga',
-                        homeTeam: 'Real Madrid',
-                        awayTeam: 'Barcelona',
-                        homeScore: 1,
-                        awayScore: 1,
-                        timeInfo: "45+2'",
-                        status: MatchStatus.halfTime,
-                        onTap: () {
-                          // TODO: Navigate to match details
+                      ValueListenableBuilder<LiveScoreModel?>(
+                        valueListenable:
+                            SocketService.instance.liveScoreNotifier,
+                        builder: (context, liveScore, child) {
+                          final matches = liveScore?.data ?? [];
+
+                          if (matches.isEmpty) {
+                            return Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16.w, vertical: 8.h),
+                              child: Text(
+                                "No live matches at the moment",
+                                style: FontManager.bodyMedium(
+                                    color: AppColors.textSecondary),
+                              ),
+                            );
+                          }
+
+                          // Show only top 2 matches
+                          final displayMatches = matches.take(2).toList();
+
+                          return Column(
+                            children: displayMatches.map((match) {
+                              return MatchCard(
+                                leagueName:
+                                    match.league?.name ?? "Unknown League",
+                                homeTeam: match.homeTeam?.name ?? "Home",
+                                awayTeam: match.awayTeam?.name ?? "Away",
+                                homeScore: match.goals?.home,
+                                awayScore: match.goals?.away,
+                                timeInfo: "${match.elapsed ?? 0}'",
+                                status: MatchStatusHelper.getMatchStatus(
+                                    match.statusShort),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          LiveMatchDetailsScreen(
+                                              matchData: match),
+                                    ),
+                                  );
+                                },
+                              );
+                            }).toList(),
+                          );
                         },
                       ),
                       AppSpacing.h8,

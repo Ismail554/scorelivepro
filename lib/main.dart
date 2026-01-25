@@ -20,9 +20,7 @@ void main() async {
       print(e);
       savedLanguage = null;
     }
-
     Locale startLocale;
-
     // Map saved language to correct locale matching translation files
     switch (savedLanguage) {
       case "English":
@@ -55,7 +53,6 @@ void main() async {
       default:
         startLocale = const Locale('en', 'US');
     }
-
     runApp(
       EasyLocalization(
         child: const ScoreLivePro(),
@@ -79,7 +76,6 @@ void main() async {
     // Log the error for debugging
     debugPrint('EasyLocalization initialization error: $e');
     debugPrint('Stack trace: $stackTrace');
-
     // Fallback if EasyLocalization fails - run app without localization
     runApp(
       MaterialApp(

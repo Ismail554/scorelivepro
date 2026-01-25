@@ -8,14 +8,14 @@ class WidgetMatchInformation extends StatelessWidget {
   final String title;
   final String stadium;
   final String referee;
-  final String attendance;
+
 
   const WidgetMatchInformation({
     super.key,
     this.title = "Match Information", // Default title set kore dilam
     required this.stadium,
     required this.referee,
-    required this.attendance,
+   
   });
 
   @override
@@ -52,15 +52,10 @@ class WidgetMatchInformation extends StatelessWidget {
             ),
           ),
           SizedBox(height: 16.h),
-          
           // --- Data Rows (Input theke asha data boshiye dilam) ---
           _buildInfoRow("Stadium:", stadium),
           SizedBox(height: 12.h),
-          
           _buildInfoRow("Referee:", referee),
-          SizedBox(height: 12.h),
-          
-          _buildInfoRow("Attendance:", attendance),
         ],
       ),
     );

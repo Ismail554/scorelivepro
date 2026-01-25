@@ -6,7 +6,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:scorelivepro/config/storage/secure_storage_helper.dart';
 
-
 enum Methods { post, get, put, patch, delete }
 
 // Simple Either implementation
@@ -79,23 +78,18 @@ class DioManager {
 
           if (!skipAuth) {
             final token = await _getValidAccessToken();
-            if (token == null) {
+            if (token != null && token.isNotEmpty) {
+              options.headers['Authorization'] = 'Bearer $token';
               log(
-                '❌ No access token available for ${options.uri}',
+                '✅ Added Bearer token to request: ${options.uri}',
                 name: 'TOKEN',
               );
-              return handler.reject(
-                DioException(
-                  requestOptions: options,
-                  error: 'Unable to generate access token',
-                ),
+            } else {
+              log(
+                '⚠️ No access token available, proceeding without auth: ${options.uri}',
+                name: 'TOKEN',
               );
             }
-            options.headers['Authorization'] = 'Bearer $token';
-            log(
-              '✅ Added Bearer token to request: ${options.uri}',
-              name: 'TOKEN',
-            );
           }
 
           // Log full request details
@@ -290,43 +284,43 @@ class DioManager {
     }
 
 //Generating new access token
-  //   try {
-  //     log('🔄 Generating new access token...', name: 'TOKEN');
+    //   try {
+    //     log('🔄 Generating new access token...', name: 'TOKEN');
 
-  //     final response = await _dio.post(
-  //       ApiEndPoint.refreshToken,
-  //       data: {'refresh': refreshToken},
-  //       options: Options(extra: {'skipAuth': true}),
-  //     );
+    //     final response = await _dio.post(
+    //       ApiEndPoint.refreshToken,
+    //       data: {'refresh': refreshToken},
+    //       options: Options(extra: {'skipAuth': true}),
+    //     );
 
-  //     final parsed = await compute(_processJsonInIsolate, response.data);
-  //     final newAccess = parsed['access'];
+    //     final parsed = await compute(_processJsonInIsolate, response.data);
+    //     final newAccess = parsed['access'];
 
-  //     if (newAccess is String && newAccess.isNotEmpty) {
-  //       _cachedAccessToken = newAccess;
-  //       _tokenGeneratedAt = DateTime.now();
-  //       log('✅ Token refreshed successfully', name: 'TOKEN');
-  //       completer.complete(newAccess);
-  //       _refreshLock = null;
-  //       return newAccess;
-  //     }
+    //     if (newAccess is String && newAccess.isNotEmpty) {
+    //       _cachedAccessToken = newAccess;
+    //       _tokenGeneratedAt = DateTime.now();
+    //       log('✅ Token refreshed successfully', name: 'TOKEN');
+    //       completer.complete(newAccess);
+    //       _refreshLock = null;
+    //       return newAccess;
+    //     }
 
-  //     log('❌ Invalid refresh response', name: 'TOKEN');
-  //     _refreshLock = null;
-  //     completer.completeError(
-  //       "Session expired. Please login again.",
-  //       StackTrace.current,
-  //     );
-  //     return null;
-  //   } catch (e) {
-  //     log('❌ Token refresh failed: $e', name: 'TOKEN');
-  //     _refreshLock = null;
-  //     completer.completeError(
-  //       "Session expired. Please login again.",
-  //       StackTrace.current,
-  //     );
-  //     return null;
-  //   }
+    //     log('❌ Invalid refresh response', name: 'TOKEN');
+    //     _refreshLock = null;
+    //     completer.completeError(
+    //       "Session expired. Please login again.",
+    //       StackTrace.current,
+    //     );
+    //     return null;
+    //   } catch (e) {
+    //     log('❌ Token refresh failed: $e', name: 'TOKEN');
+    //     _refreshLock = null;
+    //     completer.completeError(
+    //       "Session expired. Please login again.",
+    //       StackTrace.current,
+    //     );
+    //     return null;
+    //   }
   }
 
   static E apiRequest({
@@ -470,8 +464,7 @@ class DioManager {
 
       if (data is Map<String, dynamic>) {
         // Try multiple common error message fields
-        String? msg =
-            data['error'] ??
+        String? msg = data['error'] ??
             data['detail'] ??
             data['message'] ??
             data['msg'] ??

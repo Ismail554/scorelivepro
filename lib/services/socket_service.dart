@@ -1,11 +1,10 @@
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:scorelivepro/models/live_ws_model.dart';
-import 'package:scorelivepro/services/api_service.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 class SocketService {
-  IO.Socket? socket;
-  String? _token;
+  WebSocketChannel? _channel;
   ValueNotifier<LiveScoreModel?> liveScoreNotifier = ValueNotifier(null);
 
   // Singleton
@@ -13,151 +12,68 @@ class SocketService {
   SocketService._internal();
   factory SocketService() => instance;
 
-  /// 🔹 Connect socket with token
+  /// 🔹 Connect to WebSocket
   void connectSocket(String token) {
-    _token = token;
-    print("🔹 Connecting Socket with token: $token");
+    // Note: token is accepted but ignored if not needed for URL params
+    // If the server expected headers, we'd add them here.
+    // Based on requirements, we are connecting without auth headers for now.
 
-    // Disconnect previous socket if exists
-    if (socket != null) {
-      socket!.disconnect();
-      socket = null;
-      print("🔴 Previous socket disconnected");
-    }
+    print("🔹 Connecting to WebSocket...");
 
-    // Extract base URL and convert to WebSocket URL
-    final baseUrl = ApiEndPoint.baseUrl;
+    // Disconnect previous connection if exists
+    disconnect();
 
-    // Create new socket connection with proper auth format
-    socket = IO.io(
-      "wss://api.scorelivepro.it/ws/live/",
-      // baseUrl,
-      // "https://marvella-shakier-leon.ngrok-free.dev/socket.io/",
-      IO.OptionBuilder()
-          .setPath('/socket.io/')
-          .setTransports(['websocket'])
-          .enableForceNew()
-          .enableAutoConnect()
-          .enableReconnection()
-          .setReconnectionAttempts(1000)
-          .setReconnectionDelay(1000)
-          .setAuth({
-            'token': 'Bearer $_token',
-          }) // Auth format as per backend requirements
-          .setExtraHeaders({
-            "Authorization": "Bearer $_token",
-          }) // Also in headers
-          .build(),
-    );
+    try {
+      final uri = Uri.parse("wss://api.scorelivepro.it/ws/live/");
+      _channel = WebSocketChannel.connect(uri);
+      print("🟢 WebSocket Connection Initiated");
 
-    // Socket events
-    socket!.onConnect((_) {
-      print("🟢 Socket Connected");
-      _sendToken();
-    });
-
-    /// 🔹 Stop listening to a server event
-    socket!.onReconnect((attempt) {
-      print("🔄 Socket Reconnected → Attempt: $attempt");
-      _sendToken();
-    });
-
-    socket!.onDisconnect((reason) {
-      print("🔴 Socket Disconnected: $reason");
-    });
-
-    socket!.onConnectError((error) {
-      print("⚠️ Socket Connect Error: $error");
-    });
-
-    socket!.onError((error) {
-      print("⚠️ Socket Error: $error");
-    });
-
-    // Start listening to live matches immediately
-    listenToLiveMatches();
-  }
-
-  /// 🔹 Send token to server
-  void _sendToken() {
-    if (_token != null && socket != null && socket!.connected) {
-      socket!.emit("update_token", {"token": _token});
-      print("📡 Token sent: $_token");
+      // Listen to the stream
+      _channel!.stream.listen(
+        (message) {
+          _handleMessage(message);
+        },
+        onError: (error) {
+          print("⚠️ WebSocket Error: $error");
+        },
+        onDone: () {
+          print("🔴 WebSocket Disconnected");
+        },
+      );
+    } catch (e) {
+      print("⚠️ WebSocket Connection Failed: $e");
     }
   }
 
-  /// 🔹 Stop listening to a server event
-  void offEvent(String eventName) {
-    if (socket != null) {
-      socket!.off(eventName);
-      print("📌 Stopped listening to event: $eventName");
-    }
-  }
+  void _handleMessage(dynamic message) {
+    try {
+      if (message is String) {
+        final data = jsonDecode(message);
+        print("📌 WebSocket Message: $data");
 
-  /// 🔹 Update token at runtime
-  void updateToken(String newToken) {
-    _token = newToken;
-    print("🔄 Token updated: $newToken");
-    _sendToken();
-  }
-
-  void sendMessageWithAck(
-    String message,
-    String toUserId,
-    Function(bool) onResult,
-  ) {
-    if (socket != null && socket!.connected) {
-      try {
-        final data = {"message": message, "to_user": toUserId};
-        socket!.emitWithAck(
-          "send_message",
-          data,
-          ack: (ackData) {
-            if (ackData != null && ackData['status'] == 'ok') {
-              onResult(true);
-            } else {
-              onResult(false);
-            }
-          },
-        );
-      } catch (e) {
-        onResult(false);
-      }
-    } else {
-      onResult(false);
-    }
-  }
-
-  /// 🔹 Listen to live matches
-  void listenToLiveMatches() {
-    if (socket != null) {
-      socket!.on('live_data', (data) {
-        try {
-          print("📌 Live Match Data Received: $data");
-          if (data != null && data is Map<String, dynamic>) {
+        // Parse specific event types
+        if (data is Map<String, dynamic>) {
+          // Check for "live_score_update" or generic structure
+          if (data['type'] == 'live_score_update' || data['data'] != null) {
+            // The model expects the whole JSON or just the data part?
+            // Looking at LiveScoreModel.fromJson: it expects 'type' and 'data'.
+            // The screenshot shows {"type": "live_score_update", "data": [...]}
+            // So we pass the whole map.
             liveScoreNotifier.value = LiveScoreModel.fromJson(data);
           }
-        } catch (e) {
-          print("⚠️ Error parsing live match data: $e");
         }
-      });
-      print("📌 Listening to event: live_data");
-    }
-  }
-
-  /// 🔹 Listen to server events
-  void onEvent(String eventName, Function(dynamic) callback) {
-    if (socket != null) {
-      socket!.on(eventName, callback);
-      print("📌 Listening to event: $eventName");
+      }
+    } catch (e) {
+      print("⚠️ Error parsing WebSocket message: $e");
     }
   }
 
   /// 🔌 Disconnect socket
   void disconnect() {
-    if (socket != null && socket!.connected) {
-      socket!.disconnect();
-      print("🛑 Socket manually disconnected");
+    if (_channel != null) {
+      _channel!.sink.close();
+      _channel = null;
+      print("🛑 WebSocket manually closed");
     }
   }
 }

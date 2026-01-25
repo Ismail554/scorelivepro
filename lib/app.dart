@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/app_padding.dart';
-import 'package:scorelivepro/views/home_views/live_mathches/live_match_details_screen.dart';
 import 'package:scorelivepro/views/splash_screen/splash_screen.dart';
 
 class ScoreLivePro extends StatelessWidget {

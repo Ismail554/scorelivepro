@@ -94,7 +94,6 @@ class _LineupsScreenState extends State<HomeLineupsScreen> {
                     WidgetMatchInformation(
                       stadium: "Etihad Stadium",
                       referee: "Farhan Shahriar",
-                      attendance: "53,400",
                     ),
 
                     AppSpacing.h16,
