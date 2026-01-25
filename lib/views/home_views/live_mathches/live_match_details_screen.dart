@@ -14,6 +14,8 @@ import 'package:scorelivepro/widget/navigation/custom_bottom_nav_bar.dart';
 import 'package:scorelivepro/widget/navigation/transparent_tab_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
+import '../../../services/match_service.dart';
+
 import 'package:scorelivepro/models/live_ws_model.dart' hide Player;
 
 class LiveMatchDetailsScreen extends StatefulWidget {
@@ -27,11 +29,44 @@ class LiveMatchDetailsScreen extends StatefulWidget {
 class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  List<Lineup>? _lineups;
+  List<Statistic>? _statistics;
+  bool _isLoadingDetails = false;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    _lineups = widget.matchData.lineups;
+    _statistics = widget.matchData.statistics;
+    _fetchMatchDetails();
+  }
+
+  Future<void> _fetchMatchDetails() async {
+    if (widget.matchData.id == null) return;
+
+    setState(() {
+      _isLoadingDetails = true;
+    });
+
+    final matchId = widget.matchData.id!;
+
+    // Fetch lineups if not present or just to refresh
+    final lineups = await MatchService.getMatchLineups(matchId);
+    // Fetch statistics
+    final stats = await MatchService.getMatchStatistics(matchId);
+
+    if (mounted) {
+      setState(() {
+        if (lineups != null && lineups.isNotEmpty) {
+          _lineups = lineups;
+        }
+        if (stats != null && stats.isNotEmpty) {
+          _statistics = stats;
+        }
+        _isLoadingDetails = false;
+      });
+    }
   }
 
   @override
@@ -89,7 +124,6 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
                   _buildTimelineTab(),
                   _buildLineupsTab(),
                   _buildStatsTab(),
-                  // _buildCommentaryTab(),
                 ],
               ),
             ),
@@ -396,7 +430,12 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
 
   /// Lineups Tab Content
   Widget _buildLineupsTab() {
-    final lineups = widget.matchData.lineups;
+    // Use local _lineups if available, otherwise widget.matchData.lineups
+    final lineups = _lineups ?? widget.matchData.lineups;
+
+    if (_isLoadingDetails && (lineups == null || lineups.isEmpty)) {
+      return const Center(child: CircularProgressIndicator());
+    }
 
     if (lineups == null || lineups.isEmpty) {
       return Center(
@@ -484,7 +523,11 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
 
   /// Stats Tab Content
   Widget _buildStatsTab() {
-    final statistics = widget.matchData.statistics;
+    final statistics = _statistics ?? widget.matchData.statistics;
+
+    if (_isLoadingDetails && (statistics == null || statistics.isEmpty)) {
+      return const Center(child: CircularProgressIndicator());
+    }
 
     if (statistics == null || statistics.isEmpty) {
       return Center(

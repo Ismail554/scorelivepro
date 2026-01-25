@@ -1,4 +1,5 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:uuid/uuid.dart';
 
 class LocalStorageService {
   // single secure storage instance
@@ -62,6 +63,19 @@ class SecureStorageHelper {
   /// Clear refresh token only
   static Future<void> clearRefreshToken() async {
     await _storage.delete(key: _refreshTokenKey);
+  }
+
+  // UUID key
+  static const String _uuidKey = 'device_uuid';
+
+  /// Get or Generate UUID
+  static Future<String> getUuid() async {
+    String? uuid = await _storage.read(key: _uuidKey);
+    if (uuid == null || uuid.isEmpty) {
+      uuid = const Uuid().v4();
+      await _storage.write(key: _uuidKey, value: uuid);
+    }
+    return uuid;
   }
 
   // User type key

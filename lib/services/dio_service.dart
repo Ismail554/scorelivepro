@@ -92,6 +92,15 @@ class DioManager {
             }
           }
 
+          // Add UUID header
+          try {
+            final uuid = await SecureStorageHelper.getUuid();
+            options.headers['uuid'] = uuid;
+            log('🆔 Added UUID: $uuid', name: 'HEADER');
+          } catch (e) {
+            log('⚠️ Failed to add UUID header: $e', name: 'HEADER');
+          }
+
           // Log full request details
           final queryParams = options.queryParameters.isNotEmpty
               ? '?${Uri(queryParameters: options.queryParameters).query}'
