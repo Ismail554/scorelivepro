@@ -1,9 +1,12 @@
+import 'package:flutter/foundation.dart';
+import 'package:scorelivepro/models/live_ws_model.dart';
 import 'package:scorelivepro/services/api_service.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class SocketService {
   IO.Socket? socket;
   String? _token;
+  ValueNotifier<LiveScoreModel?> liveScoreNotifier = ValueNotifier(null);
 
   // Singleton
   static final SocketService instance = SocketService._internal();
@@ -27,7 +30,7 @@ class SocketService {
 
     // Create new socket connection with proper auth format
     socket = IO.io(
-    "wss://api.scorelivepro.it/ws/live/",
+      "wss://api.scorelivepro.it/ws/live/",
       // baseUrl,
       // "https://marvella-shakier-leon.ngrok-free.dev/socket.io/",
       IO.OptionBuilder()
@@ -70,6 +73,9 @@ class SocketService {
     socket!.onError((error) {
       print("⚠️ Socket Error: $error");
     });
+
+    // Start listening to live matches immediately
+    listenToLiveMatches();
   }
 
   /// 🔹 Send token to server
@@ -119,6 +125,23 @@ class SocketService {
       }
     } else {
       onResult(false);
+    }
+  }
+
+  /// 🔹 Listen to live matches
+  void listenToLiveMatches() {
+    if (socket != null) {
+      socket!.on('live_data', (data) {
+        try {
+          print("📌 Live Match Data Received: $data");
+          if (data != null && data is Map<String, dynamic>) {
+            liveScoreNotifier.value = LiveScoreModel.fromJson(data);
+          }
+        } catch (e) {
+          print("⚠️ Error parsing live match data: $e");
+        }
+      });
+      print("📌 Listening to event: live_data");
     }
   }
 
