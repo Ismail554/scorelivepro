@@ -8,10 +8,19 @@ class MatchProvider extends ChangeNotifier {
   final Map<int, List<Statistic>> _statistics = {};
   final Map<int, bool> _isLoading = {};
 
+  // Fixtures cache
+  List<Data> _upcomingMatches = [];
+  List<Data> _finishedMatches = [];
+  bool _isLoadingFixtures = false;
+
   // Getters
   List<Lineup>? getLineups(int matchId) => _lineups[matchId];
   List<Statistic>? getStatistics(int matchId) => _statistics[matchId];
   bool isLoading(int matchId) => _isLoading[matchId] ?? false;
+
+  List<Data> get upcomingMatches => _upcomingMatches;
+  List<Data> get finishedMatches => _finishedMatches;
+  bool get isLoadingFixtures => _isLoadingFixtures;
 
   /// Fetch both lineups and statistics for a match
   Future<void> fetchMatchDetails(int matchId, {bool isRefresh = false}) async {
@@ -53,6 +62,40 @@ class MatchProvider extends ChangeNotifier {
       debugPrint("Error fetching match details: $e");
     } finally {
       _isLoading[matchId] = false;
+      notifyListeners();
+    }
+  }
+
+  /// Fetch all upcoming and finished matches
+  Future<void> fetchFixtures() async {
+    if (_isLoadingFixtures) return;
+
+    _isLoadingFixtures = true;
+    notifyListeners();
+
+    try {
+      final fixtures = await MatchService.getFixtures();
+
+      if (fixtures != null) {
+        _upcomingMatches.clear();
+        _finishedMatches.clear();
+
+        for (var match in fixtures) {
+          final status = match.statusLong ?? "";
+          if (status == "Not Started" || status == "Time to be defined") {
+            _upcomingMatches.add(match);
+          } else if (status == "Match Finished") {
+            _finishedMatches.add(match);
+          }
+        }
+
+        debugPrint(
+            "Fetched Fixtures: Upcoming: ${_upcomingMatches.length}, Finished: ${_finishedMatches.length}");
+      }
+    } catch (e) {
+      debugPrint("Error fetching fixtures: $e");
+    } finally {
+      _isLoadingFixtures = false;
       notifyListeners();
     }
   }

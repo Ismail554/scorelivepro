@@ -74,4 +74,43 @@ class MatchService {
       },
     );
   }
+
+  static Future<List<Data>?> getFixtures() async {
+    final result = await DioManager.apiRequest(
+      url: ApiEndPoint.up_fin_matches,
+      methods: Methods.get,
+      skipAuth: true,
+    );
+
+    return result.fold(
+      (error) => null,
+      (data) {
+        // Check if data is directly a List (Matches direct API response)
+        if (data is List) {
+          List<Data> fixtures = [];
+          for (var v in data) {
+            fixtures.add(Data.fromJson(v));
+          }
+          return fixtures;
+        }
+
+        if (data['data'] != null && data['data'] is List) {
+          List<Data> fixtures = [];
+          data['data'].forEach((v) {
+            fixtures.add(Data.fromJson(v));
+          });
+          return fixtures;
+        }
+
+        if (data['response'] != null && data['response'] is List) {
+          List<Data> fixtures = [];
+          data['response'].forEach((v) {
+            fixtures.add(Data.fromJson(v));
+          });
+          return fixtures;
+        }
+        return null;
+      },
+    );
+  }
 }

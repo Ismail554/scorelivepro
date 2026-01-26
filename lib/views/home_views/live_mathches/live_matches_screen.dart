@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/app_strings.dart';
 import 'package:scorelivepro/core/font_manager.dart';
-import 'package:scorelivepro/models/fake_data/live_match_details_fake_data.dart';
 import 'package:scorelivepro/utils/navigation_helper.dart';
 import 'package:scorelivepro/views/home_views/live_mathches/lineups_screen.dart';
 import 'package:scorelivepro/views/home_views/live_mathches/live_match_details_screen.dart';
@@ -14,6 +14,7 @@ import 'package:scorelivepro/widget/navigation/custom_bottom_nav_bar.dart';
 import 'package:scorelivepro/services/socket_service.dart';
 import 'package:scorelivepro/models/live_ws_model.dart';
 import 'package:scorelivepro/utils/match_status_helper.dart';
+import 'package:scorelivepro/provider/match_provider.dart';
 
 class LiveMatchesScreen extends StatefulWidget {
   const LiveMatchesScreen({super.key});
@@ -34,6 +35,11 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     _tabPadding = EdgeInsets.symmetric(horizontal: 16.w);
+
+    // Fetch fixtures on load
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<MatchProvider>(context, listen: false).fetchFixtures();
+    });
   }
 
   @override
@@ -76,13 +82,27 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
           _buildTabBar(),
           const SizedBox(height: 12),
           Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                _buildRealLiveMatchesList(),
-                _buildMatchesList(kUpcomingMatchesFake),
-                _buildMatchesList(kFinishedMatchesFake),
-              ],
+            child: Consumer<MatchProvider>(
+              builder: (context, provider, child) {
+                return TabBarView(
+                  controller: _tabController,
+                  children: [
+                    _buildRealLiveMatchesList(), // Still using socket list for Live
+
+                    // Upcoming Matches
+                    provider.isLoadingFixtures
+                        ? const Center(child: CircularProgressIndicator())
+                        : _buildRealMatchesList(provider.upcomingMatches,
+                            isUpcoming: true),
+
+                    // Finished Matches
+                    provider.isLoadingFixtures
+                        ? const Center(child: CircularProgressIndicator())
+                        : _buildRealMatchesList(provider.finishedMatches,
+                            isUpcoming: false),
+                  ],
+                );
+              },
             ),
           ),
         ],
@@ -216,56 +236,59 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
     );
   }
 
-  /// Generic list builder used by all three tabs.
-  /// Adds a sponsored card as the last item.
-  Widget _buildMatchesList(List<LiveMatchFakeModel> matches) {
+  /// Generic real matches builder for Upcoming/Finished
+  Widget _buildRealMatchesList(List<Data> matches, {bool isUpcoming = false}) {
+    if (matches.isEmpty) {
+      return Center(
+        child: Text(
+          "No matches found",
+          style: FontManager.bodyMedium(color: AppColors.textSecondary),
+        ),
+      );
+    }
+
     return ListView.builder(
-      padding: EdgeInsets.only(
-        top: 12.h,
-        bottom: 16.h,
-      ),
+      padding: EdgeInsets.only(top: 12.h, bottom: 16.h),
       itemCount: matches.length + 1, // +1 for sponsored card
       itemBuilder: (context, index) {
         // Last item → sponsored card
         if (index == matches.length) {
-          return const SponsoredAdCard(
-            onTryFreeTap: null,
-          );
+          return const SponsoredAdCard(onTryFreeTap: null);
         }
 
         final match = matches[index];
         return MatchCard(
-          leagueName: match.leagueName,
-          homeTeam: match.homeTeam,
-          awayTeam: match.awayTeam,
-          homeScore: match.homeScore,
-          awayScore: match.awayScore,
-          timeInfo: match.timeInfo,
-          status: match.status,
+          leagueName: match.league?.name ?? "Unknown League",
+          homeTeam: match.homeTeam?.name ?? "Home",
+          awayTeam: match.awayTeam?.name ?? "Away",
+          homeScore: match.goals?.home,
+          awayScore: match.goals?.away,
+          timeInfo: isUpcoming
+              ? (match.date != null
+                  ? DateTime.parse(match.date!)
+                      .toLocal()
+                      .toString()
+                      .substring(11, 16)
+                  : "-")
+              : "${match.elapsed ?? 90}'",
+          status: MatchStatusHelper.getMatchStatus(match.statusShort),
           onTap: () {
-            // Navigate based on match status
-            if (match.status == MatchStatus.upcoming) {
-              // Upcoming matches → navigate to lineups screen
+            if (isUpcoming) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const HomeLineupsScreen(),
+                  builder: (context) =>
+                      const HomeLineupsScreen(), // Placeholder for now
                 ),
               );
             } else {
-              // Live, halfTime, or finished matches → navigate to match details screen
-              // Note: LiveMatchDetailsScreen now requires real Data model.
-              // We should probably update this to support fake models too or just ignore for now since this is the "generic" builder primarily for upcoming/finished.
-              // If we want to support fake data verifying UI, we'd need to convert FakeModel to Data model.
-              // For now, let's disable navigation for fake live matches to prevent crash.
-              /*
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const LiveMatchDetailsScreen(),
+                  builder: (context) =>
+                      LiveMatchDetailsScreen(matchData: match),
                 ),
               );
-              */
             }
           },
         );

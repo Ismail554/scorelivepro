@@ -136,8 +136,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           // Show only top 2 matches
                           final displayMatches = matches.take(2).toList();
 
-                          return Column(
-                            children: displayMatches.map((match) {
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            padding: EdgeInsets.zero,
+                            itemCount: displayMatches.length,
+                            itemBuilder: (context, index) {
+                              final match = displayMatches[index];
                               return MatchCard(
                                 leagueName:
                                     match.league?.name ?? "Unknown League",
@@ -159,7 +164,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   );
                                 },
                               );
-                            }).toList(),
+                            },
                           );
                         },
                       ),

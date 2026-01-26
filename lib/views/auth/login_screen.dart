@@ -190,10 +190,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // Placeholder for Google Icon if asset missing
-                      // SvgPicture.asset(SvgAssets.google, width: 24.w),
-                      // Using simple G text or Icon as fallback since asset path isn't clear in prompt context
-                      // Ideally: Image.asset('assets/icons/google.png', width: 24.w),
                       Image.asset(IconAssets.google_icon, width: 24.w),
                       SizedBox(width: 6.w),
                       Text(
