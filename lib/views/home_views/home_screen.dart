@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/app_spacing.dart';
@@ -81,8 +82,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           style: FontManager.heading3(color: Colors.white),
                         ),
                         const SizedBox(height: 4),
-                        Text(AppStrings.date_today,
-                            style: FontManager.heading4(color: Colors.white)),
+                        Text(
+                          DateFormat('EEEE, d MMM, yyyy')
+                              .format(DateTime.now()),
+                          style: FontManager.heading4(color: Colors.white),
+                        ),
                       ],
                     ),
                   ),

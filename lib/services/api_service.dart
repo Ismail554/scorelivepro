@@ -3,6 +3,7 @@ class ApiEndPoint {
   static String get baseUrl => "https://api.scorelivepro.it";
 
   static String get login => "$_baseUrl/api/v1/auth/login";
-  static String lineups (int id) => "$_baseUrl/fixtures/$id/lineups/";
-  static String statistics (int id) => "$_baseUrl/fixtures/$id/statistics/";
+  static String lineups(int id) => "$_baseUrl/sports/fixtures/$id/lineups/";
+  static String statistics(int id) =>
+      "$_baseUrl/sports/fixtures/$id/statistics/";
 }

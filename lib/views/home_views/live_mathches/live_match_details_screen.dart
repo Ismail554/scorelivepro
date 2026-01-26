@@ -13,8 +13,9 @@ import 'package:scorelivepro/widget/mini_widget/mw_notification_bell.dart';
 import 'package:scorelivepro/widget/navigation/custom_bottom_nav_bar.dart';
 import 'package:scorelivepro/widget/navigation/transparent_tab_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-
-import '../../../services/match_service.dart';
+import 'package:provider/provider.dart';
+import 'package:scorelivepro/provider/match_provider.dart';
+import 'package:marquee/marquee.dart';
 
 import 'package:scorelivepro/models/live_ws_model.dart' hide Player;
 
@@ -29,44 +30,19 @@ class LiveMatchDetailsScreen extends StatefulWidget {
 class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  List<Lineup>? _lineups;
-  List<Statistic>? _statistics;
-  bool _isLoadingDetails = false;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    _lineups = widget.matchData.lineups;
-    _statistics = widget.matchData.statistics;
-    _fetchMatchDetails();
-  }
 
-  Future<void> _fetchMatchDetails() async {
-    if (widget.matchData.id == null) return;
-
-    setState(() {
-      _isLoadingDetails = true;
+    // Fetch details using provider
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.matchData.id != null) {
+        Provider.of<MatchProvider>(context, listen: false)
+            .fetchMatchDetails(widget.matchData.id!);
+      }
     });
-
-    final matchId = widget.matchData.id!;
-
-    // Fetch lineups if not present or just to refresh
-    final lineups = await MatchService.getMatchLineups(matchId);
-    // Fetch statistics
-    final stats = await MatchService.getMatchStatistics(matchId);
-
-    if (mounted) {
-      setState(() {
-        if (lineups != null && lineups.isNotEmpty) {
-          _lineups = lineups;
-        }
-        if (stats != null && stats.isNotEmpty) {
-          _statistics = stats;
-        }
-        _isLoadingDetails = false;
-      });
-    }
   }
 
   @override
@@ -199,11 +175,65 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
               ),
 
               // League Name
-              Text(
-                widget.matchData.league?.name ?? "Unknown League",
-                style: FontManager.heading3(
-                  fontSize: 18,
-                  color: AppColors.white,
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.w),
+                  child: Builder(
+                    builder: (context) {
+                      final leagueName =
+                          widget.matchData.league?.name ?? "Unknown League";
+                      final textStyle = FontManager.heading3(
+                        fontSize: 18,
+                        color: AppColors.white,
+                      );
+
+                      // Calculate text width
+                      final textPainter = TextPainter(
+                        text: TextSpan(text: leagueName, style: textStyle),
+                        maxLines: 1,
+                        textDirection: TextDirection.ltr,
+                      )..layout(minWidth: 0, maxWidth: double.infinity);
+
+                      // Use a simplified check or LayoutBuilder if precise width needed.
+                      // Here we can use a LayoutBuilder for the container width.
+                      return LayoutBuilder(
+                        builder: (context, constraints) {
+                          final isOverflowing =
+                              textPainter.width > constraints.maxWidth;
+
+                          if (isOverflowing) {
+                            return SizedBox(
+                              height: 30.h,
+                              child: Marquee(
+                                text: leagueName,
+                                style: textStyle,
+                                scrollAxis: Axis.horizontal,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                blankSpace: 20.0,
+                                velocity: 30.0,
+                                pauseAfterRound: const Duration(seconds: 1),
+                                startPadding: 10.0,
+                                accelerationDuration:
+                                    const Duration(seconds: 1),
+                                accelerationCurve: Curves.linear,
+                                decelerationDuration:
+                                    const Duration(milliseconds: 500),
+                                decelerationCurve: Curves.easeOut,
+                              ),
+                            );
+                          } else {
+                            return Text(
+                              leagueName,
+                              style: textStyle,
+                              textAlign: TextAlign.center,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            );
+                          }
+                        },
+                      );
+                    },
+                  ),
                 ),
               ),
 
@@ -227,11 +257,11 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
       left: 0,
       right: 0,
       child: Padding(
-        padding: EdgeInsets.only(bottom: 60.h),
+        padding: EdgeInsets.only(bottom: 12.h),
         child: Column(
           children: [
             // Live Indicator
-            AppSpacing.h38,
+            AppSpacing.h24,
             _buildLiveIndicator(),
 
             AppSpacing.h2,
@@ -280,104 +310,113 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
   /// Scoreboard with Team Logos and Scores
   Widget _buildScoreboard() {
     return Padding(
-      padding: AppPadding.h24,
+      padding: const EdgeInsets.all(10),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // Home Team
           Expanded(
-            child: Column(
-              children: [
-                // Team Logo Placeholder
-                Container(
-                    width: 60.w,
-                    height: 60.w,
-                    decoration: BoxDecoration(
-                      color: AppColors.white.withOpacity(0.2),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Container(
-                      width: 48.w,
-                      height: 48.w, // Square Container keeps it circular
-                      padding: EdgeInsets.all(
-                          8.w), // Adjusted padding for better fit
-                      decoration: BoxDecoration(
-                        color: AppColors.greyE8.withOpacity(0.5),
-                        shape: BoxShape.circle,
-                      ),
-                      child: CachedNetworkImage(
-                        imageUrl: widget.matchData.homeTeam?.logo ?? "",
-                        fit: BoxFit.contain,
-                        placeholder: (context, url) =>
-                            Image.asset(IconAssets.soccer_icon),
-                        errorWidget: (context, url, error) =>
-                            Image.asset(IconAssets.soccer_icon),
-                      ),
-                    )),
-                AppSpacing.h8,
-                Text(
-                  widget.matchData.homeTeam?.name ?? "Home",
-                  style: FontManager.bodyMedium(
-                    fontSize: 14,
-                    color: AppColors.white,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
+            child: _buildTeam(
+              logo: widget.matchData.homeTeam?.logo ?? "",
+              name: widget.matchData.homeTeam?.name ?? "Home",
             ),
           ),
 
-          // Score
-          Expanded(
-            child: Column(
-              children: [
-                Text(
-                  "${widget.matchData.goals?.home ?? 0} - ${widget.matchData.goals?.away ?? 0}",
-                  style: FontManager.matchScore(
-                    fontSize: 34.sp,
-                    color: AppColors.white,
-                  ),
-                ),
-              ],
+          // Score (always center)
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 12.w),
+            child: Text(
+              "${widget.matchData.goals?.home ?? 0} - ${widget.matchData.goals?.away ?? 0}",
+              style: FontManager.matchScore(
+                fontSize: 34.sp,
+                color: AppColors.white,
+              ),
+              textAlign: TextAlign.center,
             ),
           ),
 
           // Away Team
           Expanded(
-            child: Column(
-              children: [
-                // Team Logo Placeholder
-                Container(
-                  width: 56.w,
-                  height: 56.w, // Square Container keeps it circular
-                  padding: EdgeInsets.all(8.w), // Adjusted padding
-                  decoration: BoxDecoration(
-                    color: AppColors.greyE8.withOpacity(0.5),
-                    shape: BoxShape.circle,
-                  ),
-                  child: CachedNetworkImage(
-                    imageUrl: widget.matchData.awayTeam?.logo ?? "",
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) =>
-                        Image.asset(IconAssets.soccer_icon),
-                    errorWidget: (context, url, error) =>
-                        Image.asset(IconAssets.soccer_icon),
-                  ),
-                ),
-                AppSpacing.h8,
-                Text(
-                  widget.matchData.awayTeam?.name ?? "Away",
-                  style: FontManager.bodyMedium(
-                    fontSize: 14,
-                    color: AppColors.white,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
+            child: _buildTeam(
+              logo: widget.matchData.awayTeam?.logo ?? "",
+              name: widget.matchData.awayTeam?.name ?? "Away",
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildTeam({
+    required String logo,
+    required String name,
+  }) {
+    // Calculate text width to decide if marquee is needed
+    final textStyle = FontManager.bodyMedium(
+      fontSize: 14,
+      color: AppColors.white,
+    );
+
+    final textPainter = TextPainter(
+      text: TextSpan(text: name, style: textStyle),
+      maxLines: 1,
+      textDirection: TextDirection.ltr,
+    )..layout(minWidth: 0, maxWidth: double.infinity);
+
+    final isOverflowing = textPainter.width > 90.w;
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 60.w,
+          height: 60.w,
+          decoration: BoxDecoration(
+            color: AppColors.white.withOpacity(0.2),
+            shape: BoxShape.circle,
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(8.w),
+            child: CachedNetworkImage(
+              imageUrl: logo,
+              fit: BoxFit.contain,
+              placeholder: (context, url) =>
+                  Image.asset(IconAssets.soccer_icon),
+              errorWidget: (context, url, error) =>
+                  Image.asset(IconAssets.soccer_icon),
+            ),
+          ),
+        ),
+        AppSpacing.h8,
+        SizedBox(
+          width: 120.w,
+          height: 20.h, // Fixed height for text area
+          child: isOverflowing
+              ? Marquee(
+                  text: name,
+                  style: textStyle,
+                  scrollAxis: Axis.horizontal,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  blankSpace: 20.0,
+                  velocity: 30.0,
+                  pauseAfterRound: const Duration(seconds: 1),
+                  startPadding: 10.0,
+                  accelerationDuration: const Duration(seconds: 1),
+                  accelerationCurve: Curves.linear,
+                  decelerationDuration: const Duration(milliseconds: 500),
+                  decelerationCurve: Curves.easeOut,
+                )
+              : Center(
+                  child: Text(
+                    name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    style: textStyle,
+                  ),
+                ),
+        ),
+      ],
     );
   }
 
@@ -430,189 +469,257 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
 
   /// Lineups Tab Content
   Widget _buildLineupsTab() {
-    // Use local _lineups if available, otherwise widget.matchData.lineups
-    final lineups = _lineups ?? widget.matchData.lineups;
+    return Consumer<MatchProvider>(
+      builder: (context, provider, child) {
+        final matchId = widget.matchData.id;
+        final lineups =
+            (matchId != null ? provider.getLineups(matchId) : null) ??
+                widget.matchData.lineups;
+        final isLoading = matchId != null ? provider.isLoading(matchId) : false;
 
-    if (_isLoadingDetails && (lineups == null || lineups.isEmpty)) {
-      return const Center(child: CircularProgressIndicator());
-    }
+        debugPrint(
+            "Building LineupsTab: matchId=$matchId, loading=$isLoading, data=${lineups?.length}");
 
-    if (lineups == null || lineups.isEmpty) {
-      return Center(
-        child: Text(
-          "Lineups not available yet",
-          style: FontManager.bodyMedium(color: AppColors.textSecondary),
-        ),
-      );
-    }
+        if (isLoading && (lineups == null || lineups.isEmpty)) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-    // Identify Home and Away Lineups
-    // We compare team ID with match home/away team ID
-    final homeTeamId = widget.matchData.homeTeam?.id;
-    final awayTeamId = widget.matchData.awayTeam?.id;
+        if (lineups == null || lineups.isEmpty) {
+          // Also wrap empty state in RefreshIndicator so user can retry manually
+          return RefreshIndicator(
+            onRefresh: () async {
+              if (matchId != null) {
+                await provider.fetchMatchDetails(matchId, isRefresh: true);
+              }
+            },
+            child: ListView(
+              // Changed to ListView to ensure pulling works even on empty
+              physics: const AlwaysScrollableScrollPhysics(),
+              children: [
+                SizedBox(height: 100.h),
+                Center(
+                  child: Text(
+                    "Lineups not available yet",
+                    style:
+                        FontManager.bodyMedium(color: AppColors.textSecondary),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
 
-    // Use firstWhere or similar logic.
-    // API usually returns 2 items.
-    final homeLineup = lineups.firstWhere(
-      (l) => l.team?.id == homeTeamId,
-      orElse: () => lineups[0], // Fallback
-    );
+        // Identify Home and Away Lineups
+        // We compare team ID with match home/away team ID
+        final homeTeamId = widget.matchData.homeTeam?.id;
+        final awayTeamId = widget.matchData.awayTeam?.id;
 
-    final awayLineup = lineups.firstWhere(
-      (l) => l.team?.id == awayTeamId,
-      orElse: () => lineups.length > 1 ? lineups[1] : lineups[0],
-    );
-
-    // Helper to convert model players to UI players
-    List<Player> getUiPlayers(List<dynamic>? startXI) {
-      if (startXI == null) return [];
-      return startXI.map((item) {
-        // item is StartXI from model
-        final p = item.player;
-        return Player(
-          number: p?.number ?? "0",
-          name: p?.name ?? "Unknown",
-          position: p?.pos ?? "",
+        // Use firstWhere or similar logic.
+        // API usually returns 2 items.
+        final homeLineup = lineups.firstWhere(
+          (l) => l.team?.id == homeTeamId,
+          orElse: () => lineups[0], // Fallback
         );
-      }).toList();
-    }
 
-    final homePlayers = getUiPlayers(homeLineup.startXI);
-    final awayPlayers = getUiPlayers(awayLineup.startXI);
+        final awayLineup = lineups.firstWhere(
+          (l) => l.team?.id == awayTeamId,
+          orElse: () => lineups.length > 1 ? lineups[1] : lineups[0],
+        );
 
-    return SingleChildScrollView(
-      padding: AppPadding.h16,
-      child: Container(
-        padding: EdgeInsets.only(bottom: 16.h, top: 8.h),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            AppSpacing.h12,
+        // Helper to convert model players to UI players
+        List<Player> getUiPlayers(List<dynamic>? startXI) {
+          if (startXI == null) return [];
+          return startXI.map((item) {
+            // item is StartXI from model
+            final p = item.player;
+            return Player(
+              number: p?.number ?? "0",
+              name: p?.name ?? "Unknown",
+              position: p?.pos ?? "",
+            );
+          }).toList();
+        }
 
-            // Home Team Lineup
-            TeamLineupCard(
-              teamName: homeLineup.team?.name ?? "Home Team",
-              formation: homeLineup.formation ?? "",
-              players: homePlayers,
+        final homePlayers = getUiPlayers(homeLineup.startXI);
+        final awayPlayers = getUiPlayers(awayLineup.startXI);
+
+        return RefreshIndicator(
+          onRefresh: () async {
+            if (matchId != null) {
+              await provider.fetchMatchDetails(matchId, isRefresh: true);
+            }
+          },
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: AppPadding.h16,
+            child: Container(
+              padding: EdgeInsets.only(bottom: 16.h, top: 8.h),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AppSpacing.h12,
+
+                  // Home Team Lineup
+                  TeamLineupCard(
+                    teamName: homeLineup.team?.name ?? "Home Team",
+                    formation: homeLineup.formation ?? "",
+                    players: homePlayers,
+                  ),
+
+                  AppSpacing.h32,
+
+                  // Away Team Lineup
+                  TeamLineupCard(
+                    teamName: awayLineup.team?.name ?? "Away Team",
+                    formation: awayLineup.formation ?? "",
+                    players: awayPlayers,
+                  ),
+
+                  AppSpacing.h24,
+
+                  // Match Information
+                  WidgetMatchInformation(
+                    stadium: widget.matchData.venue?.name ?? "-----------",
+                    referee: widget.matchData.referee ?? "-----------",
+                  ),
+
+                  AppSpacing.h16,
+                ],
+              ),
             ),
-
-            AppSpacing.h32,
-
-            // Away Team Lineup
-            TeamLineupCard(
-              teamName: awayLineup.team?.name ?? "Away Team",
-              formation: awayLineup.formation ?? "",
-              players: awayPlayers,
-            ),
-
-            AppSpacing.h24,
-
-            // Match Information
-            WidgetMatchInformation(
-              stadium: widget.matchData.venue?.name ?? "-----------",
-              referee: widget.matchData.referee ?? "-----------",
-            ),
-
-            AppSpacing.h16,
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
   /// Stats Tab Content
   Widget _buildStatsTab() {
-    final statistics = _statistics ?? widget.matchData.statistics;
+    return Consumer<MatchProvider>(
+      builder: (context, provider, child) {
+        final matchId = widget.matchData.id;
+        final statistics =
+            (matchId != null ? provider.getStatistics(matchId) : null) ??
+                widget.matchData.statistics;
+        final isLoading = matchId != null ? provider.isLoading(matchId) : false;
 
-    if (_isLoadingDetails && (statistics == null || statistics.isEmpty)) {
-      return const Center(child: CircularProgressIndicator());
-    }
+        debugPrint(
+            "Building StatsTab: matchId=$matchId, loading=$isLoading, data=${statistics?.length}");
 
-    if (statistics == null || statistics.isEmpty) {
-      return Center(
-        child: Text(
-          "Statistics not available yet",
-          style: FontManager.bodyMedium(color: AppColors.textSecondary),
-        ),
-      );
-    }
+        if (isLoading && (statistics == null || statistics.isEmpty)) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-    final homeTeamId = widget.matchData.homeTeam?.id;
-    final awayTeamId = widget.matchData.awayTeam?.id;
+        if (statistics == null || statistics.isEmpty) {
+          return RefreshIndicator(
+            onRefresh: () async {
+              if (matchId != null) {
+                await provider.fetchMatchDetails(matchId, isRefresh: true);
+              }
+            },
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              children: [
+                SizedBox(height: 100.h),
+                Center(
+                  child: Text(
+                    "Statistics not available yet",
+                    style:
+                        FontManager.bodyMedium(color: AppColors.textSecondary),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
 
-    final homeStats = statistics
-            .firstWhere(
-              (s) => s.team?.id == homeTeamId,
-              orElse: () => statistics[0],
-            )
-            .statistics ??
-        [];
+        final homeTeamId = widget.matchData.homeTeam?.id;
+        final awayTeamId = widget.matchData.awayTeam?.id;
 
-    final awayStats = statistics
-            .firstWhere(
-              (s) => s.team?.id == awayTeamId,
-              orElse: () =>
-                  statistics.length > 1 ? statistics[1] : statistics[0],
-            )
-            .statistics ??
-        [];
+        final homeStats = statistics
+                .firstWhere(
+                  (s) => s.team?.id == homeTeamId,
+                  orElse: () => statistics[0],
+                )
+                .statistics ??
+            [];
 
-    // Combine all types to show
-    final Set<String> types = {};
-    for (var s in homeStats) if (s.type != null) types.add(s.type!);
-    for (var s in awayStats) if (s.type != null) types.add(s.type!);
+        final awayStats = statistics
+                .firstWhere(
+                  (s) => s.team?.id == awayTeamId,
+                  orElse: () =>
+                      statistics.length > 1 ? statistics[1] : statistics[0],
+                )
+                .statistics ??
+            [];
 
-    // Helper to extract int value
-    int parseValue(dynamic value) {
-      if (value == null) return 0;
-      if (value is int) return value;
-      if (value is String) {
-        // Remove % if present
-        final clean = value.replaceAll('%', '').trim();
-        return int.tryParse(clean) ?? 0;
-      }
-      return 0;
-    }
+        // Combine all types to show
+        final Set<String> types = {};
+        for (var s in homeStats) if (s.type != null) types.add(s.type!);
+        for (var s in awayStats) if (s.type != null) types.add(s.type!);
 
-    return SingleChildScrollView(
-      padding: AppPadding.h16,
-      child: Container(
-        padding: EdgeInsets.only(bottom: 16.h, top: 8.h),
-        child: Column(
-          children: [
-            AppSpacing.h12,
+        // Helper to extract int value
+        int parseValue(dynamic value) {
+          if (value == null) return 0;
+          if (value is int) return value;
+          if (value is String) {
+            // Remove % if present
+            final clean = value.replaceAll('%', '').trim();
+            return int.tryParse(clean) ?? 0;
+          }
+          return 0;
+        }
 
-            if (types.isEmpty)
-              Text("No statistics data found", style: FontManager.bodyMedium()),
-
-            ...types.map((type) {
-              final homeItem = homeStats.firstWhere((s) => s.type == type,
-                  orElse: () => StatisticItem(type: type, value: 0));
-              final awayItem = awayStats.firstWhere((s) => s.type == type,
-                  orElse: () => StatisticItem(type: type, value: 0));
-
-              return Column(
+        return RefreshIndicator(
+          onRefresh: () async {
+            if (matchId != null) {
+              await provider.fetchMatchDetails(matchId, isRefresh: true);
+            }
+          },
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: AppPadding.h16,
+            child: Container(
+              padding: EdgeInsets.only(bottom: 16.h, top: 8.h),
+              child: Column(
                 children: [
-                  _buildStatRow(type, parseValue(homeItem.value),
-                      parseValue(awayItem.value)),
+                  AppSpacing.h12,
+
+                  if (types.isEmpty)
+                    Text("No statistics data found",
+                        style: FontManager.bodyMedium()),
+
+                  ...types.map((type) {
+                    final homeItem = homeStats.firstWhere((s) => s.type == type,
+                        orElse: () => StatisticItem(type: type, value: 0));
+                    final awayItem = awayStats.firstWhere((s) => s.type == type,
+                        orElse: () => StatisticItem(type: type, value: 0));
+
+                    return Column(
+                      children: [
+                        _buildStatRow(type, parseValue(homeItem.value),
+                            parseValue(awayItem.value)),
+                        AppSpacing.h16,
+                      ],
+                    );
+                  }).toList(),
+
+                  AppSpacing.h8,
+
+                  // Match Information
+                  WidgetMatchInformation(
+                    stadium: widget.matchData.venue?.name ?? "-----------",
+                    referee: widget.matchData.referee ?? "-----------",
+                  ),
+
                   AppSpacing.h16,
                 ],
-              );
-            }).toList(),
-
-            AppSpacing.h8,
-
-            // Match Information
-            WidgetMatchInformation(
-              stadium: widget.matchData.venue?.name ?? "-----------",
-              referee: widget.matchData.referee ?? "-----------",
+              ),
             ),
-
-            AppSpacing.h16,
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 

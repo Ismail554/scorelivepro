@@ -9,13 +9,11 @@ class WidgetMatchInformation extends StatelessWidget {
   final String stadium;
   final String referee;
 
-
   const WidgetMatchInformation({
     super.key,
     this.title = "Match Information", // Default title set kore dilam
     required this.stadium,
     required this.referee,
-   
   });
 
   @override
@@ -74,12 +72,15 @@ class WidgetMatchInformation extends StatelessWidget {
             fontWeight: FontWeight.w500,
           ),
         ),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 14.sp,
-            color: Colors.black87, // Value color dark
-            fontWeight: FontWeight.w500,
+        Flexible(
+          child: Text(
+            value,
+            textAlign: TextAlign.end,
+            style: TextStyle(
+              fontSize: 14.sp,
+              color: Colors.black87, // Value color dark
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
       ],

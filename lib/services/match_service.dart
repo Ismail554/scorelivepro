@@ -13,6 +13,14 @@ class MatchService {
     return result.fold(
       (error) => null,
       (data) {
+        // Check for direct object structure with 'home' and 'away' keys (New API pattern)
+        if (data['home'] != null && data['away'] != null) {
+          List<Lineup> lineups = [];
+          lineups.add(Lineup.fromJson(data['home']));
+          lineups.add(Lineup.fromJson(data['away']));
+          return lineups;
+        }
+
         // Check for 'data' first (User's custom API pattern)
         if (data['data'] != null && data['data'] is List) {
           List<Lineup> lineups = [];

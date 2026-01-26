@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/app_strings.dart';
+import 'package:scorelivepro/views/auth/login_screen.dart';
 import 'package:scorelivepro/views/settings/app_info_screen.dart';
 import 'package:scorelivepro/views/settings/language_selection_screen.dart';
 
@@ -50,7 +51,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   title: "Login / Sign Up",
                   subtitle: AppStrings.syncFavorites,
                   showChevron: true,
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => LoginScreen()));
+                  },
                 ),
               ],
             ),

@@ -35,6 +35,8 @@ dependencies:
   dio: ^5.9.0
   uuid: ^4.5.2
   web_socket_channel: ^3.0.3
+  marquee: ^2.3.0
+  intl: ^0.20.2
 
 
 flutter_launcher_icons:

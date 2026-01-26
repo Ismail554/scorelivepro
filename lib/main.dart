@@ -2,6 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:scorelivepro/app.dart';
 import 'package:scorelivepro/config/language/lanugage_provider.dart';
+import 'package:scorelivepro/provider/match_provider.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,7 +57,12 @@ void main() async {
     }
     runApp(
       EasyLocalization(
-        child: const ScoreLivePro(),
+        child: MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (_) => MatchProvider()),
+          ],
+          child: const ScoreLivePro(),
+        ),
         // Supported locales matching translation files in assets/translations/
         supportedLocales: const [
           Locale('en', 'US'), // English
