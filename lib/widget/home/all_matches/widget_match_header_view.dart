@@ -63,9 +63,6 @@ class WidgetMatchHeaderView extends StatelessWidget {
             ),
           ),
 
-          // Header Layer (Back Button, League Name)
-          _buildHeader(context),
-
           // Match Overview Layer (Score, Teams)
           _buildMatchOverview(),
         ],

@@ -16,6 +16,9 @@ import 'package:scorelivepro/models/live_ws_model.dart';
 import 'package:scorelivepro/utils/match_status_helper.dart';
 import 'package:scorelivepro/widget/mini_widget/mw_notification_bell.dart';
 
+import 'package:provider/provider.dart';
+import 'package:scorelivepro/provider/match_provider.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -24,6 +27,15 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Fetch fixtures on load for LiveMatchesScreen
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<MatchProvider>(context, listen: false).fetchFixtures();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

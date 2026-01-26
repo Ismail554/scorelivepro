@@ -13,32 +13,60 @@ class MatchService {
     return result.fold(
       (error) => null,
       (data) {
-        // Check for direct object structure with 'home' and 'away' keys (New API pattern)
-        if (data['home'] != null && data['away'] != null) {
-          List<Lineup> lineups = [];
-          lineups.add(Lineup.fromJson(data['home']));
-          lineups.add(Lineup.fromJson(data['away']));
-          return lineups;
-        }
+        try {
+          // 🛡️ Safety Check: If data is a List (e.g. empty list [] when no data), return null
+          if (data is List) {
+            if (data.isEmpty)
+              return []; // Return empty list instead of null if preferred
+            return null;
+          }
 
-        // Check for 'data' first (User's custom API pattern)
-        if (data['data'] != null && data['data'] is List) {
-          List<Lineup> lineups = [];
-          data['data'].forEach((v) {
-            lineups.add(Lineup.fromJson(v));
-          });
-          return lineups;
-        }
+          // Ensure data is a Map before accessing keys
+          if (data is! Map) return null;
 
-        // Check for 'response' (Standard API-Football pattern)
-        if (data['response'] != null && data['response'] is List) {
-          List<Lineup> lineups = [];
-          data['response'].forEach((v) {
-            lineups.add(Lineup.fromJson(v));
-          });
-          return lineups;
+          // Check for direct object structure with 'home' and 'away' keys (New API pattern)
+          if (data['home'] != null && data['away'] != null) {
+            // Validate that home and away are actually Maps
+            if (data['home'] is Map && data['away'] is Map) {
+              List<Lineup> lineups = [];
+              lineups.add(Lineup.fromJson(data['home']));
+              lineups.add(Lineup.fromJson(data['away']));
+              return lineups;
+            }
+          }
+
+          // Check for 'data' first (User's custom API pattern)
+          if (data['data'] != null && data['data'] is List) {
+            List<Lineup> lineups = [];
+            for (var v in data['data']) {
+              if (v is Map<String, dynamic>) {
+                lineups.add(Lineup.fromJson(v));
+              } else if (v is Map) {
+                // Cast if it's a generic Map
+                lineups.add(Lineup.fromJson(Map<String, dynamic>.from(v)));
+              }
+            }
+            return lineups;
+          }
+
+          // Check for 'response' (Standard API-Football pattern)
+          if (data['response'] != null && data['response'] is List) {
+            List<Lineup> lineups = [];
+            for (var v in data['response']) {
+              if (v is Map<String, dynamic>) {
+                lineups.add(Lineup.fromJson(v));
+              } else if (v is Map) {
+                // Cast if it's a generic Map
+                lineups.add(Lineup.fromJson(Map<String, dynamic>.from(v)));
+              }
+            }
+            return lineups;
+          }
+          return null;
+        } catch (e) {
+          print("Error parsing lineups: $e");
+          return null;
         }
-        return null;
       },
     );
   }
@@ -53,24 +81,46 @@ class MatchService {
     return result.fold(
       (error) => null,
       (data) {
-        if (data['data'] != null && data['data'] is List) {
-          List<Statistic> stats = [];
-          data['data'].forEach((v) {
-            stats.add(Statistic.fromJson(v));
-          });
-          return stats;
-        }
+        try {
+          // 🛡️ Safety Check: If data is a List (e.g. empty list [] when no data), return null
+          if (data is List) {
+            if (data.isEmpty) return [];
+            return null;
+          }
 
-        // Fallback or if structure is different
-        if (data['response'] != null && data['response'] is List) {
-          List<Statistic> stats = [];
-          data['response'].forEach((v) {
-            stats.add(Statistic.fromJson(v));
-          });
-          return stats;
-        }
+          // Ensure data is a Map before accessing keys
+          if (data is! Map) return null;
 
-        return null;
+          if (data['data'] != null && data['data'] is List) {
+            List<Statistic> stats = [];
+            for (var v in data['data']) {
+              if (v is Map<String, dynamic>) {
+                stats.add(Statistic.fromJson(v));
+              } else if (v is Map) {
+                stats.add(Statistic.fromJson(Map<String, dynamic>.from(v)));
+              }
+            }
+            return stats;
+          }
+
+          // Fallback or if structure is different
+          if (data['response'] != null && data['response'] is List) {
+            List<Statistic> stats = [];
+            for (var v in data['response']) {
+              if (v is Map<String, dynamic>) {
+                stats.add(Statistic.fromJson(v));
+              } else if (v is Map) {
+                stats.add(Statistic.fromJson(Map<String, dynamic>.from(v)));
+              }
+            }
+            return stats;
+          }
+
+          return null;
+        } catch (e) {
+          print("Error parsing statistics: $e");
+          return null;
+        }
       },
     );
   }

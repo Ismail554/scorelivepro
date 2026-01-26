@@ -15,6 +15,7 @@ import 'package:scorelivepro/services/socket_service.dart';
 import 'package:scorelivepro/models/live_ws_model.dart';
 import 'package:scorelivepro/utils/match_status_helper.dart';
 import 'package:scorelivepro/provider/match_provider.dart';
+import 'package:scorelivepro/widget/shimmer/match_card_shimmer.dart';
 
 class LiveMatchesScreen extends StatefulWidget {
   const LiveMatchesScreen({super.key});
@@ -35,11 +36,7 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     _tabPadding = EdgeInsets.symmetric(horizontal: 16.w);
-
-    // Fetch fixtures on load
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<MatchProvider>(context, listen: false).fetchFixtures();
-    });
+    // Fixtures are now fetched in HomeScreen
   }
 
   @override
@@ -91,13 +88,13 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
 
                     // Upcoming Matches
                     provider.isLoadingFixtures
-                        ? const Center(child: CircularProgressIndicator())
+                        ? _buildShimmerList()
                         : _buildRealMatchesList(provider.upcomingMatches,
                             isUpcoming: true),
 
                     // Finished Matches
                     provider.isLoadingFixtures
-                        ? const Center(child: CircularProgressIndicator())
+                        ? _buildShimmerList()
                         : _buildRealMatchesList(provider.finishedMatches,
                             isUpcoming: false),
                   ],
@@ -107,6 +104,19 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
           ),
         ],
       ),
+    );
+  }
+
+  /// ---------------- UI BUILDERS ----------------
+
+  /// Shimmer loading list
+  Widget _buildShimmerList() {
+    return ListView.builder(
+      padding: EdgeInsets.only(top: 12.h, bottom: 16.h),
+      itemCount: 5, // Show 5 shimmer items
+      itemBuilder: (context, index) {
+        return const MatchCardShimmer();
+      },
     );
   }
 
@@ -277,8 +287,9 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      const HomeLineupsScreen(), // Placeholder for now
+                  builder: (context) => HomeLineupsScreen(
+                    matchData: match,
+                  ),
                 ),
               );
             } else {
