@@ -1,35 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
 import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/app_spacing.dart';
 import 'package:scorelivepro/core/app_strings.dart';
 import 'package:scorelivepro/core/font_manager.dart';
-import 'package:scorelivepro/utils/navigation_helper.dart';
+import 'package:scorelivepro/models/league_model.dart';
+import 'package:scorelivepro/services/league_service.dart';
 import 'package:scorelivepro/views/league_views/detailed_leagues_screen.dart';
 import 'package:scorelivepro/widget/leagues/widget_league_card.dart';
 import 'package:scorelivepro/widget/leagues/widget_premium_upgrade_card.dart';
 import 'package:scorelivepro/widget/mini_widget/mw_notification_bell.dart';
-import 'package:scorelivepro/widget/navigation/custom_bottom_nav_bar.dart';
-
-/// League model
-class League {
-  final String leagueName;
-  final String countryOrRegion;
-  final LeagueIconType iconType;
-  final String? iconLabel;
-  final String? flagEmoji;
-  final String region; // For filtering
-
-  const League({
-    required this.leagueName,
-    required this.countryOrRegion,
-    required this.iconType,
-    this.iconLabel,
-    this.flagEmoji,
-    required this.region,
-  });
-}
 
 class LeaguesScreen extends StatefulWidget {
   const LeaguesScreen({super.key});
@@ -39,115 +19,60 @@ class LeaguesScreen extends StatefulWidget {
 }
 
 class _LeaguesScreenState extends State<LeaguesScreen> {
-  String _selectedRegion = "South America";
   final TextEditingController _searchController = TextEditingController();
+  List<LeagueModel> _allLeagues = [];
+  List<LeagueModel> _filteredLeagues = [];
+  bool _isLoading = true;
+  String? _errorMessage;
 
-  // Sample league data
-  final List<League> _allLeagues = [
-    // South America
-    const League(
-      leagueName: "Copa Libertadores",
-      countryOrRegion: "South America",
-      iconType: LeagueIconType.trophy,
-      region: "South America",
-    ),
-    const League(
-      leagueName: "Copa Sudamericana",
-      countryOrRegion: "South America",
-      iconType: LeagueIconType.medal,
-      iconLabel: "2",
-      region: "South America",
-    ),
-    const League(
-      leagueName: "Brasileirão Série A",
-      countryOrRegion: "Brazil",
-      iconType: LeagueIconType.flag,
-      flagEmoji: "🇧🇷",
-      region: "South America",
-    ),
-    const League(
-      leagueName: "Liga Profesional",
-      countryOrRegion: "Argentina",
-      iconType: LeagueIconType.flag,
-      flagEmoji: "🇦🇷",
-      region: "South America",
-    ),
-    const League(
-      leagueName: "Categoría Primera A",
-      countryOrRegion: "Colombia",
-      iconType: LeagueIconType.flag,
-      flagEmoji: "🇨🇴",
-      region: "South America",
-    ),
-    const League(
-      leagueName: "Primera División",
-      countryOrRegion: "Chile",
-      iconType: LeagueIconType.flag,
-      flagEmoji: "🇨🇱",
-      region: "South America",
-    ),
-    const League(
-      leagueName: "Primera División",
-      countryOrRegion: "Uruguay",
-      iconType: LeagueIconType.flag,
-      flagEmoji: "🇺🇾",
-      region: "South America",
-    ),
-    const League(
-      leagueName: "Serie A",
-      countryOrRegion: "Ecuador",
-      iconType: LeagueIconType.flag,
-      flagEmoji: "🇪🇨",
-      region: "South America",
-    ),
-    const League(
-      leagueName: "Liga 1",
-      countryOrRegion: "Peru",
-      iconType: LeagueIconType.flag,
-      flagEmoji: "🇵🇪",
-      region: "South America",
-    ),
-    const League(
-      leagueName: "Primera División",
-      countryOrRegion: "Paraguay",
-      iconType: LeagueIconType.flag,
-      flagEmoji: "🇵🇾",
-      region: "South America",
-    ),
-    // International
-    const League(
-      leagueName: "UEFA Champions League",
-      countryOrRegion: "International",
-      iconType: LeagueIconType.trophy,
-      region: "International",
-    ),
-    const League(
-      leagueName: "FIFA World Cup",
-      countryOrRegion: "International",
-      iconType: LeagueIconType.trophy,
-      region: "International",
-    ),
-    // Asia
-    const League(
-      leagueName: "AFC Champions League",
-      countryOrRegion: "Asia",
-      iconType: LeagueIconType.trophy,
-      region: "Asia",
-    ),
-    // North America
-    const League(
-      leagueName: "MLS",
-      countryOrRegion: "United States",
-      iconType: LeagueIconType.flag,
-      flagEmoji: "🇺🇸",
-      region: "North America",
-    ),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _fetchLeagues();
+    _searchController.addListener(_onSearchChanged);
+  }
 
-  List<League> get _filteredLeagues {
-    return _allLeagues
-        .where((league) => league.region == _selectedRegion)
-        .toList();
+  Future<void> _fetchLeagues() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final leagues = await LeagueService.fetchLeagues();
+      if (leagues != null) {
+        setState(() {
+          _allLeagues = leagues;
+          _filteredLeagues = leagues;
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _errorMessage = "Failed to load leagues";
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = "Error: $e";
+        _isLoading = false;
+      });
+    }
+  }
+
+  void _onSearchChanged() {
+    final query = _searchController.text.toLowerCase();
+    setState(() {
+      if (query.isEmpty) {
+        _filteredLeagues = _allLeagues;
+      } else {
+        _filteredLeagues = _allLeagues.where((league) {
+          final name = league.name?.toLowerCase() ?? '';
+          final country = league.country?.name?.toLowerCase() ?? '';
+          return name.contains(query) || country.contains(query);
+        }).toList();
+      }
+    });
   }
 
   @override
@@ -231,25 +156,6 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
                       ],
                     ),
                   ),
-
-                  SizedBox(height: 16.h),
-
-                  // Region Filter Chips
-                  SizedBox(
-                    height: 40.h,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        _buildRegionChip("International"),
-                        SizedBox(width: 8.w),
-                        _buildRegionChip("South America"),
-                        SizedBox(width: 8.w),
-                        _buildRegionChip("Asia"),
-                        SizedBox(width: 8.w),
-                        _buildRegionChip("North America"),
-                      ],
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -257,89 +163,84 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
 
           // Leagues List
           Expanded(
-            child: _filteredLeagues.isEmpty
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.emoji_events_outlined,
-                          size: 64.sp,
-                          color: AppColors.grey,
-                        ),
-                        AppSpacing.h16,
-                        Text(
-                          AppStrings.noLeagues,
-                          style: FontManager.bodyLarge(
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                : ListView.builder(
-                    padding: EdgeInsets.symmetric(vertical: 8.h),
-                    itemCount:
-                        _filteredLeagues.length + 1, // +1 for premium card
-                    itemBuilder: (context, index) {
-                      // Last item → premium upgrade card
-                      if (index == _filteredLeagues.length) {
-                        return PremiumUpgradeCard(
-                          onUpgradeTap: () {
-                            // TODO: Navigate to upgrade screen
-                          },
-                        );
-                      }
-
-                      final league = _filteredLeagues[index];
-                      return LeagueCard(
-                        leagueName: league.leagueName,
-                        countryOrRegion: league.countryOrRegion,
-                        iconType: league.iconType,
-                        iconLabel: league.iconLabel,
-                        flagEmoji: league.flagEmoji,
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      DetailedLeaguesScreen()));
-                        },
-                      );
-                    },
-                  ),
+            child: _buildBody(),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildRegionChip(String region) {
-    final isSelected = _selectedRegion == region;
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedRegion = region;
-        });
+  Widget _buildBody() {
+    if (_isLoading) {
+      return Center(child: CircularProgressIndicator());
+    }
+
+    if (_errorMessage != null) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.error_outline, size: 48.sp, color: Colors.red),
+            SizedBox(height: 16.h),
+            Text(_errorMessage!, style: TextStyle(color: Colors.red)),
+            SizedBox(height: 16.h),
+            ElevatedButton(
+              onPressed: _fetchLeagues,
+              child: Text("Retry"),
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (_filteredLeagues.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.emoji_events_outlined,
+              size: 64.sp,
+              color: AppColors.grey,
+            ),
+            AppSpacing.h16,
+            Text(
+              AppStrings.noLeagues,
+              style: FontManager.bodyLarge(
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return ListView.builder(
+      padding: EdgeInsets.symmetric(vertical: 8.h),
+      itemCount: _filteredLeagues.length + 1, // +1 for premium card
+      itemBuilder: (context, index) {
+        // Last item → premium upgrade card
+        if (index == _filteredLeagues.length) {
+          return PremiumUpgradeCard(
+            onUpgradeTap: () {
+              // TODO: Navigate to upgrade screen
+            },
+          );
+        }
+
+        final league = _filteredLeagues[index];
+        return LeagueCard(
+          leagueName: league.name ?? "Unknown League",
+          countryOrRegion: league.country?.name ?? "Unknown Country",
+          logoUrl: league.logo,
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => DetailedLeaguesScreen()));
+          },
+        );
       },
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-        decoration: BoxDecoration(
-          color: isSelected ? AppColors.primaryColor : AppColors.white,
-          borderRadius: BorderRadius.circular(20.r),
-          border: Border.all(
-            color: isSelected ? AppColors.primaryColor : AppColors.greyE8,
-            width: 1.w,
-          ),
-        ),
-        child: Text(
-          region,
-          style: FontManager.labelMedium(
-            color: isSelected ? AppColors.white : AppColors.textPrimary,
-            fontSize: 14,
-          ),
-        ),
-      ),
     );
   }
 }

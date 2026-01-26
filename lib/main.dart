@@ -57,12 +57,6 @@ void main() async {
     }
     runApp(
       EasyLocalization(
-        child: MultiProvider(
-          providers: [
-            ChangeNotifierProvider(create: (_) => MatchProvider()),
-          ],
-          child: const ScoreLivePro(),
-        ),
         // Supported locales matching translation files in assets/translations/
         supportedLocales: const [
           Locale('en', 'US'), // English
@@ -77,6 +71,12 @@ void main() async {
         startLocale: startLocale,
         useOnlyLangCode:
             false, // Use full locale (en-US) not just language code
+        child: MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (_) => MatchProvider()),
+          ],
+          child: const ScoreLivePro(),
+        ),
       ),
     );
   } catch (e, stackTrace) {

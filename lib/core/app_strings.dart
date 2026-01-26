@@ -1,12 +1,3 @@
-import 'package:flutter/material.dart';
-
-/// App Strings for ScoreLivePro
-/// Supports 6 languages: English, Spanish, French, Arabic, Portuguese, German
-///
-/// Usage:
-/// ```dart
-/// AppStrings.get(context).appName
-/// ```
 class AppStrings {
   static const String maybeLater = "Maybe Later";
   static const String saveToFavorites = "Save to Favorites";
