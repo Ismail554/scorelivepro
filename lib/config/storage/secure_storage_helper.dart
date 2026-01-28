@@ -95,4 +95,22 @@ class SecureStorageHelper {
   static Future<void> clearUserType() async {
     await _storage.delete(key: _userTypeKey);
   }
+
+  // User object key
+  static const String _userKey = 'user_data';
+
+  /// Save user object safely
+  static Future<void> saveUser(String userJson) async {
+    await _storage.write(key: _userKey, value: userJson);
+  }
+
+  /// Get user object
+  static Future<String?> getUser() async {
+    return await _storage.read(key: _userKey);
+  }
+
+  /// Clear user object
+  static Future<void> clearUser() async {
+    await _storage.delete(key: _userKey);
+  }
 }

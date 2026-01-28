@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:scorelivepro/app.dart';
 import 'package:scorelivepro/config/language/lanugage_provider.dart';
 import 'package:scorelivepro/provider/match_provider.dart';
+import 'package:scorelivepro/provider/auth_provider.dart';
+import 'package:scorelivepro/services/dio_service.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -11,6 +13,9 @@ void main() async {
   try {
     // Initialize EasyLocalization
     await EasyLocalization.ensureInitialized();
+
+    // Initialize Dio Interceptors
+    DioManager.init();
 
     // Get saved language from secure storage
     String? savedLanguage;
@@ -74,6 +79,7 @@ void main() async {
         child: MultiProvider(
           providers: [
             ChangeNotifierProvider(create: (_) => MatchProvider()),
+            ChangeNotifierProvider(create: (_) => AuthProvider()),
           ],
           child: const ScoreLivePro(),
         ),

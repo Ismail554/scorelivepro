@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/app_colors.dart';
@@ -19,31 +20,64 @@ class LeaguesScreen extends StatefulWidget {
 }
 
 class _LeaguesScreenState extends State<LeaguesScreen> {
+  final ScrollController _scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
   List<LeagueModel> _allLeagues = [];
   List<LeagueModel> _filteredLeagues = [];
   bool _isLoading = true;
+  bool _isMoreLoading = false;
   String? _errorMessage;
+  int _currentPage = 1;
+  bool _hasMore = true;
 
   @override
   void initState() {
     super.initState();
     _fetchLeagues();
     _searchController.addListener(_onSearchChanged);
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+            _scrollController.position.maxScrollExtent * 0.9 &&
+        !_isMoreLoading &&
+        _hasMore) {
+      _loadMoreLeagues();
+    }
+  }
+
+  Timer? _debounce;
+
+  void _onSearchChanged() {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      _fetchLeagues();
+    });
   }
 
   Future<void> _fetchLeagues() async {
     setState(() {
       _isLoading = true;
       _errorMessage = null;
+      _currentPage = 1;
+      _allLeagues.clear();
+      _filteredLeagues.clear();
+      _hasMore = true; // Reset hasMore on new search
     });
 
     try {
-      final leagues = await LeagueService.fetchLeagues();
-      if (leagues != null) {
+      final query = _searchController.text.trim();
+      final response = await LeagueService.fetchLeagues(
+        page: 1,
+        search: query.isNotEmpty ? query : null,
+      );
+
+      if (response != null) {
         setState(() {
-          _allLeagues = leagues;
-          _filteredLeagues = leagues;
+          _allLeagues = response.results;
+          _filteredLeagues = List.from(_allLeagues);
+          _hasMore = response.next != null;
           _isLoading = false;
         });
       } else {
@@ -60,24 +94,48 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
     }
   }
 
-  void _onSearchChanged() {
-    final query = _searchController.text.toLowerCase();
+  Future<void> _loadMoreLeagues() async {
+    if (_isMoreLoading || !_hasMore) return; // Add guard clause
+
     setState(() {
-      if (query.isEmpty) {
-        _filteredLeagues = _allLeagues;
-      } else {
-        _filteredLeagues = _allLeagues.where((league) {
-          final name = league.name?.toLowerCase() ?? '';
-          final country = league.country?.name?.toLowerCase() ?? '';
-          return name.contains(query) || country.contains(query);
-        }).toList();
-      }
+      _isMoreLoading = true;
     });
+
+    try {
+      final nextPage = _currentPage + 1;
+      final query = _searchController.text.trim();
+
+      final response = await LeagueService.fetchLeagues(
+        page: nextPage,
+        search: query.isNotEmpty ? query : null,
+      );
+
+      if (response != null) {
+        setState(() {
+          _currentPage = nextPage;
+          _allLeagues.addAll(response.results);
+          _filteredLeagues =
+              List.from(_allLeagues); // No filtering needed, API does it
+          _hasMore = response.next != null;
+          _isMoreLoading = false;
+        });
+      } else {
+        setState(() {
+          _isMoreLoading = false;
+          // Don't set hasMore to false on error, allow retry
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _isMoreLoading = false;
+      });
+    }
   }
 
   @override
   void dispose() {
     _searchController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -216,10 +274,19 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
     }
 
     return ListView.builder(
+      controller: _scrollController,
       padding: EdgeInsets.symmetric(vertical: 8.h),
-      itemCount: _filteredLeagues.length + 1, // +1 for premium card
+      itemCount: _filteredLeagues.length + 1 + (_isMoreLoading ? 1 : 0),
       itemBuilder: (context, index) {
-        // Last item → premium upgrade card
+        // Loading indicator at the bottom
+        if (index == _filteredLeagues.length + 1) {
+          return Padding(
+            padding: EdgeInsets.symmetric(vertical: 16.h),
+            child: const Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        // Premium upgrade card (now at second to last position if loading)
         if (index == _filteredLeagues.length) {
           return PremiumUpgradeCard(
             onUpgradeTap: () {

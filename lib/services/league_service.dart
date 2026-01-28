@@ -3,9 +3,17 @@ import 'package:scorelivepro/services/api_service.dart';
 import 'package:scorelivepro/services/dio_service.dart';
 
 class LeagueService {
-  static Future<List<LeagueModel>?> fetchLeagues() async {
+  static Future<LeagueResponse?> fetchLeagues({
+    int page = 1,
+    String? search,
+  }) async {
+    String url = "${ApiEndPoint.leagues}?page=$page";
+    if (search != null && search.isNotEmpty) {
+      url += "&search=$search";
+    }
+
     final result = await DioManager.apiRequest(
-      url: ApiEndPoint.leagues,
+      url: url,
       methods: Methods.get,
       skipAuth: true,
     );
@@ -13,16 +21,10 @@ class LeagueService {
     return result.fold(
       (error) => null,
       (data) {
-        if (data is List) {
-          return data.map((e) => LeagueModel.fromJson(e)).toList();
-        } else if (data is Map && data.containsKey('data')) {
-          // Handle potential wrapped response like { data: [...] }
-          final list = data['data'];
-          if (list is List) {
-            return list.map((e) => LeagueModel.fromJson(e)).toList();
-          }
+        if (data is Map<String, dynamic>) {
+          return LeagueResponse.fromJson(data);
         }
-        return null; // Or empty list depending on preference
+        return null;
       },
     );
   }

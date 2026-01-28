@@ -95,7 +95,7 @@ class DioManager {
           // Add UUID header
           try {
             final uuid = await SecureStorageHelper.getUuid();
-            options.headers['uuid'] = uuid;
+            options.headers['X-Device-ID'] = uuid;
             log('🆔 Added UUID: $uuid', name: 'HEADER');
           } catch (e) {
             log('⚠️ Failed to add UUID header: $e', name: 'HEADER');

@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
+import 'package:scorelivepro/core/app_spacing.dart';
 
 import 'package:scorelivepro/core/assets_manager.dart';
 import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/font_manager.dart';
+import 'package:scorelivepro/provider/auth_provider.dart';
+import 'package:scorelivepro/views/auth/sign_up/sign_up_screen.dart';
+import 'package:scorelivepro/views/home_views/home_screen.dart';
+import 'package:scorelivepro/views/main_navigation/main_navigation_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -146,22 +152,49 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(height: 12.h),
 
                 // Login Button
-                SizedBox(
-                  width: double.maxFinite,
-                  height: 56.h,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // TODO: Implement Login Logic
-                    },
-                    child: Text(
-                      "Login",
-                      style: FontManager.labelLarge(
-                        color: Colors.white,
-                        fontSize: 16,
-                      ),
+                Consumer<AuthProvider>(builder: (context, auth, _) {
+                  return SizedBox(
+                    width: double.maxFinite,
+                    height: 56.h,
+                    child: ElevatedButton(
+                      onPressed: auth.isLoading
+                          ? null
+                          : () async {
+                              if (_emailController.text.isEmpty ||
+                                  _passwordController.text.isEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(
+                                          "Please enter email and password")),
+                                );
+                                return;
+                              }
+                              final success = await auth.login(
+                                _emailController.text,
+                                _passwordController.text,
+                              );
+                              if (success && context.mounted) {
+                                Navigator.pop(context);
+                              } else if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(
+                                          "Login failed. Please check your credentials.")),
+                                );
+                              }
+                            },
+                      child: auth.isLoading
+                          ? const CircularProgressIndicator(color: Colors.white)
+                          : Text(
+                              "Login",
+                              style: FontManager.labelLarge(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
+                            ),
                     ),
-                  ),
-                ),
+                  );
+                }),
                 SizedBox(height: 18.h),
 
                 // OR Divider
@@ -183,6 +216,41 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
                 SizedBox(height: 18.h),
+                // Guest Login
+                // Guest Login
+                OutlinedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MainNavigationScreen(),
+                      ),
+                    );
+                  },
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: Colors.grey.shade300),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16.r),
+                    ),
+                    padding: EdgeInsets.symmetric(vertical: 14.h),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.person_outline,
+                          color: AppColors.textPrimary, size: 24.w),
+                      SizedBox(width: 8.w),
+                      Text(
+                        "Continue as a Guest",
+                        style: FontManager.labelMedium(
+                          fontSize: 16,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                AppSpacing.h10,
 
                 // Google Login
                 OutlinedButton(
@@ -213,7 +281,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     TextButton(
                       onPressed: () {
-                        // TODO: Navigate to Sign Up
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SignUpScreen(),
+                          ),
+                        );
                       },
                       child: Text(
                         "Sign Up",

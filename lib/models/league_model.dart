@@ -25,6 +25,33 @@ class LeagueModel {
   }
 }
 
+class LeagueResponse {
+  final int count;
+  final String? next;
+  final String? previous;
+  final List<LeagueModel> results;
+
+  LeagueResponse({
+    required this.count,
+    this.next,
+    this.previous,
+    required this.results,
+  });
+
+  factory LeagueResponse.fromJson(Map<String, dynamic> json) {
+    return LeagueResponse(
+      count: json['count'] ?? 0,
+      next: json['next'],
+      previous: json['previous'],
+      results: json['results'] != null
+          ? (json['results'] as List)
+              .map((e) => LeagueModel.fromJson(e))
+              .toList()
+          : [],
+    );
+  }
+}
+
 class Country {
   final String? name;
   final String? code;

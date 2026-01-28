@@ -4,6 +4,9 @@ import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/app_spacing.dart';
 import 'package:scorelivepro/core/app_strings.dart';
 import 'package:scorelivepro/core/font_manager.dart';
+import 'package:provider/provider.dart';
+import 'package:scorelivepro/provider/auth_provider.dart';
+import 'package:scorelivepro/views/auth/login_screen.dart';
 import 'package:scorelivepro/views/favorites_views/favorites_teams_screen.dart';
 import 'package:scorelivepro/widget/favorites/widget_favorite_league_card.dart';
 import 'package:scorelivepro/widget/favorites/widget_favorite_team_card.dart';
@@ -144,11 +147,17 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Sync Favorites Card
-                  SyncFavoritesCard(
-                    onLoginTap: () {
-                      // TODO: Navigate to login screen
-                    },
-                  ),
+                  Consumer<AuthProvider>(builder: (context, auth, _) {
+                    if (auth.isLoggedIn) return const SizedBox.shrink();
+                    return SyncFavoritesCard(
+                      onLoginTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const LoginScreen()));
+                      },
+                    );
+                  }),
 
                   // Upcoming Matches Section
                   SectionHeader(
