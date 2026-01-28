@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
+import 'package:scorelivepro/provider/notification_provider.dart';
 import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/app_spacing.dart';
 import 'package:scorelivepro/core/app_strings.dart';
 import 'package:scorelivepro/core/font_manager.dart';
 import 'package:scorelivepro/views/notification_views/models/notification_model.dart';
 import 'package:scorelivepro/widget/notifications/widget_notification_card.dart';
-import 'package:scorelivepro/widget/notifications/widget_premium_notification_card.dart';
 
 class NotificationAllScreen extends StatefulWidget {
   const NotificationAllScreen({super.key});
@@ -81,8 +82,6 @@ class _NotificationAllScreenState extends State<NotificationAllScreen> {
     ),
   ];
 
-  int get _unreadCount => _notifications.where((n) => !n.isRead).length;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,18 +98,8 @@ class _NotificationAllScreenState extends State<NotificationAllScreen> {
                   ? _buildEmptyState()
                   : ListView.builder(
                       padding: EdgeInsets.symmetric(vertical: 8.h),
-                      itemCount:
-                          _notifications.length + 1, // +1 for premium card
+                      itemCount: _notifications.length,
                       itemBuilder: (context, index) {
-                        if (index == _notifications.length) {
-                          // Premium Feature Card at the bottom
-                          return PremiumNotificationCard(
-                            onUpgradeTap: () {
-                              // TODO: Navigate to premium/upgrade screen
-                            },
-                          );
-                        }
-
                         final notification = _notifications[index];
                         return NotificationCard(
                           notification: notification,
@@ -155,38 +144,48 @@ class _NotificationAllScreenState extends State<NotificationAllScreen> {
 
           // Title
           Expanded(
-            child: Text(
-              AppStrings.notifications,
-              style: FontManager.heading2(
-                fontSize: 20,
-                color: AppColors.textPrimary,
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  AppStrings.notifications,
+                  style: FontManager.heading2(
+                    fontSize: 20,
+                    color: AppColors.textPrimary,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.notifications_outlined,
+                      size: 18.sp,
+                      color: AppColors.primaryLight,
+                    ),
+                    SizedBox(width: 4.w),
+                    Consumer<NotificationProvider>(
+                      builder: (context, provider, child) {
+                        return Text(
+                          '${provider.unreadCount} unread notifications',
+                          style: FontManager.bodySmall(
+                            fontSize: 11,
+                            color: AppColors.textSecondary,
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
 
           SizedBox(width: 8.w),
 
           // Bell Icon with Unread Count (Compact)
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.notifications_outlined,
-                size: 18.sp,
-                color: AppColors.textPrimary,
-              ),
-              SizedBox(width: 4.w),
-              Text(
-                '$_unreadCount',
-                style: FontManager.bodySmall(
-                  fontSize: 11,
-                  color: AppColors.textSecondary,
-                ),
-              ),
-            ],
-          ),
 
           SizedBox(width: 8.w),
 
@@ -206,7 +205,7 @@ class _NotificationAllScreenState extends State<NotificationAllScreen> {
                   child: Text(
                     'Mark all read',
                     style: FontManager.labelMedium(
-                      fontSize: 11,
+                      fontSize: 14,
                       color: AppColors.primaryColor,
                     ),
                     maxLines: 1,
@@ -220,16 +219,16 @@ class _NotificationAllScreenState extends State<NotificationAllScreen> {
           SizedBox(width: 4.w),
 
           // Settings Icon
-          IconButton(
-            icon: const Icon(Icons.settings_outlined),
-            onPressed: () {
-              // TODO: Navigate to notification settings
-            },
-            color: AppColors.textPrimary,
-            iconSize: 20.sp,
-            constraints: const BoxConstraints(),
-            padding: EdgeInsets.all(8.w),
-          ),
+          // IconButton(
+          //   icon: const Icon(Icons.settings_outlined),
+          //   onPressed: () {
+          //     // TODO: Navigate to notification settings
+          //   },
+          //   color: AppColors.textPrimary,
+          //   iconSize: 20.sp,
+          //   constraints: const BoxConstraints(),
+          //   padding: EdgeInsets.all(8.w),
+          // ),
         ],
       ),
     );
@@ -293,6 +292,8 @@ class _NotificationAllScreenState extends State<NotificationAllScreen> {
         );
       }).toList();
     });
+    // Optimistically update provider count to 0
+    Provider.of<NotificationProvider>(context, listen: false).setUnreadCount(0);
   }
 
   /// Delete notification

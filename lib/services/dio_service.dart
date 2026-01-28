@@ -350,6 +350,7 @@ class DioManager {
           response = await _dio.get(
             url,
             queryParameters: queryParameters,
+            data: body, // Support body in GET requests
             options: options,
           );
           break;

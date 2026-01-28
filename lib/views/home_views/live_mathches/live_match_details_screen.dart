@@ -111,50 +111,59 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
 
   /// Top Stack Section - Header + Match Overview
   Widget _buildTopStack() {
-    return SizedBox(
-      height: 270.h, // Increased to accommodate tab bar
-      width: double.maxFinite,
-      child: Stack(
-        children: [
-          // Stadium Background Image
-          Positioned.fill(
-            child: Image.asset(
-              ImageAssets.home_bg, // Use stadium/match background image
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return Container(color: AppColors.darkGrey);
-              },
-            ),
-          ),
+    return Consumer<MatchProvider>(
+      builder: (context, provider, child) {
+        // Use live data if available, otherwise fallback to widget data
+        final currentMatch = (widget.matchData.id != null)
+            ? (provider.getMatch(widget.matchData.id!) ?? widget.matchData)
+            : widget.matchData;
 
-          // Dark Overlay
-          Positioned.fill(
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.black.withOpacity(0.4),
-                    Colors.black.withOpacity(0.2),
-                  ],
+        return SizedBox(
+          height: 270.h, // Increased to accommodate tab bar
+          width: double.maxFinite,
+          child: Stack(
+            children: [
+              // Stadium Background Image
+              Positioned.fill(
+                child: Image.asset(
+                  ImageAssets.home_bg, // Use stadium/match background image
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(color: AppColors.darkGrey);
+                  },
                 ),
               ),
-            ),
+
+              // Dark Overlay
+              Positioned.fill(
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.black.withOpacity(0.4),
+                        Colors.black.withOpacity(0.2),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+              // Header (Back Button, League Name, Notification Bell)
+              _buildHeader(currentMatch),
+
+              // Match Overview (Live Indicator, Teams, Score)
+              _buildMatchOverview(currentMatch),
+            ],
           ),
-
-          // Header (Back Button, League Name, Notification Bell)
-          _buildHeader(),
-
-          // Match Overview (Live Indicator, Teams, Score)
-          _buildMatchOverview(),
-        ],
-      ),
+        );
+      },
     );
   }
 
   /// Header with Back Button, League Name, and Notification Bell
-  Widget _buildHeader() {
+  Widget _buildHeader(Data matchData) {
     return Positioned(
       top: 0,
       left: 0,
@@ -181,7 +190,7 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
                   child: Builder(
                     builder: (context) {
                       final leagueName =
-                          widget.matchData.league?.name ?? "Unknown League";
+                          matchData.league?.name ?? "Unknown League";
                       final textStyle = FontManager.heading3(
                         fontSize: 18,
                         color: AppColors.white,
@@ -250,7 +259,7 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
   }
 
   /// Match Overview - Live Indicator, Teams, Score
-  Widget _buildMatchOverview() {
+  Widget _buildMatchOverview(Data matchData) {
     return Positioned(
       bottom: 0,
       top: 48,
@@ -262,12 +271,12 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
           children: [
             // Live Indicator
             AppSpacing.h24,
-            _buildLiveIndicator(),
+            _buildLiveIndicator(matchData),
 
             AppSpacing.h2,
 
             // Teams and Score
-            _buildScoreboard(),
+            _buildScoreboard(matchData),
           ],
         ),
       ),
@@ -275,7 +284,7 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
   }
 
   /// Live Indicator Badge
-  Widget _buildLiveIndicator() {
+  Widget _buildLiveIndicator(Data matchData) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
       decoration: BoxDecoration(
@@ -296,7 +305,7 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
           ),
           AppSpacing.w8,
           Text(
-            "${widget.matchData.statusShort ?? 'LIVE'} - ${widget.matchData.elapsed ?? 0}'",
+            "${matchData.statusShort ?? 'LIVE'} - ${matchData.elapsed ?? 0}'",
             style: FontManager.labelMedium(
               fontSize: 12,
               color: AppColors.white,
@@ -308,7 +317,7 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
   }
 
   /// Scoreboard with Team Logos and Scores
-  Widget _buildScoreboard() {
+  Widget _buildScoreboard(Data matchData) {
     return Padding(
       padding: const EdgeInsets.all(10),
       child: Row(
@@ -317,8 +326,8 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
           // Home Team
           Expanded(
             child: _buildTeam(
-              logo: widget.matchData.homeTeam?.logo ?? "",
-              name: widget.matchData.homeTeam?.name ?? "Home",
+              logo: matchData.homeTeam?.logo ?? "",
+              name: matchData.homeTeam?.name ?? "Home",
             ),
           ),
 
@@ -326,7 +335,7 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 12.w),
             child: Text(
-              "${widget.matchData.goals?.home ?? 0} - ${widget.matchData.goals?.away ?? 0}",
+              "${matchData.goals?.home ?? 0} - ${matchData.goals?.away ?? 0}",
               style: FontManager.matchScore(
                 fontSize: 34.sp,
                 color: AppColors.white,
@@ -338,8 +347,8 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
           // Away Team
           Expanded(
             child: _buildTeam(
-              logo: widget.matchData.awayTeam?.logo ?? "",
-              name: widget.matchData.awayTeam?.name ?? "Away",
+              logo: matchData.awayTeam?.logo ?? "",
+              name: matchData.awayTeam?.name ?? "Away",
             ),
           ),
         ],

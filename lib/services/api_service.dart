@@ -22,5 +22,10 @@ class ApiEndPoint {
 
   // ============= Leagues =============
   static String getFixtures(int id) => "$_baseUrl/sports/fixtures/$id/";
-  static String getTeams(int id) => "$_baseUrl/sports/teams/$id/"; // response: { "id": 311, "name": "Albirex Niigata", "logo": "https://media.api-sports.io/football/teams/311.png" }
+  static String getTeams(int id) =>
+      "$_baseUrl/sports/teams/$id/"; // response: { "id": 311, "name": "Albirex Niigata", "logo": "https://media.api-sports.io/football/teams/311.png" }
+
+  // ============= Notifications =============
+  static String unreadNotificationsCount() =>
+      "$_baseUrl/notifications/unread-count/"; // response body: { "unread_count": 0 }
 }

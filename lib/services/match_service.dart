@@ -125,17 +125,35 @@ class MatchService {
     );
   }
 
-  static Future<List<Data>?> getFixtures() async {
+  static Future<List<Data>?> getFixtures({String? status, int? page}) async {
+    final Map<String, dynamic> body = {};
+    if (status != null) body['status'] = status;
+    if (page != null) body['page'] = page;
+
     final result = await DioManager.apiRequest(
       url: ApiEndPoint.up_fin_matches,
       methods: Methods.get,
+      // Change from queryParameters to body as requested
+      body: body.isNotEmpty ? body : null,
       skipAuth: true,
     );
 
     return result.fold(
       (error) => null,
       (data) {
-        // Check if data is directly a List (Matches direct API response)
+        // 1. Handle new pagination structure with 'results' key
+        if (data is Map && data.containsKey('results')) {
+          final results = data['results'];
+          if (results is List) {
+            List<Data> fixtures = [];
+            for (var v in results) {
+              fixtures.add(Data.fromJson(v));
+            }
+            return fixtures;
+          }
+        }
+
+        // 2. Handle direct list (Old behavior fallback)
         if (data is List) {
           List<Data> fixtures = [];
           for (var v in data) {
@@ -144,7 +162,8 @@ class MatchService {
           return fixtures;
         }
 
-        if (data['data'] != null && data['data'] is List) {
+        // 3. Handle 'data' wrapper (Another common pattern)
+        if (data is Map && data['data'] != null && data['data'] is List) {
           List<Data> fixtures = [];
           data['data'].forEach((v) {
             fixtures.add(Data.fromJson(v));
@@ -152,7 +171,10 @@ class MatchService {
           return fixtures;
         }
 
-        if (data['response'] != null && data['response'] is List) {
+        // 4. Handle 'response' wrapper (API-Football standard)
+        if (data is Map &&
+            data['response'] != null &&
+            data['response'] is List) {
           List<Data> fixtures = [];
           data['response'].forEach((v) {
             fixtures.add(Data.fromJson(v));

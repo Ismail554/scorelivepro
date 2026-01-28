@@ -4,6 +4,7 @@ import 'package:scorelivepro/app.dart';
 import 'package:scorelivepro/config/language/lanugage_provider.dart';
 import 'package:scorelivepro/provider/match_provider.dart';
 import 'package:scorelivepro/provider/auth_provider.dart';
+import 'package:scorelivepro/provider/notification_provider.dart';
 import 'package:scorelivepro/services/dio_service.dart';
 import 'package:provider/provider.dart';
 
@@ -79,6 +80,7 @@ void main() async {
           providers: [
             ChangeNotifierProvider(create: (_) => MatchProvider()),
             ChangeNotifierProvider(create: (_) => AuthProvider()),
+            ChangeNotifierProvider(create: (_) => NotificationProvider()),
           ],
           child: const ScoreLivePro(),
         ),
