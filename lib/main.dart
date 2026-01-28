@@ -13,7 +13,6 @@ void main() async {
   try {
     // Initialize EasyLocalization
     await EasyLocalization.ensureInitialized();
-
     // Initialize Dio Interceptors
     DioManager.init();
 
