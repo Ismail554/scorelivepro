@@ -78,6 +78,12 @@ class SecureStorageHelper {
     return uuid;
   }
 
+  /// Check if UUID exists (First time user check)
+  static Future<bool> hasUuid() async {
+    String? uuid = await _storage.read(key: _uuidKey);
+    return uuid != null && uuid.isNotEmpty;
+  }
+
   // User type key
   static const String _userTypeKey = 'user_type';
 

@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:scorelivepro/core/assets_manager.dart';
 import 'package:scorelivepro/widget/onboarding/onboarding_controller.dart';
+import 'package:scorelivepro/views/main_navigation/main_navigation_screen.dart';
+import 'package:scorelivepro/config/storage/secure_storage_helper.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -19,9 +21,21 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void _navigateToOnboarding() {
-    Timer(const Duration(seconds: 2), () {
+    Timer(const Duration(seconds: 2), () async {
       if (mounted) {
-        OnboardingController.navigateToOnboarding(context);
+        bool hasUuid = await SecureStorageHelper.hasUuid();
+        if (mounted) {
+          if (hasUuid) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const MainNavigationScreen(),
+              ),
+            );
+          } else {
+            OnboardingController.navigateToOnboarding(context);
+          }
+        }
       }
     });
   }
