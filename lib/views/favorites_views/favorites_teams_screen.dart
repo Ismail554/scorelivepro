@@ -202,8 +202,10 @@ class _FavoritesTeamsScreenState extends State<FavoritesTeamsScreen> {
                           isFavorited:
                               false, // Default false as API doesn't return state
                           logoUrl: team.logo,
-                          // Favorites flow intentionally disabled for now
-                          onFavoriteToggle: null,
+                          onFavoriteToggle: () {
+                            // TODO: Implement favorite toggle logic
+                            debugPrint("Toggle favorite for ${team.name}");
+                          },
                         );
                       },
                     );
