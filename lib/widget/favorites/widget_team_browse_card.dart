@@ -9,7 +9,9 @@ class TeamBrowseCard extends StatelessWidget {
   final String teamName;
   final String leagueName;
   final bool isFavorited;
+
   final VoidCallback? onFavoriteToggle;
+  final String? logoUrl;
 
   const TeamBrowseCard({
     super.key,
@@ -17,6 +19,7 @@ class TeamBrowseCard extends StatelessWidget {
     required this.leagueName,
     this.isFavorited = false,
     this.onFavoriteToggle,
+    this.logoUrl,
   });
 
   @override
@@ -50,10 +53,19 @@ class TeamBrowseCard extends StatelessWidget {
               color: AppColors.greyE8.withOpacity(0.5),
               shape: BoxShape.circle,
             ),
-            child: Image.asset(
-              IconAssets.soccer_icon,
-              fit: BoxFit.contain,
-            ),
+            child: logoUrl != null
+                ? Image.network(
+                    logoUrl!,
+                    fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) => Image.asset(
+                      IconAssets.soccer_icon,
+                      fit: BoxFit.contain,
+                    ),
+                  )
+                : Image.asset(
+                    IconAssets.soccer_icon,
+                    fit: BoxFit.contain,
+                  ),
           ),
 
           SizedBox(width: 16.w),
@@ -83,24 +95,25 @@ class TeamBrowseCard extends StatelessWidget {
           ),
 
           // Favorite/Add Button
-          GestureDetector(
-            onTap: onFavoriteToggle,
-            child: Container(
-              width: 40.w,
-              height: 40.w,
-              decoration: BoxDecoration(
-                color: isFavorited
-                    ? AppColors.primaryColor.withOpacity(0.1)
-                    : Colors.transparent,
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              child: Icon(
-                isFavorited ? Icons.favorite : Icons.add,
-                color: isFavorited ? AppColors.primaryColor : AppColors.grey,
-                size: 24.sp,
+          if (onFavoriteToggle != null)
+            GestureDetector(
+              onTap: onFavoriteToggle,
+              child: Container(
+                width: 40.w,
+                height: 40.w,
+                decoration: BoxDecoration(
+                  color: isFavorited
+                      ? AppColors.primaryColor.withOpacity(0.1)
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: Icon(
+                  isFavorited ? Icons.favorite : Icons.add,
+                  color: isFavorited ? AppColors.primaryColor : AppColors.grey,
+                  size: 24.sp,
+                ),
               ),
             ),
-          ),
         ],
       ),
     );

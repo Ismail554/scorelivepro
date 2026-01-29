@@ -117,15 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       // Live Matches Section
                       SectionHeader(
                         title: AppStrings.liveMatches,
-                        onSeeAllTap: () {
-                          // Navigate to LiveMatchesScreen tab 0 (Live)
-                          // Assuming we can switch tab from here via MainNavigation or just push the screen.
-                          // For now, let's just use the MainNavigation to go to Matches tab.
-                          // Ideally this would switch the BottomNavBar index.
-                          // Since we don't have direct access here, we might need a callback or Provider.
-                          // But for now, let's just print or do nothing as passing a dummy match isn't right.
-                          // Or better, navigate to the MainNavigation with index 0.
-                        },
+                        onSeeAllTap: () {},
                       ),
                       ValueListenableBuilder<LiveScoreModel?>(
                         valueListenable:
@@ -189,24 +181,53 @@ class _HomeScreenState extends State<HomeScreen> {
                           // TODO: Navigate to upcoming matches screen
                         },
                       ),
-                      MatchCard(
-                        leagueName: 'Bundesliga',
-                        homeTeam: 'Bayern Munich',
-                        awayTeam: 'Borussia Dortmund',
-                        timeInfo: 'Today, 18:30',
-                        status: MatchStatus.upcoming,
-                        onTap: () {
-                          // TODO: Navigate to match details
-                        },
-                      ),
-                      MatchCard(
-                        leagueName: 'Ligue 1',
-                        homeTeam: 'PSG',
-                        awayTeam: 'Marseille',
-                        timeInfo: 'Today, 20:45',
-                        status: MatchStatus.upcoming,
-                        onTap: () {
-                          // TODO: Navigate to match details
+                      Consumer<MatchProvider>(
+                        builder: (context, provider, child) {
+                          if (provider.isLoadingUpcoming &&
+                              provider.upcomingMatches.isEmpty) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          }
+
+                          if (provider.upcomingMatches.isEmpty) {
+                            return Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16.w, vertical: 8.h),
+                              child: Text(
+                                "No upcoming matches",
+                                style: FontManager.bodyMedium(
+                                    color: AppColors.textSecondary),
+                              ),
+                            );
+                          }
+
+                          // Show only top 2 matches
+                          final upcomingDisplay =
+                              provider.upcomingMatches.take(2).toList();
+
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            padding: EdgeInsets.zero,
+                            itemCount: upcomingDisplay.length,
+                            itemBuilder: (context, index) {
+                              final match = upcomingDisplay[index];
+                              return MatchCard(
+                                leagueName:
+                                    match.league?.name ?? "Unknown League",
+                                homeTeam: match.homeTeam?.name ?? "Home",
+                                awayTeam: match.awayTeam?.name ?? "Away",
+                                timeInfo: match.date != null
+                                    ? DateFormat('EEE, HH:mm').format(
+                                        DateTime.parse(match.date!).toLocal())
+                                    : "Upcoming",
+                                status: MatchStatus.upcoming,
+                                onTap: () {
+                                  // TODO: Navigate to match details
+                                },
+                              );
+                            },
+                          );
                         },
                       ),
                       AppSpacing.h8,

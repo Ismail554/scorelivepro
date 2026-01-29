@@ -6,7 +6,6 @@ class ApiEndPoint {
   static String statistics(int id) =>
       "$_baseUrl/sports/fixtures/$id/statistics/";
   static String get up_fin_matches => "$_baseUrl/sports/fixtures/";
-  static String get leagues => "$_baseUrl/sports/leagues/";
 
   // ============= Auth ================
   static String get login =>
@@ -28,4 +27,13 @@ class ApiEndPoint {
   // ============= Notifications =============
   static String unreadNotificationsCount() =>
       "$_baseUrl/notifications/unread-count/"; // response body: { "unread_count": 0 }
+
+  // ============= Teams & Leagues ==============
+  static String getAllTeams() =>
+      "$_baseUrl/sports/teams/"; // response body: { "count": 15214, "next": "https://api.scorelivepro.it/sports/teams/?page=2", "previous": null, "results": [ { "id": 18391, "name": "ADESG", "logo": "https://media.api-sports.io/football/teams/18391.png" } ] }
+  static String get leagues => "$_baseUrl/sports/leagues/";
+  static String addToFavoriteLeaques() =>
+      "$_baseUrl/auth/profile/favorites/leagues/"; // body: { "id": 0 } , use method POST for add and DELETE for remove
+  static String addToFavoriteTeams() =>
+      "$_baseUrl/auth/profile/favorites/teams/"; // body: { "id": 0 } , use method POST for add and DELETE for remove
 }

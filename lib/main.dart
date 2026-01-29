@@ -7,6 +7,7 @@ import 'package:scorelivepro/provider/auth_provider.dart';
 import 'package:scorelivepro/provider/notification_provider.dart';
 import 'package:scorelivepro/services/dio_service.dart';
 import 'package:provider/provider.dart';
+import 'package:scorelivepro/provider/team_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -79,6 +80,7 @@ void main() async {
         child: MultiProvider(
           providers: [
             ChangeNotifierProvider(create: (_) => MatchProvider()),
+            ChangeNotifierProvider(create: (_) => TeamProvider()),
             ChangeNotifierProvider(create: (_) => AuthProvider()),
             ChangeNotifierProvider(create: (_) => NotificationProvider()),
           ],
