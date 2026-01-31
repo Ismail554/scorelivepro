@@ -174,7 +174,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                 _passwordController.text,
                               );
                               if (success && context.mounted) {
-                                Navigator.pop(context);
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const MainNavigationScreen(),
+                                  ),
+                                );
                               } else if (context.mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(

@@ -27,6 +27,10 @@ class AppStrings {
   static const String noData = "No data available";
   static const String noInternet = "No internet connection";
   static const String changed = "changed";
+  static const String go_to_login = "Go to login";
+  static const String your_account_has_been_created_successfully =
+      "Your account has been created successfully";
+  static const String congratulations = "Congratulations";
 
   // ==================== Splash & Onboarding ====================
   static const String splashLoading = "Loading...";
@@ -42,6 +46,7 @@ class AppStrings {
   static const String skip = "Skip";
   static const String next = "Next";
   static const String getStarted = "Get Started";
+
 
   // ==================== Authentication ====================
   static const String signIn = "Sign In";
