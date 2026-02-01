@@ -18,6 +18,7 @@ class ApiEndPoint {
       "$_baseUrl/auth/verify-email/"; // body: {"email": "user@example.com", "otp": "string"}
   static String get resendOTP =>
       "$_baseUrl/auth/resend-activation-code/"; // body: {"email": "user@example.com"}, response: {"message": ""}
+  static String get googleLogin => "$_baseUrl/auth/google/"; // bodyt:{ "access_token": "string", "code": "string", "id_token": "string" } 
 
   // ============= Leagues =============
   static String getFixtures(int id) => "$_baseUrl/sports/fixtures/$id/";

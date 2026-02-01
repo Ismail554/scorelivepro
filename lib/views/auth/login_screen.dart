@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:scorelivepro/core/app_spacing.dart';
 
@@ -260,7 +261,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 // Google Login
                 OutlinedButton(
-                  onPressed: () {},
+                  onPressed: signIn,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -351,5 +352,16 @@ class _LoginScreenState extends State<LoginScreen> {
         borderSide: const BorderSide(color: Color(0xFFFF7A28)),
       ),
     );
+  }
+
+  Future signIn() async {
+    final success =
+        await Provider.of<AuthProvider>(context, listen: false).googleLogin();
+    if (success && mounted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const MainNavigationScreen()),
+      );
+    }
   }
 }

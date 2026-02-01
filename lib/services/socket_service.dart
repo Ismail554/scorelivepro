@@ -1,6 +1,9 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:flutter/foundation.dart';
+import 'package:scorelivepro/config/storage/secure_storage_helper.dart';
 import 'package:scorelivepro/models/live_ws_model.dart';
+import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 class SocketService {
@@ -13,11 +16,7 @@ class SocketService {
   factory SocketService() => instance;
 
   /// 🔹 Connect to WebSocket
-  void connectSocket(String token) {
-    // Note: token is accepted but ignored if not needed for URL params
-    // If the server expected headers, we'd add them here.
-    // Based on requirements, we are connecting without auth headers for now.
-
+  Future<void> connectSocket(String token) async {
     print("🔹 Connecting to WebSocket...");
 
     // Disconnect previous connection if exists
@@ -25,7 +24,18 @@ class SocketService {
 
     try {
       final uri = Uri.parse("wss://api.scorelivepro.it/ws/live/");
-      _channel = WebSocketChannel.connect(uri);
+
+      Map<String, dynamic> headers = {};
+      // Add UUID header
+      try {
+        final uuid = await SecureStorageHelper.getUuid();
+        headers['X-Device-ID'] = uuid;
+        log('🆔 Added UUID: $uuid', name: 'HEADER');
+      } catch (e) {
+        log('⚠️ Failed to add UUID header: $e', name: 'HEADER');
+      }
+
+      _channel = IOWebSocketChannel.connect(uri, headers: headers);
       print("🟢 WebSocket Connection Initiated");
 
       // Listen to the stream
@@ -55,10 +65,6 @@ class SocketService {
         if (data is Map<String, dynamic>) {
           // Check for "live_score_update" or generic structure
           if (data['type'] == 'live_score_update' || data['data'] != null) {
-            // The model expects the whole JSON or just the data part?
-            // Looking at LiveScoreModel.fromJson: it expects 'type' and 'data'.
-            // The screenshot shows {"type": "live_score_update", "data": [...]}
-            // So we pass the whole map.
             liveScoreNotifier.value = LiveScoreModel.fromJson(data);
           }
         }

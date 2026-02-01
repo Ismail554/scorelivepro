@@ -5,6 +5,8 @@ import 'package:scorelivepro/models/auth_response_model.dart';
 import 'package:scorelivepro/models/user_model.dart';
 import 'package:scorelivepro/services/api_service.dart';
 import 'package:scorelivepro/services/dio_service.dart';
+// ✅ Import the new service
+import 'package:scorelivepro/services/google_auth_service.dart';
 
 class AuthProvider extends ChangeNotifier {
   bool _isLoading = false;
@@ -12,6 +14,9 @@ class AuthProvider extends ChangeNotifier {
 
   User? _user;
   User? get user => _user;
+
+  // Initialize the new Google Service
+  final GoogleAuthService _googleAuthService = GoogleAuthService();
 
   bool get isLoggedIn => _user != null;
 
@@ -26,7 +31,7 @@ class AuthProvider extends ChangeNotifier {
     if (token != null && userJson != null) {
       try {
         _user = User.fromJson(jsonDecode(userJson));
-        _isLoading = false; // Just to be safe, though init is syncish
+        _isLoading = false;
         notifyListeners();
       } catch (e) {
         // If parsing fails, clear storage
@@ -46,7 +51,6 @@ class AuthProvider extends ChangeNotifier {
         body: {
           "email": email,
           "password": password,
-          // "device_id": ... // Isolate/Intercept already handles X-Device-ID header if needed, or we can add it here implicitly if API expects body
         },
         skipAuth: true,
       );
@@ -55,25 +59,11 @@ class AuthProvider extends ChangeNotifier {
         (error) {
           _isLoading = false;
           notifyListeners();
-          return false; // Or rethrow / handle error display via callback
+          return false;
         },
         (data) async {
           try {
-            final authResponse = AuthResponse.fromJson(data);
-
-            if (authResponse.access != null) {
-              await SecureStorageHelper.saveAccessToken(authResponse.access!);
-            }
-            if (authResponse.refresh != null) {
-              await SecureStorageHelper.saveRefreshToken(authResponse.refresh!);
-            }
-            if (authResponse.user != null) {
-              _user = authResponse.user;
-              await SecureStorageHelper.saveUser(jsonEncode(_user!.toJson()));
-            }
-
-            _isLoading = false;
-            notifyListeners();
+            await _handleAuthSuccess(data);
             return true;
           } catch (e) {
             print("Parsing error: $e");
@@ -119,7 +109,6 @@ class AuthProvider extends ChangeNotifier {
         (data) {
           _isLoading = false;
           notifyListeners();
-          // Extract message or use default
           return data['message'] as String? ?? "Registration successful";
         },
       );
@@ -163,7 +152,6 @@ class AuthProvider extends ChangeNotifier {
 
   Future<bool> resendOtp(String email) async {
     try {
-      // Ideally show some loading for resend too, but maybe just return result
       final result = await DioManager.apiRequest(
         url: ApiEndPoint.resendOTP,
         methods: Methods.post,
@@ -177,11 +165,56 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  // 👇 UPDATED: The Real Google Login Implementation
+  Future<bool> googleLogin() async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      // 1. Get Code & Send to Backend
+      final backendData = await _googleAuthService.signInAndSync();
+
+      if (backendData == null) {
+        _isLoading = false;
+        notifyListeners();
+        return false; // Failed or Cancelled
+      }
+
+      // 2. Parse Response (Reusing helper)
+      await _handleAuthSuccess(backendData);
+
+      return true;
+    } catch (e) {
+      _isLoading = false;
+      notifyListeners();
+      print("Google Login Error: $e");
+      return false;
+    }
+  }
+
+  // Helper to reduce code duplication
+  Future<void> _handleAuthSuccess(Map<String, dynamic> data) async {
+    final authResponse = AuthResponse.fromJson(data);
+
+    if (authResponse.access != null) {
+      await SecureStorageHelper.saveAccessToken(authResponse.access!);
+    }
+    if (authResponse.refresh != null) {
+      await SecureStorageHelper.saveRefreshToken(authResponse.refresh!);
+    }
+    if (authResponse.user != null) {
+      _user = authResponse.user;
+      await SecureStorageHelper.saveUser(jsonEncode(_user!.toJson()));
+    }
+
+    _isLoading = false;
+    notifyListeners();
+  }
+
   Future<void> logout() async {
-    await DioManager
-        .logout(); // Clears access token and calls SecureStorageHelper.clearAll
-    await SecureStorageHelper
-        .clearUser(); // Explicitly clear user if clearAll doesn't (Base clearAll might not know about new key)
+    await _googleAuthService.signOut(); // Sign out from Google too
+    await DioManager.logout();
+    await SecureStorageHelper.clearUser();
     _user = null;
     notifyListeners();
   }

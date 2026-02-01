@@ -8,6 +8,8 @@ import 'package:scorelivepro/provider/auth_provider.dart';
 import 'package:scorelivepro/views/auth/login_screen.dart';
 import 'package:scorelivepro/views/auth/sign_up/otp_verifiy_screen.dart';
 import 'package:scorelivepro/core/utils/snackbar_util.dart';
+// ✅ Import Main Navigation
+import 'package:scorelivepro/views/main_navigation/main_navigation_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -58,11 +60,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(
-                    height: 20.h), // Less spacing than login to fit more fields
-                // Header Icon
+                SizedBox(height: 20.h),
                 Container(
-                  width: 80.w, // Slightly smaller than login
+                  width: 80.w,
                   height: 80.w,
                   decoration: BoxDecoration(
                     color: const Color(0xFFFF7A28),
@@ -75,15 +75,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ),
                 SizedBox(height: 16.h),
-
-                // Title
                 Text(
-                  "Create Account", // Corrected from "Welcome Back!"
+                  "Create Account",
                   style: FontManager.heading2(fontSize: 22),
                 ),
                 SizedBox(height: 8.h),
                 Text(
-                  "Sign up to get started!", // Corrected subtitle
+                  "Sign up to get started!",
                   textAlign: TextAlign.center,
                   style: FontManager.bodySmall(
                     color: AppColors.textSecondary,
@@ -307,9 +305,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 }),
                 SizedBox(height: 18.h),
 
-                // Google Sign Up
+                // 👇 GOOGLE LOGIN BUTTON WIRED UP
                 OutlinedButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    // Call the same googleLogin method we updated in AuthProvider
+                    final success =
+                        await Provider.of<AuthProvider>(context, listen: false)
+                            .googleLogin();
+
+                    if (success && context.mounted) {
+                      // Navigate to Main Screen on success
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const MainNavigationScreen()),
+                      );
+                    }
+                    // No need for 'else' snackbar here if you want to handle errors silently
+                    // or let the Provider handle toast messages.
+                  },
                   style: OutlinedButton.styleFrom(
                     padding: EdgeInsets.symmetric(vertical: 14.h),
                     side: BorderSide(color: Colors.grey.withOpacity(0.2)),
