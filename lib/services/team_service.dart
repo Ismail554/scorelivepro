@@ -29,4 +29,25 @@ class TeamService {
       return null;
     }
   }
+
+  static Future<bool> addTeamToFavorites(int teamId) async {
+    try {
+      final response = await DioManager.apiRequest(
+        url: ApiEndPoint.addToFavoriteTeams(),
+        methods: Methods.post,
+        body: {"id": teamId},
+      );
+
+      return response.fold(
+        (error) {
+          debugPrint("Error adding team to favorites: $error");
+          return false;
+        },
+        (data) => true,
+      );
+    } catch (e) {
+      debugPrint("Exception adding team to favorites: $e");
+      return false;
+    }
+  }
 }

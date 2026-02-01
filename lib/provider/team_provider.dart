@@ -44,4 +44,19 @@ class TeamProvider extends ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
+
+  Future<void> addTeamToFavorites(int teamId, BuildContext context) async {
+    final success = await TeamService.addTeamToFavorites(teamId);
+    if (context.mounted) {
+      if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Team added to favorites")),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Failed to add team to favorites")),
+        );
+      }
+    }
+  }
 }

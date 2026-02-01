@@ -6,7 +6,7 @@ import 'package:scorelivepro/services/dio_service.dart';
 class GoogleAuthService {
   // 🔴 YOUR WEB CLIENT ID
   final String _webClientId =
-      "641571105178-brdjpvqttg4jj0j1nfg1qleh8ka766oi.apps.googleusercontent.com";
+      "641571105178-n1cakg9mh25f2qmubq96o6che2gtfa2t.apps.googleusercontent.com";
 
   // Use the singleton instance
   google_lib.GoogleSignIn get _googleSignIn => google_lib.GoogleSignIn.instance;
@@ -99,8 +99,9 @@ class GoogleAuthService {
       url: ApiEndPoint.googleLogin,
       methods: Methods.post,
       body: {
-        "code": authCode,
-        "callback_url": "postmessage", // Backend seems to expect this
+        "code":
+            authCode,
+        "callback_url": "postmessage", 
       },
       skipAuth: true, // Login endpoints usually don't need the bearer token
     );

@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/app_strings.dart';
 import 'package:scorelivepro/core/font_manager.dart';
+import 'package:scorelivepro/core/assets_manager.dart';
+import 'package:scorelivepro/widget/favorites/widget_add_to_favorites_dialog.dart';
 import 'package:scorelivepro/widget/favorites/widget_team_browse_card.dart';
 import 'package:scorelivepro/widget/mini_widget/mw_notification_bell.dart';
 import 'package:scorelivepro/widget/shimmer_loading.dart';
@@ -203,7 +205,29 @@ class _FavoritesTeamsScreenState extends State<FavoritesTeamsScreen> {
                               false, // Default false as API doesn't return state
                           logoUrl: team.logo,
                           onFavoriteToggle: () {
-                            // TODO: Implement favorite toggle logic
+                            showDialog(
+                              context: context,
+                              builder: (context) => AddToFavoritesDialog(
+                                teamId: team.id,
+                                teamName: "${team.name}",
+                                leagueName: "",
+                                teamLogo: team.logo != null
+                                    ? Image.network(
+                                        team.logo!,
+                                        fit: BoxFit.contain,
+                                        errorBuilder:
+                                            (context, error, stackTrace) =>
+                                                Image.asset(
+                                          IconAssets.soccer_icon,
+                                          fit: BoxFit.contain,
+                                        ),
+                                      )
+                                    : Image.asset(
+                                        IconAssets.soccer_icon,
+                                        fit: BoxFit.contain,
+                                      ),
+                              ),
+                            );
                             debugPrint("Toggle favorite for ${team.name}");
                           },
                         );
