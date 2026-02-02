@@ -163,10 +163,13 @@ class AddToFavoritesDialog extends StatelessWidget {
                     spacing: 12.h,
                     children: [
                       ElevatedButton(
-                          onPressed: () {
-                            Provider.of<TeamProvider>(context, listen: false)
-                                .addTeamToFavorites(teamId, context);
-                            Navigator.of(context).pop();
+                          onPressed: () async {
+                            await Provider.of<TeamProvider>(context,
+                                    listen: false)
+                                .addTeamToFavorites(teamId, teamName, context);
+                            if (context.mounted) {
+                              Navigator.of(context).pop();
+                            }
                             if (onSave != null) onSave!();
                           },
                           child: Text(AppStrings.saveToFavorites,

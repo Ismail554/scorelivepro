@@ -6,7 +6,7 @@ import 'package:scorelivepro/services/dio_service.dart';
 class GoogleAuthService {
   // 🔴 YOUR WEB CLIENT ID
   final String _webClientId =
-      "641571105178-n1cakg9mh25f2qmubq96o6che2gtfa2t.apps.googleusercontent.com";
+      "641571105178-d0529b3arcdoo6fd2istoinrdcbh3m9a.apps.googleusercontent.com";
 
   // Use the singleton instance
   google_lib.GoogleSignIn get _googleSignIn => google_lib.GoogleSignIn.instance;
@@ -92,18 +92,18 @@ class GoogleAuthService {
     debugPrint("$yellow------------------------------------------------$reset");
     debugPrint("$yellow GoogleAuthService: PREPARING PAYLOAD:$reset");
     debugPrint("$yellow code: $authCode$reset");
-    debugPrint("$yellow callback_url: postmessage$reset");
+    const String callbackUrl = "postmessage";
+    debugPrint("$yellow callback_url: $callbackUrl$reset");
     debugPrint("$yellow------------------------------------------------$reset");
 
     final result = await DioManager.apiRequest(
       url: ApiEndPoint.googleLogin,
       methods: Methods.post,
       body: {
-        "code":
-            authCode,
-        "callback_url": "postmessage", 
+        "code": authCode,
+        "callback_url": "",
       },
-      skipAuth: true, // Login endpoints usually don't need the bearer token
+      skipAuth: true,
     );
 
     return result.fold(

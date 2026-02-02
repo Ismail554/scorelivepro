@@ -30,7 +30,7 @@ class TeamService {
     }
   }
 
-  static Future<bool> addTeamToFavorites(int teamId) async {
+  static Future<String?> addTeamToFavorites(int teamId) async {
     try {
       final response = await DioManager.apiRequest(
         url: ApiEndPoint.addToFavoriteTeams(),
@@ -41,13 +41,13 @@ class TeamService {
       return response.fold(
         (error) {
           debugPrint("Error adding team to favorites: $error");
-          return false;
+          return error;
         },
-        (data) => true,
+        (data) => null,
       );
     } catch (e) {
       debugPrint("Exception adding team to favorites: $e");
-      return false;
+      return e.toString();
     }
   }
 }
