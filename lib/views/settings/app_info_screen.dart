@@ -8,7 +8,6 @@ class AppInfoScreen extends StatelessWidget {
   const AppInfoScreen({super.key});
 
   // Color Palette form the image
-  final Color primaryOrange = const Color(0xFFFF6B00);
   final Color bgColor = const Color(0xFFF8F9FA);
   final Color cardColor = Colors.white;
   final Color textColor = const Color(0xFF1A1A1A);
@@ -263,10 +262,10 @@ class AppInfoScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: primaryOrange.withOpacity(0.1),
+              color: AppColors.primaryColor.withOpacity(0.1),
               shape: BoxShape.circle,
             ),
-            child: Icon(icon, color: primaryOrange, size: 20),
+            child: Icon(icon, color: AppColors.primaryColor, size: 20),
           ),
           const SizedBox(width: 15),
           Expanded(
@@ -317,7 +316,7 @@ class AppInfoScreen extends StatelessWidget {
               style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 13,
-                  color: isLink ? primaryOrange : Colors.black87)),
+                  color: isLink ? AppColors.primaryColor : Colors.black87)),
         ],
       ),
     );

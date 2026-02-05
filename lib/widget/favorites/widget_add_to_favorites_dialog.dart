@@ -4,18 +4,24 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/app_strings.dart';
 import 'package:scorelivepro/core/font_manager.dart';
+import 'package:provider/provider.dart';
+import 'package:scorelivepro/provider/team_provider.dart';
 
 class AddToFavoritesDialog extends StatelessWidget {
+  final int teamId;
   final String teamName;
   final String leagueName;
+  final Widget? teamLogo;
   final VoidCallback? onSave;
   final VoidCallback? onMaybeLater;
 
   const AddToFavoritesDialog({
     super.key,
+    required this.teamId,
     required this.teamName,
     required this.leagueName,
     this.onSave,
+    this.teamLogo,
     this.onMaybeLater,
   });
 
@@ -43,139 +49,150 @@ class AddToFavoritesDialog extends StatelessWidget {
                 width: 1.w,
               ),
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Add to Favorites?",
-                      style: FontManager.heading3(
-                        color: AppColors
-                            .white, // Text White korechi dark bg er jonno
-                        fontSize: 20,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () => Navigator.of(context).pop(),
-                      child: Icon(
-                        Icons.close,
-                        color: AppColors.white.withOpacity(0.7),
-                        size: 24.sp,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20.h),
-
-                // Team Info Card (Updating to blend with glass)
-                Container(
-                  padding: EdgeInsets.all(16.w),
-                  decoration: BoxDecoration(
-                    color: AppColors.warningLight
-                        .withOpacity(0.1), // Semi-transparent card
-                    borderRadius: BorderRadius.circular(12.r),
-                    border: Border.all(
-                        color: AppColors.primaryColor.withOpacity(0.1)),
-                  ),
-                  child: Row(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Header
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(
-                        width: 48.w,
-                        height: 48.w,
-                        padding: EdgeInsets.all(8.w),
-                        decoration: BoxDecoration(
-                          color: AppColors.white.withOpacity(0.2),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.sports_soccer,
-                          color: AppColors.white,
-                          size: 24.sp,
+                      Text(
+                        "Add to Favorites?",
+                        style: FontManager.heading3(
+                          color: AppColors
+                              .white, // Text White korechi dark bg er jonno
+                          fontSize: 20,
                         ),
                       ),
-                      SizedBox(width: 16.w),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              teamName,
-                              style: FontManager.teamName(
-                                color: AppColors.white,
-                                fontSize: 16,
-                              ),
-                            ),
-                            SizedBox(height: 4.h),
-                            Text(
-                              leagueName,
-                              style: FontManager.leagueName(
-                                color: AppColors.white.withOpacity(0.7),
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
+                      GestureDetector(
+                        onTap: () => Navigator.of(context).pop(),
+                        child: Icon(
+                          Icons.close,
+                          color: AppColors.white.withOpacity(0.7),
+                          size: 24.sp,
                         ),
                       ),
                     ],
                   ),
-                ),
+                  SizedBox(height: 20.h),
 
-                SizedBox(height: 24.h),
+                  // Team Info Card (Updating to blend with glass)
+                  Container(
+                    padding: EdgeInsets.all(16.w),
+                    decoration: BoxDecoration(
+                      color: AppColors.warningLight
+                          .withOpacity(0.1), // Semi-transparent card
+                      borderRadius: BorderRadius.circular(12.r),
+                      border: Border.all(
+                          color: AppColors.primaryColor.withOpacity(0.1)),
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                            width: 48.w,
+                            height: 48.w,
+                            padding: EdgeInsets.all(8.w),
+                            decoration: BoxDecoration(
+                              color: AppColors.white.withOpacity(0.2),
+                              shape: BoxShape.circle,
+                            ),
+                            child: teamLogo
+                            //  Icon(
+                            //   Icons.sports_soccer,
+                            //   color: AppColors.white,
+                            //   size: 24.sp,
+                            // ),
+                            ),
+                        SizedBox(width: 16.w),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                teamName,
+                                style: FontManager.teamName(
+                                  color: AppColors.white,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              SizedBox(height: 4.h),
+                              Text(
+                                leagueName,
+                                style: FontManager.leagueName(
+                                  color: AppColors.white.withOpacity(0.7),
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
 
-                // Features List
-                _buildFeatureOption(
-                  icon: Icons.flash_on_rounded,
-                  title: "Quick Access",
-                  description: "View all matches instantly",
-                ),
-                SizedBox(height: 16.h),
-                _buildFeatureOption(
-                  iconColor: AppColors.yellow,
-                  icon: Icons.notifications_active,
-                  title: "Live Updates",
-                  description: "Goals, red cards & more",
-                ),
-                SizedBox(height: 16.h),
-                _buildFeatureOption(
-                  iconColor: Colors.green,
-                  icon: Icons.check_circle_outline_rounded,
-                  title: "Personalized Feed",
-                  description: "Tailored news for you",
-                  isSelected: true,
-                ),
+                  SizedBox(height: 24.h),
 
-                SizedBox(height: 24.h),
+                  // Features List
+                  _buildFeatureOption(
+                    icon: Icons.flash_on_rounded,
+                    title: "Quick Access",
+                    description: "View all matches instantly",
+                  ),
+                  SizedBox(height: 16.h),
+                  _buildFeatureOption(
+                    iconColor: AppColors.yellow,
+                    icon: Icons.notifications_active,
+                    title: "Live Updates",
+                    description: "Goals, red cards & more",
+                  ),
+                  SizedBox(height: 16.h),
+                  _buildFeatureOption(
+                    iconColor: Colors.green,
+                    icon: Icons.check_circle_outline_rounded,
+                    title: "Personalized Feed",
+                    description: "Tailored news for you",
+                    isSelected: true,
+                  ),
 
-                // Action Buttons
-                Column(
-                  spacing: 12.h,
-                  children: [
-                    ElevatedButton(
-                        onPressed: () {},
-                        child: Text(AppStrings.saveToFavorites,
-                            style: FontManager.buttonText()),
-                        style: ElevatedButton.styleFrom(
-                            fixedSize: Size.fromWidth(double.maxFinite))),
-                    ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          if (onMaybeLater != null) {
-                            onMaybeLater!();
-                          }
-                        },
-                        child: Text(AppStrings.maybeLater,
-                            style:
-                                FontManager.buttonText(color: AppColors.black)),
-                        style: ElevatedButton.styleFrom(
-                            fixedSize: Size.fromWidth(double.maxFinite),
-                            backgroundColor: AppColors.white)),
-                  ],
-                )
-              ],
+                  SizedBox(height: 24.h),
+
+                  // Action Buttons
+                  Column(
+                    spacing: 12.h,
+                    children: [
+                      ElevatedButton(
+                          onPressed: () async {
+                            await Provider.of<TeamProvider>(context,
+                                    listen: false)
+                                .addTeamToFavorites(teamId, teamName, context);
+                            if (context.mounted) {
+                              Navigator.of(context).pop();
+                            }
+                            if (onSave != null) onSave!();
+                          },
+                          child: Text(AppStrings.saveToFavorites,
+                              style: FontManager.buttonText()),
+                          style: ElevatedButton.styleFrom(
+                              fixedSize: Size.fromWidth(double.maxFinite))),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            if (onMaybeLater != null) {
+                              onMaybeLater!();
+                            }
+                          },
+                          child: Text(AppStrings.maybeLater,
+                              style: FontManager.buttonText(
+                                  color: AppColors.black)),
+                          style: ElevatedButton.styleFrom(
+                              fixedSize: Size.fromWidth(double.maxFinite),
+                              backgroundColor: AppColors.white)),
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         ),

@@ -1,4 +1,4 @@
-package com.example.scorelivepro
+package com.scorelivepro.app
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/app_strings.dart';
+import 'package:scorelivepro/views/auth/login_screen.dart';
 import 'package:scorelivepro/views/settings/app_info_screen.dart';
 import 'package:scorelivepro/views/settings/language_selection_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:scorelivepro/provider/auth_provider.dart';
+import 'package:scorelivepro/views/settings/profile_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -33,6 +37,50 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
         ),
+        actions: [
+          Consumer<AuthProvider>(
+            builder: (context, authProvider, child) {
+              if (authProvider.isLoggedIn) {
+                return IconButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text("Logout"),
+                        content: const Text("Are you sure about logout?"),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text("Cancel"),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              authProvider.logout();
+                              Navigator.pop(context); // Close dialog
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoginScreen()),
+                                (route) =>
+                                    false, // Remove all previous routes to prevent back navigation
+                              );
+                            },
+                            child: const Text("Yes",
+                                style: TextStyle(color: Colors.red)),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.logout, color: Colors.red),
+                  tooltip: AppStrings.signOut,
+                );
+              }
+              return const SizedBox.shrink();
+            },
+          ),
+          SizedBox(width: 16.w),
+        ],
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
@@ -43,14 +91,40 @@ class _SettingsScreenState extends State<SettingsScreen> {
             _buildSectionHeader(AppStrings.account),
             _buildSettingsGroup(
               children: [
-                _buildSettingsTile(
-                  icon: Icons.login,
-                  iconColor: const Color(0xFFFF6B00), // Orange Icon
-                  iconBgColor: const Color(0xFFFFF1EB), // Light Orange BG
-                  title: "Login / Sign Up",
-                  subtitle: AppStrings.syncFavorites,
-                  showChevron: true,
-                  onTap: () {},
+                Consumer<AuthProvider>(
+                  builder: (context, authProvider, child) {
+                    if (authProvider.isLoggedIn) {
+                      return _buildSettingsTile(
+                        icon: Icons.person_outline,
+                        iconColor: const Color(0xFFFF6B00), // Orange Icon
+                        iconBgColor: const Color(0xFFFFF1EB), // Light Orange BG
+                        title: "User Profile",
+                        subtitle: "View and edit profile",
+                        showChevron: true,
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const ProfileScreen()));
+                        },
+                      );
+                    } else {
+                      return _buildSettingsTile(
+                        icon: Icons.login,
+                        iconColor: const Color(0xFFFF6B00), // Orange Icon
+                        iconBgColor: const Color(0xFFFFF1EB), // Light Orange BG
+                        title: "Login / Sign Up",
+                        subtitle: AppStrings.syncFavorites,
+                        showChevron: true,
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LoginScreen()));
+                        },
+                      );
+                    }
+                  },
                 ),
               ],
             ),

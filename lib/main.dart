@@ -2,6 +2,12 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:scorelivepro/app.dart';
 import 'package:scorelivepro/config/language/lanugage_provider.dart';
+import 'package:scorelivepro/provider/match_provider.dart';
+import 'package:scorelivepro/provider/auth_provider.dart';
+import 'package:scorelivepro/provider/notification_provider.dart';
+import 'package:scorelivepro/services/dio_service.dart';
+import 'package:provider/provider.dart';
+import 'package:scorelivepro/provider/team_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -9,6 +15,8 @@ void main() async {
   try {
     // Initialize EasyLocalization
     await EasyLocalization.ensureInitialized();
+    // Initialize Dio Interceptors
+    DioManager.init();
 
     // Get saved language from secure storage
     String? savedLanguage;
@@ -20,9 +28,7 @@ void main() async {
       print(e);
       savedLanguage = null;
     }
-
     Locale startLocale;
-
     // Map saved language to correct locale matching translation files
     switch (savedLanguage) {
       case "English":
@@ -55,10 +61,8 @@ void main() async {
       default:
         startLocale = const Locale('en', 'US');
     }
-
     runApp(
       EasyLocalization(
-        child: const ScoreLivePro(),
         // Supported locales matching translation files in assets/translations/
         supportedLocales: const [
           Locale('en', 'US'), // English
@@ -73,13 +77,21 @@ void main() async {
         startLocale: startLocale,
         useOnlyLangCode:
             false, // Use full locale (en-US) not just language code
+        child: MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (_) => MatchProvider()),
+            ChangeNotifierProvider(create: (_) => TeamProvider()),
+            ChangeNotifierProvider(create: (_) => AuthProvider()),
+            ChangeNotifierProvider(create: (_) => NotificationProvider()),
+          ],
+          child: const ScoreLivePro(),
+        ),
       ),
     );
   } catch (e, stackTrace) {
     // Log the error for debugging
     debugPrint('EasyLocalization initialization error: $e');
     debugPrint('Stack trace: $stackTrace');
-
     // Fallback if EasyLocalization fails - run app without localization
     runApp(
       MaterialApp(

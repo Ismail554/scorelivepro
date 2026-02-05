@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/font_manager.dart';
@@ -14,18 +15,20 @@ enum LeagueIconType {
 class LeagueCard extends StatelessWidget {
   final String leagueName;
   final String countryOrRegion;
-  final LeagueIconType iconType;
-  final String? iconLabel; // For medal type (e.g., "2")
-  final String? flagEmoji; // For flag type
+  final LeagueIconType? iconType;
+  final String? iconLabel;
+  final String? flagEmoji;
+  final String? logoUrl; // URL from API
   final VoidCallback? onTap;
 
   const LeagueCard({
     super.key,
     required this.leagueName,
     required this.countryOrRegion,
-    required this.iconType,
+    this.iconType,
     this.iconLabel,
     this.flagEmoji,
+    this.logoUrl,
     this.onTap,
   });
 
@@ -95,7 +98,34 @@ class LeagueCard extends StatelessWidget {
   }
 
   Widget _buildIcon() {
-    switch (iconType) {
+    if (logoUrl != null && logoUrl!.isNotEmpty) {
+      return Container(
+        width: 48.w,
+        height: 48.w,
+        padding: EdgeInsets.all(8.w),
+        decoration: BoxDecoration(
+          color: AppColors.greyE8,
+          shape: BoxShape.circle,
+        ),
+        child: CachedNetworkImage(
+          imageUrl: logoUrl!,
+          placeholder: (context, url) => Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: CircularProgressIndicator(strokeWidth: 2),
+          ),
+          errorWidget: (context, url, error) => Icon(
+            Icons.broken_image,
+            color: AppColors.textSecondary,
+            size: 20.sp,
+          ),
+        ),
+      );
+    }
+
+    // Fallback to existing logic if no URL
+    if (iconType == null) return SizedBox(width: 48.w);
+
+    switch (iconType!) {
       case LeagueIconType.trophy:
         return Container(
           width: 48.w,

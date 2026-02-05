@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/app_spacing.dart';
@@ -10,7 +11,13 @@ import 'package:scorelivepro/widget/home/match_card.dart';
 import 'package:scorelivepro/widget/home/quick_action_card.dart';
 import 'package:scorelivepro/widget/home/section_header.dart';
 import 'package:scorelivepro/widget/home/sponsored_ad_card.dart';
+import 'package:scorelivepro/services/socket_service.dart';
+import 'package:scorelivepro/models/live_ws_model.dart';
+import 'package:scorelivepro/utils/match_status_helper.dart';
 import 'package:scorelivepro/widget/mini_widget/mw_notification_bell.dart';
+
+import 'package:provider/provider.dart';
+import 'package:scorelivepro/provider/match_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,6 +27,15 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Fetch fixtures on load for LiveMatchesScreen
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<MatchProvider>(context, listen: false).fetchFixtures();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,8 +94,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           style: FontManager.heading3(color: Colors.white),
                         ),
                         const SizedBox(height: 4),
-                        Text(AppStrings.date_today,
-                            style: FontManager.heading4(color: Colors.white)),
+                        Text(
+                          DateFormat('EEEE, d MMM, yyyy')
+                              .format(DateTime.now()),
+                          style: FontManager.heading4(color: Colors.white),
+                        ),
                       ],
                     ),
                   ),
@@ -98,33 +117,59 @@ class _HomeScreenState extends State<HomeScreen> {
                       // Live Matches Section
                       SectionHeader(
                         title: AppStrings.liveMatches,
-                        onSeeAllTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      LiveMatchDetailsScreen()));
-                        },
+                        onSeeAllTap: () {},
                       ),
-                      MatchCard(
-                        leagueName: 'Premier League',
-                        homeTeam: 'Manchester United',
-                        awayTeam: 'Liverpool',
-                        homeScore: 2,
-                        awayScore: 1,
-                        timeInfo: "67'",
-                        status: MatchStatus.live,
-                      ),
-                      MatchCard(
-                        leagueName: 'La Liga',
-                        homeTeam: 'Real Madrid',
-                        awayTeam: 'Barcelona',
-                        homeScore: 1,
-                        awayScore: 1,
-                        timeInfo: "45+2'",
-                        status: MatchStatus.halfTime,
-                        onTap: () {
-                          // TODO: Navigate to match details
+                      ValueListenableBuilder<LiveScoreModel?>(
+                        valueListenable:
+                            SocketService.instance.liveScoreNotifier,
+                        builder: (context, liveScore, child) {
+                          final matches = liveScore?.data ?? [];
+
+                          if (matches.isEmpty) {
+                            return Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16.w, vertical: 8.h),
+                              child: Text(
+                                "No live matches at the moment",
+                                style: FontManager.bodyMedium(
+                                    color: AppColors.textSecondary),
+                              ),
+                            );
+                          }
+
+                          // Show only top 2 matches
+                          final displayMatches = matches.take(2).toList();
+
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            padding: EdgeInsets.zero,
+                            itemCount: displayMatches.length,
+                            itemBuilder: (context, index) {
+                              final match = displayMatches[index];
+                              return MatchCard(
+                                leagueName:
+                                    match.league?.name ?? "Unknown League",
+                                homeTeam: match.homeTeam?.name ?? "Home",
+                                awayTeam: match.awayTeam?.name ?? "Away",
+                                homeScore: match.goals?.home,
+                                awayScore: match.goals?.away,
+                                timeInfo: "${match.elapsed ?? 0}'",
+                                status: MatchStatusHelper.getMatchStatus(
+                                    match.statusShort),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          LiveMatchDetailsScreen(
+                                              matchData: match),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          );
                         },
                       ),
                       AppSpacing.h8,
@@ -136,24 +181,53 @@ class _HomeScreenState extends State<HomeScreen> {
                           // TODO: Navigate to upcoming matches screen
                         },
                       ),
-                      MatchCard(
-                        leagueName: 'Bundesliga',
-                        homeTeam: 'Bayern Munich',
-                        awayTeam: 'Borussia Dortmund',
-                        timeInfo: 'Today, 18:30',
-                        status: MatchStatus.upcoming,
-                        onTap: () {
-                          // TODO: Navigate to match details
-                        },
-                      ),
-                      MatchCard(
-                        leagueName: 'Ligue 1',
-                        homeTeam: 'PSG',
-                        awayTeam: 'Marseille',
-                        timeInfo: 'Today, 20:45',
-                        status: MatchStatus.upcoming,
-                        onTap: () {
-                          // TODO: Navigate to match details
+                      Consumer<MatchProvider>(
+                        builder: (context, provider, child) {
+                          if (provider.isLoadingUpcoming &&
+                              provider.upcomingMatches.isEmpty) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          }
+
+                          if (provider.upcomingMatches.isEmpty) {
+                            return Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16.w, vertical: 8.h),
+                              child: Text(
+                                "No upcoming matches",
+                                style: FontManager.bodyMedium(
+                                    color: AppColors.textSecondary),
+                              ),
+                            );
+                          }
+
+                          // Show only top 2 matches
+                          final upcomingDisplay =
+                              provider.upcomingMatches.take(2).toList();
+
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            padding: EdgeInsets.zero,
+                            itemCount: upcomingDisplay.length,
+                            itemBuilder: (context, index) {
+                              final match = upcomingDisplay[index];
+                              return MatchCard(
+                                leagueName:
+                                    match.league?.name ?? "Unknown League",
+                                homeTeam: match.homeTeam?.name ?? "Home",
+                                awayTeam: match.awayTeam?.name ?? "Away",
+                                timeInfo: match.date != null
+                                    ? DateFormat('EEE, HH:mm').format(
+                                        DateTime.parse(match.date!).toLocal())
+                                    : "Upcoming",
+                                status: MatchStatus.upcoming,
+                                onTap: () {
+                                  // TODO: Navigate to match details
+                                },
+                              );
+                            },
+                          );
                         },
                       ),
                       AppSpacing.h8,

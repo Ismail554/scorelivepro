@@ -44,21 +44,22 @@ class NotificationCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            
             // Notification Icon (Circular with Emoji)
-            Container(
-              width: 48.w,
-              height: 48.w,
-              decoration: BoxDecoration(
-                color: _getIconBackgroundColor(),
-                shape: BoxShape.circle,
-              ),
-              child: Center(
-                child: Text(
-                  notification.iconEmoji,
-                  style: TextStyle(fontSize: 24.sp),
-                ),
-              ),
-            ),
+            // Container(
+            //   width: 48.w,
+            //   height: 48.w,
+            //   decoration: BoxDecoration(
+            //     color: _getIconBackgroundColor(),
+            //     shape: BoxShape.circle,
+            //   ),
+            //   child: Center(
+            //     child: Text(
+            //       notification.iconEmoji,
+            //       style: TextStyle(fontSize: 24.sp),
+            //     ),
+            //   ),
+            // ),
 
             SizedBox(width: 12.w),
 
@@ -152,4 +153,3 @@ class NotificationCard extends StatelessWidget {
     }
   }
 }
-

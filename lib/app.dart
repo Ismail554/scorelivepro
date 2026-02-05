@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/app_padding.dart';
-import 'package:scorelivepro/views/home_views/live_mathches/live_match_details_screen.dart';
 import 'package:scorelivepro/views/splash_screen/splash_screen.dart';
 
 class ScoreLivePro extends StatelessWidget {
@@ -27,11 +26,21 @@ class ScoreLivePro extends StatelessWidget {
           theme: ThemeData(
               scaffoldBackgroundColor: AppColors.white,
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
+              outlinedButtonTheme: OutlinedButtonThemeData(
+                  style: OutlinedButton.styleFrom(
+                backgroundColor: AppColors.white,
+                foregroundColor: AppColors.primaryColor,
+                fixedSize: Size.fromHeight(52.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: AppPadding.c12,
+                ),
+                elevation: 0,
+              )),
               elevatedButtonTheme: ElevatedButtonThemeData(
                   style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primaryColor,
                 foregroundColor: AppColors.white,
-                fixedSize: Size.fromHeight(62.h),
+                fixedSize: Size.fromHeight(52.h),
                 shape: RoundedRectangleBorder(
                   borderRadius: AppPadding.c12,
                 ),
