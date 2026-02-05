@@ -1,6 +1,6 @@
 class ApiEndPoint {
-  static String get _baseUrl => "http://10.10.13.8:8000";
-  static String get baseUrl => "http://10.10.13.8:8000";
+  static String get _baseUrl => "https://api.scorelivepro.it";
+  static String get baseUrl => "https://api.scorelivepro.it";
 
   static String lineups(int id) => "$_baseUrl/sports/fixtures/$id/lineups/";
   static String statistics(int id) =>
