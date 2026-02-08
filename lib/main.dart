@@ -1,16 +1,21 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_core/firebase_core.dart' show Firebase;
 import 'package:flutter/material.dart';
 import 'package:scorelivepro/app.dart';
 import 'package:scorelivepro/config/language/lanugage_provider.dart';
+import 'package:scorelivepro/firebase_options.dart';
 import 'package:scorelivepro/provider/match_provider.dart';
 import 'package:scorelivepro/provider/auth_provider.dart';
 import 'package:scorelivepro/provider/notification_provider.dart';
 import 'package:scorelivepro/services/dio_service.dart';
 import 'package:provider/provider.dart';
 import 'package:scorelivepro/provider/team_provider.dart';
+import 'package:scorelivepro/services/firebase_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await FirebaseService().initNotifications();
 
   try {
     // Initialize EasyLocalization

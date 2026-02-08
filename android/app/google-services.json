@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "641571105178",
+    "project_id": "scorelivepro-67f37",
+    "storage_bucket": "scorelivepro-67f37.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:641571105178:android:e7356ebdea86e43e4d3223",
+        "android_client_info": {
+          "package_name": "com.scorelivepro.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "641571105178-d0529b3arcdoo6fd2istoinrdcbh3m9a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOvSl7-jPmdZ8kN-G5LrrRWGb9yZwyCDI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "641571105178-d0529b3arcdoo6fd2istoinrdcbh3m9a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
