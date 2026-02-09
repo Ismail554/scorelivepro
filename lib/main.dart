@@ -22,7 +22,6 @@ void main() async {
     await EasyLocalization.ensureInitialized();
     // Initialize Dio Interceptors
     DioManager.init();
-
     // Get saved language from secure storage
     String? savedLanguage;
     try {
