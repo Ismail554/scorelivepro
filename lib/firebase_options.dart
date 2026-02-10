@@ -63,12 +63,13 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDqqhz7XoWjd8OUTaSTu-YULv8A6woy60c',
-    appId: '1:641571105178:ios:b67d564eb6f46a4d4d3223',
+    appId: '1:641571105178:ios:00a4d620b66960334d3223',
     messagingSenderId: '641571105178',
     projectId: 'scorelivepro-67f37',
     storageBucket: 'scorelivepro-67f37.firebasestorage.app',
-    androidClientId: '641571105178-brdjpvqttg4jj0j1nfg1qleh8ka766oi.apps.googleusercontent.com',
-    iosBundleId: 'com.scorelivepro.app',
+    androidClientId:
+        '641571105178-brdjpvqttg4jj0j1nfg1qleh8ka766oi.apps.googleusercontent.com',
+    iosBundleId: 'com.scorelivepro.app.dev',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -77,7 +78,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '641571105178',
     projectId: 'scorelivepro-67f37',
     storageBucket: 'scorelivepro-67f37.firebasestorage.app',
-    androidClientId: '641571105178-brdjpvqttg4jj0j1nfg1qleh8ka766oi.apps.googleusercontent.com',
+    androidClientId:
+        '641571105178-brdjpvqttg4jj0j1nfg1qleh8ka766oi.apps.googleusercontent.com',
     iosBundleId: 'com.scorelivepro.app',
   );
 }
