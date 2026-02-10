@@ -82,7 +82,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   CircleAvatar(
                     radius: 50.r,
                     backgroundImage: const NetworkImage(
-                        "https://i.pravatar.cc/300"), // Placeholder
+                        "https://avatar.iran.liara.run/public"), // Placeholder
+                    onBackgroundImageError: (exception, stackTrace) {
+                      debugPrint("Avatar load error: $exception");
+                    },
                   ),
                   Positioned(
                     bottom: 0,

@@ -51,7 +51,10 @@ class ProfileScreen extends StatelessWidget {
                   CircleAvatar(
                     radius: 50.r,
                     backgroundImage: const NetworkImage(
-                        "https://i.pravatar.cc/300"), // Placeholder as in design
+                        "https://avatar.iran.liara.run/public"), // Placeholder as in design
+                    onBackgroundImageError: (exception, stackTrace) {
+                      debugPrint("Avatar load error: $exception");
+                    },
                   ),
                   Positioned(
                     bottom: 0,

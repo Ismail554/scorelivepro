@@ -45,5 +45,23 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
+	<key>GIDClientID</key>
+	<string>641571105178-brdjpvqttg4jj0j1nfg1qleh8ka766oi.apps.googleusercontent.com</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.641571105178-brdjpvqttg4jj0j1nfg1qleh8ka766oi</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>
