@@ -40,7 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              AppColors.primaryColor, // Light Orange/Peach
+              AppColors.primaryColor, 
               Colors.white,
             ],
             stops: [
@@ -59,7 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 // Header Icon/Image
                 Container(
                   width: 100.w,
-                  height: 100.w,
+                  height: 100.h,
                   decoration: BoxDecoration(
                     color: const Color(
                         0xFFFF7A28), // Orange background from design
@@ -76,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 // Welcome Text
                 Text(
                   "Welcome Back!",
-                  style: FontManager.heading2(fontSize: 22),
+                  style: FontManager.heading2(fontSize: 22.sp),
                 ),
                 SizedBox(height: 8.h),
                 Text(
@@ -129,7 +129,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 SizedBox(height: 16.h),
 
-                // Remember Me & Forgot Password
+                //Forgot Password
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
@@ -144,7 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Text(
                       "Forgot Password?",
                       style: FontManager.labelMedium(
-                        fontSize: 14,
+                        fontSize: 14.sp,
                         color: const Color(0xFFFF7A28),
                       ),
                     ),
@@ -224,7 +224,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 SizedBox(height: 18.h),
                 // Guest Login
-                // Guest Login
                 OutlinedButton(
                   onPressed: () {
                     Navigator.push(
@@ -250,7 +249,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Text(
                         "Continue as a Guest",
                         style: FontManager.labelMedium(
-                          fontSize: 16,
+                          fontSize: 16.sp,
                           color: AppColors.textPrimary,
                         ),
                       ),
@@ -269,7 +268,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       SizedBox(width: 6.w),
                       Text(
                         "Continue with Google",
-                        style: FontManager.labelMedium(fontSize: 16),
+                        style: FontManager.labelMedium(fontSize: 16.sp),
                       ),
                     ],
                   ),
@@ -320,7 +319,7 @@ class _LoginScreenState extends State<LoginScreen> {
         text,
         style: FontManager.labelMedium(
           color: AppColors.textPrimary,
-          fontSize: 14,
+          fontSize: 14.sp,
         ),
       ),
     );
