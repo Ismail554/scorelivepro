@@ -13,6 +13,8 @@ import 'package:scorelivepro/views/league_views/leagues_screen.dart';
 import 'package:scorelivepro/widget/favorites/widget_favorite_league_card.dart';
 import 'package:scorelivepro/widget/favorites/widget_favorite_team_card.dart';
 import 'package:scorelivepro/widget/favorites/widget_sync_favorites_card.dart';
+import 'package:scorelivepro/widget/favorites/confirmation_dialog.dart';
+import 'package:scorelivepro/widget/custom_snackbar.dart';
 import 'package:scorelivepro/widget/home/match_card.dart';
 import 'package:scorelivepro/widget/home/section_header.dart';
 import 'package:scorelivepro/widget/mini_widget/mw_notification_bell.dart';
@@ -66,6 +68,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   bool _isLoadingTeams = true;
   bool _isLoadingLeagues = true;
   bool _hasFetched = false;
+  final GlobalKey<AnimatedListState> _teamsListKey =
+      GlobalKey<AnimatedListState>();
+  final GlobalKey<AnimatedListState> _leaguesListKey =
+      GlobalKey<AnimatedListState>();
 
   @override
   void initState() {
@@ -120,53 +126,120 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   }
 
   Future<void> _removeTeam(int teamId) async {
-    // Optimistic update
     final index = _favoriteTeams.indexWhere((t) => t.id == teamId);
     if (index == -1) return;
 
-    final removedTeam = _favoriteTeams[index];
-    setState(() {
-      _favoriteTeams.removeAt(index);
-    });
+    final team = _favoriteTeams[index];
 
-    final error = await TeamService.removeTeamFromFavorites(teamId);
+    // Show Confirmation Dialog
+    showDialog(
+      context: context,
+      builder: (context) => ConfirmationDialog(
+        title: "Remove Team?",
+        message:
+            "Are you sure you want to remove ${team.name} from your favorites?",
+        confirmText: "Remove",
+        isDestructive: true,
+        onConfirm: () async {
+          // Animated Removal
+          _teamsListKey.currentState?.removeItem(
+            index,
+            (context, animation) => SizeTransition(
+              sizeFactor: animation,
+              child: FavoriteTeamCard(
+                teamName: team.name ?? 'Unknown',
+                leagueName: '',
+                logoUrl: team.logo,
+                onDelete: null, // Disable delete during animation
+              ),
+            ),
+            duration: const Duration(milliseconds: 300),
+          );
 
-    if (error != null) {
-      // Revert if error
-      if (mounted) {
-        setState(() {
-          _favoriteTeams.insert(index, removedTeam);
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(error), backgroundColor: Colors.red),
-        );
-      }
-    }
+          setState(() {
+            _favoriteTeams.removeAt(index);
+          });
+
+          // API Call
+          final error = await TeamService.removeTeamFromFavorites(teamId);
+
+          if (mounted) {
+            if (error != null) {
+              // Revert if error
+              setState(() {
+                _favoriteTeams.insert(index, team);
+              });
+              _teamsListKey.currentState?.insertItem(index);
+              CustomSnackBar.show(
+                  context: context, message: error, isError: true);
+            } else {
+              CustomSnackBar.show(
+                  context: context,
+                  message: "${team.name} removed successfully");
+            }
+          }
+        },
+      ),
+    );
   }
 
   Future<void> _removeLeague(int leagueId) async {
-    // Optimistic update
     final index = _favoriteLeagues.indexWhere((l) => l.id == leagueId);
     if (index == -1) return;
 
-    final removedLeague = _favoriteLeagues[index];
-    setState(() {
-      _favoriteLeagues.removeAt(index);
-    });
+    final league = _favoriteLeagues[index];
 
-    final error = await LeagueService.removeLeagueFromFavorites(leagueId);
+    // Show Confirmation Dialog
+    showDialog(
+      context: context,
+      builder: (context) => ConfirmationDialog(
+        title: "Remove League?",
+        message:
+            "Are you sure you want to remove ${league.name} from your favorites?",
+        confirmText: "Remove",
+        isDestructive: true,
+        onConfirm: () async {
+          // Animated Removal
+          _leaguesListKey.currentState?.removeItem(
+            index,
+            (context, animation) => SizeTransition(
+              sizeFactor: animation,
+              child: FavoriteLeagueCard(
+                leagueName: league.name ?? 'Unknown',
+                countryName: league.country?.name ?? 'Unknown',
+                countryFlag: league.country?.flag,
+                logoUrl: league.logo,
+                onDelete: null,
+              ),
+            ),
+            duration: const Duration(milliseconds: 300),
+          );
 
-    if (error != null) {
-      // Revert if error
-      if (mounted) {
-        setState(() {
-          _favoriteLeagues.insert(index, removedLeague);
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(error), backgroundColor: Colors.red),
-        );
-      }
-    }
+          setState(() {
+            _favoriteLeagues.removeAt(index);
+          });
+
+          // API Call
+          final error = await LeagueService.removeLeagueFromFavorites(leagueId);
+
+          if (mounted) {
+            if (error != null) {
+              // Revert if error
+              setState(() {
+                _favoriteLeagues.insert(index, league);
+              });
+              _leaguesListKey.currentState?.insertItem(index);
+              CustomSnackBar.show(
+                  context: context, message: error, isError: true);
+            } else {
+              CustomSnackBar.show(
+                  context: context,
+                  message: "${league.name} removed successfully");
+            }
+          }
+        },
+      ),
+    );
   }
 
   @override
@@ -401,18 +474,24 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       );
     }
 
-    return ListView.builder(
+    return AnimatedList(
+      key: _teamsListKey,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: _favoriteTeams.length,
-      itemBuilder: (context, index) {
+      initialItemCount: _favoriteTeams.length,
+      itemBuilder: (context, index, animation) {
+        // Safety check for index out of bounds during fast deletes or updates
+        if (index >= _favoriteTeams.length) return const SizedBox.shrink();
+
         final team = _favoriteTeams[index];
-        return FavoriteTeamCard(
-          teamName: team.name ?? 'Unknown',
-          leagueName: '', // API doesn't seem to provide league name in list
-          logoUrl: team.logo,
-          onDelete: () => _removeTeam(team.id),
-          // Remove onNotificationToggle as requested by user's recent edit context
+        return SizeTransition(
+          sizeFactor: animation,
+          child: FavoriteTeamCard(
+            teamName: team.name ?? 'Unknown',
+            leagueName: '', // API doesn't seem to provide league name in list
+            logoUrl: team.logo,
+            onDelete: () => _removeTeam(team.id),
+          ),
         );
       },
     );
@@ -438,19 +517,25 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       );
     }
 
-    return ListView.builder(
+    return AnimatedList(
+      key: _leaguesListKey,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: _favoriteLeagues.length,
-      itemBuilder: (context, index) {
-        final league = _favoriteLeagues[index];
-        return FavoriteLeagueCard(
-          leagueName: league.name ?? 'Unknown',
-          countryName: league.country?.name ?? 'Unknown',
+      initialItemCount: _favoriteLeagues.length,
+      itemBuilder: (context, index, animation) {
+        // Safety check
+        if (index >= _favoriteLeagues.length) return const SizedBox.shrink();
 
-          logoUrl: league.logo,
-          onDelete: league.id == null ? null : () => _removeLeague(league.id!),
-          // Remove onNotificationToggle as requested
+        final league = _favoriteLeagues[index];
+        return SizeTransition(
+          sizeFactor: animation,
+          child: FavoriteLeagueCard(
+            leagueName: league.name ?? 'Unknown',
+            countryName: league.country?.name ?? 'Unknown',
+            logoUrl: league.logo,
+            onDelete:
+                league.id == null ? null : () => _removeLeague(league.id!),
+          ),
         );
       },
     );
