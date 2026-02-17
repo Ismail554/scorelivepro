@@ -8,8 +8,7 @@ class FavoriteLeagueCard extends StatelessWidget {
   final String leagueName;
   final String countryName;
   final String? countryFlag; // Can be emoji or asset path
-  final bool notificationsEnabled;
-  final VoidCallback? onNotificationToggle;
+  final String? logoUrl;
   final VoidCallback? onDelete;
 
   const FavoriteLeagueCard({
@@ -17,8 +16,7 @@ class FavoriteLeagueCard extends StatelessWidget {
     required this.leagueName,
     required this.countryName,
     this.countryFlag,
-    this.notificationsEnabled = true,
-    this.onNotificationToggle,
+    this.logoUrl,
     this.onDelete,
   });
 
@@ -45,15 +43,28 @@ class FavoriteLeagueCard extends StatelessWidget {
           Container(
             width: 48.w,
             height: 48.w,
+            padding: EdgeInsets.all(8.w),
             decoration: BoxDecoration(
               color: AppColors.greyE8,
               shape: BoxShape.circle,
             ),
-            child: Icon(
-              Icons.emoji_events,
-              color: AppColors.warning,
-              size: 24.sp,
-            ),
+            child: logoUrl != null
+                ? Image.network(
+                    logoUrl!,
+                    fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Icon(
+                        Icons.emoji_events,
+                        color: AppColors.warning,
+                        size: 24.sp,
+                      );
+                    },
+                  )
+                : Icon(
+                    Icons.emoji_events,
+                    color: AppColors.warning,
+                    size: 24.sp,
+                  ),
           ),
 
           SizedBox(width: 16.w),
@@ -92,27 +103,6 @@ class FavoriteLeagueCard extends StatelessWidget {
               ],
             ),
           ),
-
-          // Notification Bell Icon
-          GestureDetector(
-            onTap: onNotificationToggle,
-            child: Container(
-              padding: EdgeInsets.all(8.w),
-              child: notificationsEnabled
-                  ? Icon(
-                      Icons.notifications_active,
-                      color: AppColors.primaryColor,
-                      size: 24.sp,
-                    )
-                  : Icon(
-                      Icons.notifications_off,
-                      color: AppColors.grey,
-                      size: 24.sp,
-                    ),
-            ),
-          ),
-
-          SizedBox(width: 8.w),
 
           // Delete Icon
           GestureDetector(

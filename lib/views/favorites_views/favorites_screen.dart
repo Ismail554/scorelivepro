@@ -9,7 +9,7 @@ import 'package:scorelivepro/provider/auth_provider.dart';
 import 'package:scorelivepro/views/auth/login_screen.dart';
 import 'package:scorelivepro/views/favorites_views/favorites_teams_screen.dart';
 import 'package:scorelivepro/views/league_views/leagues_screen.dart';
-import 'package:scorelivepro/views/notification_views/notification_all_screen.dart';
+
 import 'package:scorelivepro/widget/favorites/widget_favorite_league_card.dart';
 import 'package:scorelivepro/widget/favorites/widget_favorite_team_card.dart';
 import 'package:scorelivepro/widget/favorites/widget_sync_favorites_card.dart';
@@ -18,6 +18,11 @@ import 'package:scorelivepro/widget/home/section_header.dart';
 import 'package:scorelivepro/widget/mini_widget/mw_notification_bell.dart';
 import 'package:scorelivepro/provider/match_provider.dart';
 import 'package:intl/intl.dart';
+import 'package:scorelivepro/models/team_model.dart';
+import 'package:scorelivepro/models/league_model.dart';
+import 'package:scorelivepro/services/team_service.dart';
+import 'package:scorelivepro/services/league_service.dart';
+import 'package:scorelivepro/widget/shimmer_loading.dart';
 
 /// Favorite team model
 class FavoriteTeam {
@@ -55,45 +60,114 @@ class FavoritesScreen extends StatefulWidget {
 }
 
 class _FavoritesScreenState extends State<FavoritesScreen> {
-  // Sample data
-  final List<FavoriteTeam> _favoriteTeams = [
-    const FavoriteTeam(
-      teamName: "Manchester City",
-      leagueName: "Premier League",
-      notificationsEnabled: true,
-    ),
-    const FavoriteTeam(
-      teamName: "Real Madrid",
-      leagueName: "La Liga",
-      notificationsEnabled: true,
-    ),
-    const FavoriteTeam(
-      teamName: "Inter Milan",
-      leagueName: "Serie A",
-      notificationsEnabled: false,
-    ),
-  ];
+  // Data
+  List<TeamModel> _favoriteTeams = [];
+  List<LeagueModel> _favoriteLeagues = [];
+  bool _isLoadingTeams = true;
+  bool _isLoadingLeagues = true;
+  bool _hasFetched = false;
 
-  final List<FavoriteLeague> _favoriteLeagues = [
-    const FavoriteLeague(
-      leagueName: "Premier League",
-      countryName: "England",
-      countryFlag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
-      notificationsEnabled: true,
-    ),
-    const FavoriteLeague(
-      leagueName: "La Liga",
-      countryName: "Spain",
-      countryFlag: "🇪🇸",
-      notificationsEnabled: true,
-    ),
-    const FavoriteLeague(
-      leagueName: "Serie A",
-      countryName: "Italy",
-      countryFlag: "🇮🇹",
-      notificationsEnabled: false,
-    ),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _fetchFavorites();
+  }
+
+  Future<void> _fetchFavorites() async {
+    // Determine if user is logged in
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+    if (!authProvider.isLoggedIn) {
+      setState(() {
+        _isLoadingTeams = false;
+        _isLoadingLeagues = false;
+        _favoriteTeams = [];
+        _favoriteLeagues = [];
+        _hasFetched = false;
+      });
+      return;
+    }
+
+    if (mounted) {
+      setState(() {
+        _hasFetched = true;
+      });
+    }
+    _fetchTeams();
+    _fetchLeagues();
+  }
+
+  Future<void> _fetchTeams() async {
+    setState(() => _isLoadingTeams = true);
+    final response = await TeamService.fetchFavoriteTeams();
+    if (mounted) {
+      setState(() {
+        _favoriteTeams = response ?? [];
+        _isLoadingTeams = false;
+      });
+    }
+  }
+
+  Future<void> _fetchLeagues() async {
+    setState(() => _isLoadingLeagues = true);
+    final response = await LeagueService.fetchFavoriteLeagues();
+    if (mounted) {
+      setState(() {
+        _favoriteLeagues = response ?? [];
+        _isLoadingLeagues = false;
+      });
+    }
+  }
+
+  Future<void> _removeTeam(int teamId) async {
+    // Optimistic update
+    final index = _favoriteTeams.indexWhere((t) => t.id == teamId);
+    if (index == -1) return;
+
+    final removedTeam = _favoriteTeams[index];
+    setState(() {
+      _favoriteTeams.removeAt(index);
+    });
+
+    final error = await TeamService.removeTeamFromFavorites(teamId);
+
+    if (error != null) {
+      // Revert if error
+      if (mounted) {
+        setState(() {
+          _favoriteTeams.insert(index, removedTeam);
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(error), backgroundColor: Colors.red),
+        );
+      }
+    }
+  }
+
+  Future<void> _removeLeague(int leagueId) async {
+    // Optimistic update
+    final index = _favoriteLeagues.indexWhere((l) => l.id == leagueId);
+    if (index == -1) return;
+
+    final removedLeague = _favoriteLeagues[index];
+    setState(() {
+      _favoriteLeagues.removeAt(index);
+    });
+
+    final error = await LeagueService.removeLeagueFromFavorites(leagueId);
+
+    if (error != null) {
+      // Revert if error
+      if (mounted) {
+        setState(() {
+          _favoriteLeagues.insert(index, removedLeague);
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(error), backgroundColor: Colors.red),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -166,7 +240,15 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                 children: [
                   // Sync Favorites Card
                   Consumer<AuthProvider>(builder: (context, auth, _) {
-                    if (auth.isLoggedIn) return const SizedBox.shrink();
+                    if (auth.isLoggedIn) {
+                      // Trigger data fetch if we just logged in and haven't fetched yet
+                      if (!_hasFetched) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          _fetchFavorites();
+                        });
+                      }
+                      return const SizedBox.shrink();
+                    }
                     return SyncFavoritesCard(
                       onLoginTap: () {
                         Navigator.push(
@@ -256,33 +338,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                       ],
                     ),
                   ),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: _favoriteTeams.length,
-                    itemBuilder: (context, index) {
-                      final team = _favoriteTeams[index];
-                      return FavoriteTeamCard(
-                        teamName: team.teamName,
-                        leagueName: team.leagueName,
-                        notificationsEnabled: team.notificationsEnabled,
-                        onNotificationToggle: () {
-                          setState(() {
-                            _favoriteTeams[index] = FavoriteTeam(
-                              teamName: team.teamName,
-                              leagueName: team.leagueName,
-                              notificationsEnabled: !team.notificationsEnabled,
-                            );
-                          });
-                        },
-                        onDelete: () {
-                          setState(() {
-                            _favoriteTeams.removeAt(index);
-                          });
-                        },
-                      );
-                    },
-                  ),
+                  _buildTeamsList(),
 
                   // Favorite Leagues Section
                   Padding(
@@ -315,42 +371,88 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                       ],
                     ),
                   ),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: _favoriteLeagues.length,
-                    itemBuilder: (context, index) {
-                      final league = _favoriteLeagues[index];
-                      return FavoriteLeagueCard(
-                        leagueName: league.leagueName,
-                        countryName: league.countryName,
-                        countryFlag: league.countryFlag,
-                        notificationsEnabled: league.notificationsEnabled,
-                        onNotificationToggle: () {
-                          setState(() {
-                            _favoriteLeagues[index] = FavoriteLeague(
-                              leagueName: league.leagueName,
-                              countryName: league.countryName,
-                              countryFlag: league.countryFlag,
-                              notificationsEnabled:
-                                  !league.notificationsEnabled,
-                            );
-                          });
-                        },
-                        onDelete: () {
-                          setState(() {
-                            _favoriteLeagues.removeAt(index);
-                          });
-                        },
-                      );
-                    },
-                  ),
+                  _buildLeaguesList(),
                 ],
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildTeamsList() {
+    if (_isLoadingTeams) {
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
+        child: const ShimmerLoading(
+          itemCount: 3,
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+        ),
+      );
+    }
+
+    if (_favoriteTeams.isEmpty) {
+      return Padding(
+        padding: EdgeInsets.all(16.w),
+        child: Text("No favorite teams added yet.",
+            style: FontManager.bodyMedium(color: AppColors.textSecondary)),
+      );
+    }
+
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: _favoriteTeams.length,
+      itemBuilder: (context, index) {
+        final team = _favoriteTeams[index];
+        return FavoriteTeamCard(
+          teamName: team.name ?? 'Unknown',
+          leagueName: '', // API doesn't seem to provide league name in list
+          logoUrl: team.logo,
+          onDelete: () => _removeTeam(team.id),
+          // Remove onNotificationToggle as requested by user's recent edit context
+        );
+      },
+    );
+  }
+
+  Widget _buildLeaguesList() {
+    if (_isLoadingLeagues) {
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
+        child: const ShimmerLoading(
+          itemCount: 3,
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+        ),
+      );
+    }
+
+    if (_favoriteLeagues.isEmpty) {
+      return Padding(
+        padding: EdgeInsets.all(16.w),
+        child: Text("No favorite leagues added yet.",
+            style: FontManager.bodyMedium(color: AppColors.textSecondary)),
+      );
+    }
+
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: _favoriteLeagues.length,
+      itemBuilder: (context, index) {
+        final league = _favoriteLeagues[index];
+        return FavoriteLeagueCard(
+          leagueName: league.name ?? 'Unknown',
+          countryName: league.country?.name ?? 'Unknown',
+
+          logoUrl: league.logo,
+          onDelete: league.id == null ? null : () => _removeLeague(league.id!),
+          // Remove onNotificationToggle as requested
+        );
+      },
     );
   }
 }

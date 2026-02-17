@@ -52,6 +52,8 @@ class LeagueService {
 
   static Future<String?> removeLeagueFromFavorites(int leagueId) async {
     try {
+      print(
+          "Calling API: ${ApiEndPoint.addToFavoriteLeaques()} (DELETE) - Removing League ID: $leagueId");
       final response = await DioManager.apiRequest(
         url: ApiEndPoint.addToFavoriteLeaques(),
         methods: Methods.delete,
@@ -59,32 +61,51 @@ class LeagueService {
       );
 
       return response.fold(
-        (error) => error,
-        (data) => null,
+        (error) {
+          print("Error Removing League from Favorites: $error");
+          return error;
+        },
+        (data) {
+          print("Success Removing League from Favorites: $data");
+          return null;
+        },
       );
     } catch (e) {
+      print("Exception Removing League from Favorites: $e");
       return e.toString();
     }
   }
 
-  static Future<LeagueResponse?> fetchFavoriteLeagues() async {
+  static Future<List<LeagueModel>?> fetchFavoriteLeagues() async {
     try {
+      print(
+          "Calling API: ${ApiEndPoint.myFavoritesLeagues()} (GET) - Fetching Favorite Leagues");
       final response = await DioManager.apiRequest(
-        url: ApiEndPoint.addToFavoriteLeaques(),
+        url: ApiEndPoint.myFavoritesLeagues(),
         methods: Methods.get,
         skipAuth: false,
       );
 
       return response.fold(
-        (error) => null,
-        (data) {
-          if (data is Map<String, dynamic>) {
-            return LeagueResponse.fromJson(data);
-          }
+        (error) {
+          print("Error Fetching Favorite Leagues: $error");
           return null;
+        },
+        (data) {
+          print("Success Fetching Favorite Leagues: $data");
+          if (data is List) {
+            return data.map((e) => LeagueModel.fromJson(e)).toList();
+          }
+          if (data is Map<String, dynamic> && data['results'] != null) {
+            return (data['results'] as List)
+                .map((e) => LeagueModel.fromJson(e))
+                .toList();
+          }
+          return [];
         },
       );
     } catch (e) {
+      print("Exception Fetching Favorite Leagues: $e");
       return null;
     }
   }

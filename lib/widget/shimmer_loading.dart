@@ -3,12 +3,23 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ShimmerLoading extends StatelessWidget {
-  const ShimmerLoading({super.key});
+  final int itemCount;
+  final bool shrinkWrap;
+  final ScrollPhysics? physics;
+
+  const ShimmerLoading({
+    super.key,
+    this.itemCount = 10,
+    this.shrinkWrap = false,
+    this.physics,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: 10,
+      itemCount: itemCount,
+      shrinkWrap: shrinkWrap,
+      physics: physics,
       padding: EdgeInsets.symmetric(vertical: 8.h),
       itemBuilder: (context, index) {
         return Padding(

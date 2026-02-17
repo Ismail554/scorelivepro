@@ -8,16 +8,14 @@ import 'package:scorelivepro/core/font_manager.dart';
 class FavoriteTeamCard extends StatelessWidget {
   final String teamName;
   final String leagueName;
-  final bool notificationsEnabled;
-  final VoidCallback? onNotificationToggle;
+  final String? logoUrl;
   final VoidCallback? onDelete;
 
   const FavoriteTeamCard({
     super.key,
     required this.teamName,
     required this.leagueName,
-    this.notificationsEnabled = true,
-    this.onNotificationToggle,
+    this.logoUrl,
     this.onDelete,
   });
 
@@ -44,15 +42,26 @@ class FavoriteTeamCard extends StatelessWidget {
           Container(
             width: 48.w,
             height: 48.w,
-            padding: EdgeInsets.all(12.w),
+            padding: EdgeInsets.all(8.w),
             decoration: BoxDecoration(
               color: AppColors.greyE8.withOpacity(0.5),
               shape: BoxShape.circle,
             ),
-            child: Image.asset(
-              IconAssets.soccer_icon,
-              fit: BoxFit.contain,
-            ),
+            child: logoUrl != null
+                ? Image.network(
+                    logoUrl!,
+                    fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.asset(
+                        IconAssets.soccer_icon,
+                        fit: BoxFit.contain,
+                      );
+                    },
+                  )
+                : Image.asset(
+                    IconAssets.soccer_icon,
+                    fit: BoxFit.contain,
+                  ),
           ),
 
           SizedBox(width: 16.w),
@@ -81,7 +90,6 @@ class FavoriteTeamCard extends StatelessWidget {
             ),
           ),
 
-         
           SizedBox(width: 8.w),
 
           // Delete Icon

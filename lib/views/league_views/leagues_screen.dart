@@ -65,7 +65,7 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
     final response = await LeagueService.fetchFavoriteLeagues();
     if (response != null && mounted) {
       setState(() {
-        _favoritedLeagueIds = response.results.map((e) => e.id!).toSet();
+        _favoritedLeagueIds = response.map((e) => e.id!).toSet();
       });
     }
   }
