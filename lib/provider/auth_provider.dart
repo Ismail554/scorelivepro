@@ -119,6 +119,40 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  Future<bool> forgotPassword(String email) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final result = await DioManager.apiRequest(
+        url: ApiEndPoint.forgotPassword(),
+        methods: Methods.post,
+        body: {"email": email},
+        skipAuth: true,
+      );
+
+      return result.fold(
+        (error) {
+          print("Forgot Password Error: $error");
+          _isLoading = false;
+          notifyListeners();
+          return false;
+        },
+        (data) {
+          print("Forgot Password Success: $data");
+          _isLoading = false;
+          notifyListeners();
+          return true;
+        },
+      );
+    } catch (e) {
+      print("Forgot Password Exception: $e");
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
   Future<bool> verifyEmail(String email, String otp) async {
     _isLoading = true;
     notifyListeners();
@@ -159,8 +193,18 @@ class AuthProvider extends ChangeNotifier {
         skipAuth: true,
       );
 
-      return result.fold((l) => false, (r) => true);
+      return result.fold(
+        (l) {
+          print("Resend OTP Error: $l");
+          return false;
+        },
+        (r) {
+          print("Resend OTP Success: $r");
+          return true;
+        },
+      );
     } catch (e) {
+      print("Resend OTP Exception: $e");
       return false;
     }
   }

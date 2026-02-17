@@ -7,6 +7,7 @@ import 'package:scorelivepro/core/font_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:scorelivepro/provider/auth_provider.dart';
 import 'package:scorelivepro/views/auth/sign_up/congratulation_screen.dart';
+import 'dart:async';
 
 class OtpVerifyScreen extends StatefulWidget {
   final String email;
@@ -18,10 +19,40 @@ class OtpVerifyScreen extends StatefulWidget {
 
 class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
   final _pinController = TextEditingController();
+  Timer? _timer;
+  int _start = 60;
+  bool _isResendEnabled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    startTimer();
+  }
+
+  void startTimer() {
+    _start = 60;
+    _isResendEnabled = false;
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (mounted) {
+        if (_start == 0) {
+          setState(() {
+            _isResendEnabled = true;
+            timer.cancel();
+          });
+        } else {
+          setState(() {
+            _start--;
+          });
+        }
+      }
+    });
+  }
 
   @override
   void dispose() {
     _pinController.dispose();
+    _timer?.cancel();
     super.dispose();
   }
 
@@ -54,10 +85,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors
-            .transparent, // Transparent to show gradient if extended, but here we might just have white or simple back button.
-        // The design shows a back button on top of the gradient.
-        // So we should probably use the same container structure as SignUp/Login.
+        backgroundColor: Colors.transparent,
         elevation: 0,
         leading: Padding(
             padding: EdgeInsets.only(left: 16.w),
@@ -235,7 +263,9 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                   ),
                   SizedBox(height: 8.h),
                   Text(
-                    "Resend code in 60s",
+                    _isResendEnabled
+                        ? "You can now resend the code"
+                        : "Resend code in ${_start}s",
                     style: FontManager.bodySmall(
                       color: AppColors.textHint,
                     ),
@@ -243,9 +273,8 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                   SizedBox(height: 8.h),
                   Consumer<AuthProvider>(builder: (context, auth, _) {
                     return TextButton(
-                      onPressed: auth.isLoading
-                          ? null
-                          : () async {
+                      onPressed: (_isResendEnabled && !auth.isLoading)
+                          ? () async {
                               final success =
                                   await auth.resendOtp(widget.email);
                               if (context.mounted) {
@@ -255,12 +284,20 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                                           ? "OTP resent successfully"
                                           : "Failed to resend OTP. Please try again.")),
                                 );
+                                if (success) {
+                                  setState(() {
+                                    startTimer();
+                                  });
+                                }
                               }
-                            },
+                            }
+                          : null,
                       child: Text(
                         "Resend OTP",
                         style: FontManager.labelMedium(
-                          color: const Color(0xFFFF7A28),
+                          color: _isResendEnabled
+                              ? const Color(0xFFFF7A28)
+                              : AppColors.textHint,
                         ),
                       ),
                     );

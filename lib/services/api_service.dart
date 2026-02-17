@@ -38,4 +38,11 @@ class ApiEndPoint {
       "$_baseUrl/auth/profile/favorites/leagues/"; // body: { "id": 0 } , use method POST for add and DELETE for remove
   static String addToFavoriteTeams() =>
       "$_baseUrl/auth/profile/favorites/teams/"; // body: { "id": 0 } , use method POST for add and DELETE for remove
+
+
+
+
+
+
+  static String forgotPassword() => "$_baseUrl/auth/resend-activation-code/"; // body: { "email": "user@example.com"}
 }

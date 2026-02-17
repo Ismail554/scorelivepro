@@ -8,6 +8,7 @@ import 'package:scorelivepro/core/assets_manager.dart';
 import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/font_manager.dart';
 import 'package:scorelivepro/provider/auth_provider.dart';
+import 'package:scorelivepro/views/auth/forgot_password/forgot_password_screen.dart';
 import 'package:scorelivepro/views/auth/sign_up/sign_up_screen.dart';
 import 'package:scorelivepro/views/home_views/home_screen.dart';
 import 'package:scorelivepro/views/main_navigation/main_navigation_screen.dart';
@@ -134,7 +135,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   alignment: Alignment.centerRight,
                   child: TextButton(
                     onPressed: () {
-                      // TODO: Navigate to Forgot Password
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ForgotPasswordScreen(),
+                        ),
+                      );
                     },
                     style: TextButton.styleFrom(
                       padding: EdgeInsets.zero,
