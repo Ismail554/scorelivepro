@@ -33,7 +33,8 @@ class ApiEndPoint {
   // ============= Teams & Leagues ==============
   static String getAllTeams() =>
       "$_baseUrl/sports/teams/"; // response body: { "count": 15214, "next": "https://api.scorelivepro.it/sports/teams/?page=2", "previous": null, "results": [ { "id": 18391, "name": "ADESG", "logo": "https://media.api-sports.io/football/teams/18391.png" } ] }
-  static String get leagues => "$_baseUrl/sports/leagues/";
+  static String getAllLeagues() => "$_baseUrl/sports/leagues/"; 
+
   static String addToFavoriteLeaques() =>
       "$_baseUrl/auth/profile/favorites/leagues/"; // body: { "id": 0 } , use method POST for add and DELETE for remove
   static String addToFavoriteTeams() =>
@@ -43,6 +44,7 @@ class ApiEndPoint {
 
 
 
-
+ static String myFavoritesTeam() => "$_baseUrl/auth/profile/favorites/teams/"; // [ { "id": 26605, "name": " Johnstone Burgh", "logo": "https://media.api-sports.io/football/teams/26605.png" } ]
+ static String myFavoritesLeagues() => "$_baseUrl/auth/profile/favorites/leagues/"; // [ { "id": 322, "name": "Premier League", "country": { "name": "Jamaica", "code": "JM", "flag": "https://media.api-sports.io/flags/jm.svg" }, "logo": "https://media.api-sports.io/football/leagues/322.png", "season_year": 2025 } ]
   static String forgotPassword() => "$_baseUrl/auth/resend-activation-code/"; // body: { "email": "user@example.com"}
 }

@@ -208,10 +208,11 @@ class _FavoritesTeamsScreenState extends State<FavoritesTeamsScreen> {
                             showDialog(
                               context: context,
                               builder: (context) => AddToFavoritesDialog(
-                                teamId: team.id,
-                                teamName: "${team.name}",
-                                leagueName: "",
-                                teamLogo: team.logo != null
+                                id: team
+                                    .id, // Assuming id is non-nullable in model, or handle null
+                                name: "${team.name}",
+                                subtitle: "",
+                                logo: team.logo != null
                                     ? Image.network(
                                         team.logo!,
                                         fit: BoxFit.contain,
@@ -226,6 +227,7 @@ class _FavoritesTeamsScreenState extends State<FavoritesTeamsScreen> {
                                         IconAssets.soccer_icon,
                                         fit: BoxFit.contain,
                                       ),
+                                isLeague: false,
                               ),
                             );
                             debugPrint("Toggle favorite for ${team.name}");

@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:scorelivepro/provider/auth_provider.dart';
 import 'package:scorelivepro/views/auth/login_screen.dart';
 import 'package:scorelivepro/views/favorites_views/favorites_teams_screen.dart';
+import 'package:scorelivepro/views/league_views/leagues_screen.dart';
 import 'package:scorelivepro/views/notification_views/notification_all_screen.dart';
 import 'package:scorelivepro/widget/favorites/widget_favorite_league_card.dart';
 import 'package:scorelivepro/widget/favorites/widget_favorite_team_card.dart';
@@ -286,7 +287,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                   // Favorite Leagues Section
                   Padding(
                     padding:
-                        EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+                        EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -298,7 +299,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            // TODO: Navigate to add league screen
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LeaguesScreen()));
                           },
                           child: Text(
                             "+ Add League",
@@ -341,8 +345,6 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                       );
                     },
                   ),
-
-                  AppSpacing.h16,
                 ],
               ),
             ),

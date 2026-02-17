@@ -20,6 +20,8 @@ class LeagueCard extends StatelessWidget {
   final String? flagEmoji;
   final String? logoUrl; // URL from API
   final VoidCallback? onTap;
+  final bool isFavorited;
+  final VoidCallback? onFavoriteToggle;
 
   const LeagueCard({
     super.key,
@@ -30,6 +32,8 @@ class LeagueCard extends StatelessWidget {
     this.flagEmoji,
     this.logoUrl,
     this.onTap,
+    this.isFavorited = false,
+    this.onFavoriteToggle,
   });
 
   @override
@@ -85,12 +89,29 @@ class LeagueCard extends StatelessWidget {
               ),
             ),
 
-            // Right Arrow
-            Icon(
-              Icons.arrow_forward_ios,
-              size: 16.sp,
-              color: AppColors.textTertiary,
-            ),
+            // Favorite/Add Button
+            if (onFavoriteToggle != null)
+              GestureDetector(
+                onTap: onFavoriteToggle,
+                child: Container(
+                  width: 40.w,
+                  height: 40.w,
+                  decoration: BoxDecoration(
+                    // Orange if favorited, Light Grey/White if not
+                    color: isFavorited
+                        ? const Color(
+                            0xFFFF6B2C) // Example orange color from the image description
+                        : const Color(0xFFF3F4F6), // Light grey
+                    borderRadius: BorderRadius.circular(
+                        12.r), // Rounded corners like in the image
+                  ),
+                  child: Icon(
+                    isFavorited ? Icons.favorite : Icons.add,
+                    color: isFavorited ? Colors.white : const Color(0xFF5A5A5A),
+                    size: 20.sp,
+                  ),
+                ),
+              ),
           ],
         ),
       ),

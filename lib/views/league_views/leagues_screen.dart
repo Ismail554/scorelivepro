@@ -7,10 +7,13 @@ import 'package:scorelivepro/core/app_strings.dart';
 import 'package:scorelivepro/core/font_manager.dart';
 import 'package:scorelivepro/models/league_model.dart';
 import 'package:scorelivepro/services/league_service.dart';
+import 'package:scorelivepro/services/api_service.dart';
 import 'package:scorelivepro/views/league_views/detailed_leagues_screen.dart';
 import 'package:scorelivepro/widget/leagues/widget_league_card.dart';
 import 'package:scorelivepro/widget/leagues/widget_premium_upgrade_card.dart';
 import 'package:scorelivepro/widget/mini_widget/mw_notification_bell.dart';
+import 'package:scorelivepro/widget/favorites/widget_add_to_favorites_dialog.dart';
+import 'package:scorelivepro/core/assets_manager.dart';
 
 class LeaguesScreen extends StatefulWidget {
   const LeaguesScreen({super.key});
@@ -24,6 +27,7 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
   final TextEditingController _searchController = TextEditingController();
   List<LeagueModel> _allLeagues = [];
   List<LeagueModel> _filteredLeagues = [];
+  Set<int> _favoritedLeagueIds = {}; // Track favorited league IDs
   bool _isLoading = true;
   bool _isMoreLoading = false;
   String? _errorMessage;
@@ -34,6 +38,7 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
   void initState() {
     super.initState();
     _fetchLeagues();
+    _fetchFavorites(); // Fetch favorites on init
     _searchController.addListener(_onSearchChanged);
     _scrollController.addListener(_onScroll);
   }
@@ -54,6 +59,102 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
     _debounce = Timer(const Duration(milliseconds: 500), () {
       _fetchLeagues();
     });
+  }
+
+  Future<void> _fetchFavorites() async {
+    final response = await LeagueService.fetchFavoriteLeagues();
+    if (response != null && mounted) {
+      setState(() {
+        _favoritedLeagueIds = response.results.map((e) => e.id!).toSet();
+      });
+    }
+  }
+
+  Future<void> _showAddFavoriteDialog(LeagueModel league) async {
+    showDialog(
+      context: context,
+      builder: (context) => AddToFavoritesDialog(
+        id: league.id!,
+        name: league.name ?? "Unknown League",
+        subtitle: league.country?.name ?? "Unknown Country",
+        logo: league.logo != null
+            ? Image.network(
+                league.logo!,
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) => Image.asset(
+                  IconAssets.soccer_icon, // Fallback icon
+                  fit: BoxFit.contain,
+                ),
+              )
+            : Image.asset(
+                IconAssets.soccer_icon,
+                fit: BoxFit.contain,
+              ),
+        isLeague: true,
+        onSave: () {
+          // Optimistically update UI or refresh
+          setState(() {
+            _favoritedLeagueIds.add(league.id!);
+          });
+        },
+      ),
+    );
+  }
+
+  Future<void> _toggleFavorite(int leagueId, String leagueName) async {
+    // This method is kept if we want direct toggle removal,
+    // but for adding we use the dialog now.
+    // However, the user request says "implement... through the popup".
+    // So if it IS favorited, maybe we just remove it directly?
+    // Or do we show dialog even for removal? usually dialog is for "Add".
+    // Let's assume:
+    // If NOT favorited -> Show Dialog to Add
+    // If Favorited -> Remove directly (toggle behavior)
+
+    final isFavorited = _favoritedLeagueIds.contains(leagueId);
+
+    if (!isFavorited) {
+      // Find league object
+      final league =
+          _allLeagues.firstWhere((element) => element.id == leagueId);
+      _showAddFavoriteDialog(league);
+      return;
+    }
+
+    // Is favorited -> Remove directly
+    String? error;
+    setState(() {
+      _favoritedLeagueIds.remove(leagueId);
+    });
+
+    print(
+        "CALLING API: ${ApiEndPoint.addToFavoriteLeaques()} with ID: $leagueId (DELETE)");
+    error = await LeagueService.removeLeagueFromFavorites(leagueId);
+
+    if (error != null) {
+      // Revert on error
+      setState(() {
+        _favoritedLeagueIds.add(leagueId);
+      });
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(error),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("$leagueName removed from favorites"),
+            backgroundColor: Colors.grey,
+            duration: const Duration(seconds: 1),
+          ),
+        );
+      }
+    }
   }
 
   Future<void> _fetchLeagues() async {
@@ -300,6 +401,9 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
           leagueName: league.name ?? "Unknown League",
           countryOrRegion: league.country?.name ?? "Unknown Country",
           logoUrl: league.logo,
+          isFavorited: _favoritedLeagueIds.contains(league.id),
+          onFavoriteToggle: () =>
+              _toggleFavorite(league.id!, league.name ?? "League"),
           onTap: () {
             Navigator.push(
                 context,

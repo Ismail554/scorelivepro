@@ -6,23 +6,27 @@ import 'package:scorelivepro/core/app_strings.dart';
 import 'package:scorelivepro/core/font_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:scorelivepro/provider/team_provider.dart';
+import 'package:scorelivepro/services/api_service.dart';
+import 'package:scorelivepro/services/league_service.dart';
 
 class AddToFavoritesDialog extends StatelessWidget {
-  final int teamId;
-  final String teamName;
-  final String leagueName;
-  final Widget? teamLogo;
+  final int id;
+  final String name;
+  final String subtitle;
+  final Widget? logo;
   final VoidCallback? onSave;
   final VoidCallback? onMaybeLater;
+  final bool isLeague;
 
   const AddToFavoritesDialog({
     super.key,
-    required this.teamId,
-    required this.teamName,
-    required this.leagueName,
+    required this.id,
+    required this.name,
+    required this.subtitle,
     this.onSave,
-    this.teamLogo,
+    this.logo,
     this.onMaybeLater,
+    this.isLeague = false,
   });
 
   @override
@@ -78,7 +82,7 @@ class AddToFavoritesDialog extends StatelessWidget {
                   ),
                   SizedBox(height: 20.h),
 
-                  // Team Info Card (Updating to blend with glass)
+                  // Team/League Info Card (Updating to blend with glass)
                   Container(
                     padding: EdgeInsets.all(16.w),
                     decoration: BoxDecoration(
@@ -98,20 +102,14 @@ class AddToFavoritesDialog extends StatelessWidget {
                               color: AppColors.white.withOpacity(0.2),
                               shape: BoxShape.circle,
                             ),
-                            child: teamLogo
-                            //  Icon(
-                            //   Icons.sports_soccer,
-                            //   color: AppColors.white,
-                            //   size: 24.sp,
-                            // ),
-                            ),
+                            child: logo),
                         SizedBox(width: 16.w),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                teamName,
+                                name,
                                 style: FontManager.teamName(
                                   color: AppColors.white,
                                   fontSize: 16,
@@ -119,7 +117,7 @@ class AddToFavoritesDialog extends StatelessWidget {
                               ),
                               SizedBox(height: 4.h),
                               Text(
-                                leagueName,
+                                subtitle,
                                 style: FontManager.leagueName(
                                   color: AppColors.white.withOpacity(0.7),
                                   fontSize: 12,
@@ -164,12 +162,82 @@ class AddToFavoritesDialog extends StatelessWidget {
                     children: [
                       ElevatedButton(
                           onPressed: () async {
-                            await Provider.of<TeamProvider>(context,
-                                    listen: false)
-                                .addTeamToFavorites(teamId, teamName, context);
-                            if (context.mounted) {
-                              Navigator.of(context).pop();
+                            if (isLeague) {
+                              // LEAGUE LOGIC
+                              print(
+                                  "CALLING API: ${ApiEndPoint.addToFavoriteLeaques()} with ID: $id (POST)");
+                              final error =
+                                  await LeagueService.addLeagueToFavorites(id);
+
+                              if (context.mounted) {
+                                Navigator.of(context).pop();
+                                if (error == null) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Row(
+                                        children: [
+                                          const Icon(Icons.check_circle_outline,
+                                              color: Colors.white),
+                                          SizedBox(width: 8),
+                                          Expanded(
+                                            child: Text(
+                                              "$name is added to favorites",
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      behavior: SnackBarBehavior.floating,
+                                      backgroundColor: AppColors.success,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      margin: const EdgeInsets.all(16),
+                                    ),
+                                  );
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Row(
+                                        children: [
+                                          const Icon(Icons.error_outline,
+                                              color: Colors.white),
+                                          SizedBox(width: 8),
+                                          const Expanded(
+                                            child: Text(
+                                              "You must need to login for add leagues to Favorite.",
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      behavior: SnackBarBehavior.floating,
+                                      backgroundColor: Colors.redAccent,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      margin: const EdgeInsets.all(16),
+                                    ),
+                                  );
+                                }
+                              }
+                            } else {
+                              // TEAM LOGIC
+                              print(
+                                  "CALLING API: ${ApiEndPoint.addToFavoriteTeams()} with ID: $id (POST)");
+                              // Note: We are printing the endpoint here for visibility,
+                              // but the actual call happens inside TeamProvider which might use a different method.
+                              // Ideally, logging should be inside the service/provider, but user asked here too or "print all api calls".
+                              await Provider.of<TeamProvider>(context,
+                                      listen: false)
+                                  .addTeamToFavorites(id, name, context);
+                              if (context.mounted) {
+                                Navigator.of(context).pop();
+                              }
                             }
+
                             if (onSave != null) onSave!();
                           },
                           child: Text(AppStrings.saveToFavorites,
