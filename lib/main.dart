@@ -11,15 +11,19 @@ import 'package:scorelivepro/services/dio_service.dart';
 import 'package:provider/provider.dart';
 import 'package:scorelivepro/provider/team_provider.dart';
 import 'package:scorelivepro/services/firebase_service.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await FirebaseService().initNotifications();
+  
 
   try {
-    // Initialize EasyLocalization
+    // Initialize EasyLocalization and MobileAds
+    
     await EasyLocalization.ensureInitialized();
+    MobileAds.instance.initialize();
     // Initialize Dio Interceptors
     DioManager.init();
     // Get saved language from secure storage
