@@ -47,4 +47,9 @@ class ApiEndPoint {
  static String myFavoritesTeam() => "$_baseUrl/auth/profile/favorites/teams/"; // [ { "id": 26605, "name": " Johnstone Burgh", "logo": "https://media.api-sports.io/football/teams/26605.png" } ]
  static String myFavoritesLeagues() => "$_baseUrl/auth/profile/favorites/leagues/"; // [ { "id": 322, "name": "Premier League", "country": { "name": "Jamaica", "code": "JM", "flag": "https://media.api-sports.io/flags/jm.svg" }, "logo": "https://media.api-sports.io/football/leagues/322.png", "season_year": 2025 } ]
   static String forgotPassword() => "$_baseUrl/auth/resend-activation-code/"; // body: { "email": "user@example.com"}
+  // =================== Notifications ===========
+  static String getNotifications() => "$_baseUrl/notifications/inbox/";// response body: [ { "id": 82149, "title": "📅 Premier League Schedule", "body": "There are 1 matches starting tomorrow in Premier League. Don't miss out!", "data": { "type": "SCHEDULE", "reason": "Following Premier League", "league_id": "322" }, "event_type": "MATCH_START", "created_at": "2026-02-17T08:00:13.960913Z", "time_ago": "3 days, 11 hours", "is_read": false }, { "id": 19290, "title": "📅 Premier League Schedule", "body": "There are 1 matches starting tomorrow in Premier League. Don't miss out!", "data": {}, "event_type": "MATCH_START", "created_at": "2026-01-28T21:31:35.331422Z", "time_ago": "3 weeks, 1 day", "is_read": false } ]
+  static String markAllRead() => "$_baseUrl/notifications/mark-read/"; // use method POST
+  static String deleteNotification(int id) => "$_baseUrl/notifications/remove/$id/"; // use method DELETE
 }
+

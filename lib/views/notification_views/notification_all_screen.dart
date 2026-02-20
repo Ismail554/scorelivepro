@@ -6,7 +6,6 @@ import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/app_spacing.dart';
 import 'package:scorelivepro/core/app_strings.dart';
 import 'package:scorelivepro/core/font_manager.dart';
-import 'package:scorelivepro/views/notification_views/models/notification_model.dart';
 import 'package:scorelivepro/widget/notifications/widget_notification_card.dart';
 
 class NotificationAllScreen extends StatefulWidget {
@@ -17,99 +16,64 @@ class NotificationAllScreen extends StatefulWidget {
 }
 
 class _NotificationAllScreenState extends State<NotificationAllScreen> {
-  // Sample notifications data
-  List<NotificationModel> _notifications = [
-    const NotificationModel(
-      id: '1',
-      title: '🔥 Transfer Alert!',
-      content:
-          'PSG preparing €120M bid for Premier League midfielder. Breaking news!',
-      timestamp: '4 hours ago',
-      category: 'Ligue 1',
-      iconEmoji: '🔥',
-      isRead: false,
-      type: NotificationType.transfer,
-    ),
-    const NotificationModel(
-      id: '2',
-      title: '📰 Premier League Update',
-      content: 'New VAR changes announced for next season. Read full details.',
-      timestamp: '5 hours ago',
-      category: 'Premier League',
-      iconEmoji: '📰',
-      isRead: true,
-      type: NotificationType.news,
-    ),
-    const NotificationModel(
-      id: '3',
-      title: '🚑 Injury Update',
-      content: 'Star striker ruled out for 3 months. Major blow for the team.',
-      timestamp: '6 hours ago',
-      category: 'Premier League',
-      iconEmoji: '🚑',
-      isRead: false,
-      type: NotificationType.injury,
-    ),
-    const NotificationModel(
-      id: '4',
-      title: '⚽ Match Started',
-      content: 'Manchester United vs Liverpool - Match has begun!',
-      timestamp: '1 day ago',
-      category: 'Premier League',
-      iconEmoji: '⚽',
-      isRead: true,
-      type: NotificationType.match,
-    ),
-    const NotificationModel(
-      id: '5',
-      title: '🏆 League Update',
-      content: 'Premier League standings updated after latest matches.',
-      timestamp: '2 days ago',
-      category: 'Premier League',
-      iconEmoji: '🏆',
-      isRead: true,
-      type: NotificationType.league,
-    ),
-    const NotificationModel(
-      id: '6',
-      title: '👥 Team News',
-      content: 'New signing confirmed for Manchester City.',
-      timestamp: '3 days ago',
-      category: 'Premier League',
-      iconEmoji: '👥',
-      isRead: true,
-      type: NotificationType.team,
-    ),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<NotificationProvider>(context, listen: false)
+          .fetchNotifications();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.bgColor,
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Header Section
-            _buildHeader(),
+    return WillPopScope(
+      onWillPop: () async {
+        Provider.of<NotificationProvider>(context, listen: false)
+            .markAllAsRead();
+        return true;
+      },
+      child: Scaffold(
+        backgroundColor: AppColors.bgColor,
+        body: SafeArea(
+          child: Column(
+            children: [
+              // Header Section
+              _buildHeader(),
 
-            // Notifications List
-            Expanded(
-              child: _notifications.isEmpty
-                  ? _buildEmptyState()
-                  : ListView.builder(
-                      padding: EdgeInsets.symmetric(vertical: 8.h),
-                      itemCount: _notifications.length,
-                      itemBuilder: (context, index) {
-                        final notification = _notifications[index];
-                        return NotificationCard(
-                          notification: notification,
-                          onDelete: () => _deleteNotification(notification.id),
-                          onTap: () => _markAsRead(notification.id),
-                        );
-                      },
-                    ),
-            ),
-          ],
+              // Notifications List
+              Expanded(
+                child: Consumer<NotificationProvider>(
+                  builder: (context, provider, child) {
+                    if (provider.isLoadingNotifications) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+
+                    final notifications = provider.notifications;
+
+                    return notifications.isEmpty
+                        ? _buildEmptyState()
+                        : ListView.builder(
+                            padding: EdgeInsets.symmetric(vertical: 8.h),
+                            itemCount: notifications.length,
+                            itemBuilder: (context, index) {
+                              final notification = notifications[index];
+                              return NotificationCard(
+                                notification: notification,
+                                onDelete: () => provider
+                                    .deleteNotification(notification.id),
+                                onTap: () =>
+                                    provider.markAsRead(notification.id),
+                              );
+                            },
+                          );
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -134,7 +98,11 @@ class _NotificationAllScreenState extends State<NotificationAllScreen> {
           // Back Button
           IconButton(
             icon: const Icon(Icons.arrow_back),
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              Provider.of<NotificationProvider>(context, listen: false)
+                  .markAllAsRead();
+              Navigator.pop(context);
+            },
             color: AppColors.textPrimary,
             constraints: const BoxConstraints(),
             padding: EdgeInsets.zero,
@@ -190,8 +158,10 @@ class _NotificationAllScreenState extends State<NotificationAllScreen> {
           SizedBox(width: 8.w),
 
           // Mark All Read Button (Compact - Icon only or short text)
-          GestureDetector(
-            onTap: _markAllAsRead,
+          InkWell(
+            onTap: () =>
+                Provider.of<NotificationProvider>(context, listen: false)
+                    .markAllAsRead(),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -255,51 +225,5 @@ class _NotificationAllScreenState extends State<NotificationAllScreen> {
         ],
       ),
     );
-  }
-
-  /// Mark notification as read
-  void _markAsRead(String id) {
-    setState(() {
-      final index = _notifications.indexWhere((n) => n.id == id);
-      if (index != -1) {
-        _notifications[index] = NotificationModel(
-          id: _notifications[index].id,
-          title: _notifications[index].title,
-          content: _notifications[index].content,
-          timestamp: _notifications[index].timestamp,
-          category: _notifications[index].category,
-          iconEmoji: _notifications[index].iconEmoji,
-          isRead: true,
-          type: _notifications[index].type,
-        );
-      }
-    });
-  }
-
-  /// Mark all notifications as read
-  void _markAllAsRead() {
-    setState(() {
-      _notifications = _notifications.map((notification) {
-        return NotificationModel(
-          id: notification.id,
-          title: notification.title,
-          content: notification.content,
-          timestamp: notification.timestamp,
-          category: notification.category,
-          iconEmoji: notification.iconEmoji,
-          isRead: true,
-          type: notification.type,
-        );
-      }).toList();
-    });
-    // Optimistically update provider count to 0
-    Provider.of<NotificationProvider>(context, listen: false).setUnreadCount(0);
-  }
-
-  /// Delete notification
-  void _deleteNotification(String id) {
-    setState(() {
-      _notifications.removeWhere((n) => n.id == id);
-    });
   }
 }
