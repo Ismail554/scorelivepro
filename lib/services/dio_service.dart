@@ -292,6 +292,13 @@ class DioManager {
       return null;
     }
 
+    _refreshLock = null;
+    completer.completeError(
+      "Session expired. Please login again.",
+      StackTrace.current,
+    );
+    return null;
+
 //Generating new access token
     //   try {
     //     log('🔄 Generating new access token...', name: 'TOKEN');

@@ -20,7 +20,9 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
   @override
   void initState() {
     super.initState();
-    _loadAd();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadAd();
+    });
   }
 
   // Load the banner ad

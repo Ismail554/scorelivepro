@@ -87,13 +87,15 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
                     _buildRealLiveMatchesList(), // Still using socket list for Live
 
                     // Upcoming Matches
-                    provider.isLoadingFixtures
+                    provider.isLoadingUpcoming &&
+                            provider.upcomingMatches.isEmpty
                         ? _buildShimmerList()
                         : _buildRealMatchesList(provider.upcomingMatches,
                             isUpcoming: true),
 
                     // Finished Matches
-                    provider.isLoadingFixtures
+                    provider.isLoadingFinished &&
+                            provider.finishedMatches.isEmpty
                         ? _buildShimmerList()
                         : _buildRealMatchesList(provider.finishedMatches,
                             isUpcoming: false),

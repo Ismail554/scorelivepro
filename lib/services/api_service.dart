@@ -6,6 +6,8 @@ class ApiEndPoint {
   static String statistics(int id) =>
       "$_baseUrl/sports/fixtures/$id/statistics/";
   static String get up_fin_matches => "$_baseUrl/sports/fixtures/";
+  static String get upcomingMatches => "$_baseUrl/sports/fixtures/?status=upcoming";
+  static String get finishedMatches => "$_baseUrl/sports/fixtures/?status=finished";
 
   // ============= Auth ================
   static String get login =>

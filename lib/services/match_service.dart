@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:scorelivepro/models/live_ws_model.dart';
 import 'package:scorelivepro/services/api_service.dart';
 import 'package:scorelivepro/services/dio_service.dart';
@@ -125,21 +126,92 @@ class MatchService {
     );
   }
 
-  static Future<List<Data>?> getFixtures({String? status, int? page}) async {
-    final Map<String, dynamic> body = {};
-    if (status != null) body['status'] = status;
-    if (page != null) body['page'] = page;
+  static Future<List<Data>?> getUpcomingMatches({int? page}) async {
+    String url = ApiEndPoint.upcomingMatches;
+    if (page != null) {
+      url += "&page=$page";
+    }
+
+    debugPrint("🏆 [MatchService] Attempting to fetch Upcoming Matches: $url");
 
     final result = await DioManager.apiRequest(
-      url: ApiEndPoint.up_fin_matches,
+      url: url,
       methods: Methods.get,
-      // Change from queryParameters to body as requested
-      body: body.isNotEmpty ? body : null,
-      skipAuth: true,
+      skipAuth:
+          true, // Turned skipAuth from true to false since the API returned 401 token errors
     );
 
     return result.fold(
-      (error) => null,
+      (error) {
+        debugPrint("🏆 [MatchService] Error from Upcoming Matches: $error");
+        return null;
+      },
+      (data) {
+        // 1. Handle new pagination structure with 'results' key
+        if (data is Map && data.containsKey('results')) {
+          final results = data['results'];
+          if (results is List) {
+            List<Data> fixtures = [];
+            for (var v in results) {
+              fixtures.add(Data.fromJson(v));
+            }
+            return fixtures;
+          }
+        }
+
+        // 2. Handle direct list (Old behavior fallback)
+        if (data is List) {
+          List<Data> fixtures = [];
+          for (var v in data) {
+            fixtures.add(Data.fromJson(v));
+          }
+          return fixtures;
+        }
+
+        // 3. Handle 'data' wrapper (Another common pattern)
+        if (data is Map && data['data'] != null && data['data'] is List) {
+          List<Data> fixtures = [];
+          data['data'].forEach((v) {
+            fixtures.add(Data.fromJson(v));
+          });
+          return fixtures;
+        }
+
+        // 4. Handle 'response' wrapper (API-Football standard)
+        if (data is Map &&
+            data['response'] != null &&
+            data['response'] is List) {
+          List<Data> fixtures = [];
+          data['response'].forEach((v) {
+            fixtures.add(Data.fromJson(v));
+          });
+          return fixtures;
+        }
+        return null;
+      },
+    );
+  }
+
+  static Future<List<Data>?> getFinishedMatches({int? page}) async {
+    String url = ApiEndPoint.finishedMatches;
+    if (page != null) {
+      url += "&page=$page";
+    }
+
+    debugPrint("🏆 [MatchService] Attempting to fetch Finished Matches: $url");
+
+    final result = await DioManager.apiRequest(
+      url: url,
+      methods: Methods.get,
+      skipAuth:
+          true, // Turned skipAuth from true to false since the API returned 401 token errors
+    );
+
+    return result.fold(
+      (error) {
+        debugPrint("🏆 [MatchService] Error from Finished Matches: $error");
+        return null;
+      },
       (data) {
         // 1. Handle new pagination structure with 'results' key
         if (data is Map && data.containsKey('results')) {

@@ -121,22 +121,31 @@ class MatchProvider extends ChangeNotifier {
 
   /// Fetch upcoming matches with pagination
   Future<void> fetchUpcomingMatches({bool refresh = false}) async {
+    debugPrint(
+        "🏆 [MatchProvider] fetchUpcomingMatches called. Refresh: $refresh, Page: $_upcomingPage");
     if (refresh) {
       _upcomingPage = 1;
       _hasMoreUpcoming = true;
       _upcomingMatches.clear();
     }
 
-    if (_isLoadingUpcoming || !_hasMoreUpcoming) return;
+    if (_isLoadingUpcoming || !_hasMoreUpcoming) {
+      debugPrint(
+          "🏆 [MatchProvider] fetchUpcomingMatches skipped. IsLoading: $_isLoadingUpcoming, HasMore: $_hasMoreUpcoming");
+      return;
+    }
 
     _isLoadingUpcoming = true;
     notifyListeners();
 
     try {
-      final fixtures = await MatchService.getFixtures(
-          status: "upcoming", page: _upcomingPage);
+      debugPrint("🏆 [MatchProvider] Awaiting API for upcoming...");
+      final fixtures =
+          await MatchService.getUpcomingMatches(page: _upcomingPage);
 
       if (fixtures != null) {
+        debugPrint(
+            "🏆 [MatchProvider] Fetched ${fixtures.length} upcoming matches.");
         if (fixtures.isEmpty) {
           _hasMoreUpcoming = false;
         } else {
@@ -144,11 +153,16 @@ class MatchProvider extends ChangeNotifier {
           _upcomingPage++;
         }
       } else {
+        debugPrint(
+            "🏆 [MatchProvider] getFixtures returned null for upcoming.");
         _hasMoreUpcoming = false;
       }
-    } catch (e) {
-      debugPrint("Error fetching upcoming fixtures: $e");
+    } catch (e, stack) {
+      debugPrint("🏆 [MatchProvider] Error fetching upcoming fixtures: $e");
+      debugPrint("🏆 [MatchProvider] Stack: $stack");
     } finally {
+      debugPrint(
+          "🏆 [MatchProvider] Finished fetchUpcomingMatches, setting isLoading to false.");
       _isLoadingUpcoming = false;
       notifyListeners();
     }
@@ -156,22 +170,31 @@ class MatchProvider extends ChangeNotifier {
 
   /// Fetch finished matches with pagination
   Future<void> fetchFinishedMatches({bool refresh = false}) async {
+    debugPrint(
+        "🏆 [MatchProvider] fetchFinishedMatches called. Refresh: $refresh, Page: $_finishedPage");
     if (refresh) {
       _finishedPage = 1;
       _hasMoreFinished = true;
       _finishedMatches.clear();
     }
 
-    if (_isLoadingFinished || !_hasMoreFinished) return;
+    if (_isLoadingFinished || !_hasMoreFinished) {
+      debugPrint(
+          "🏆 [MatchProvider] fetchFinishedMatches skipped. IsLoading: $_isLoadingFinished, HasMore: $_hasMoreFinished");
+      return;
+    }
 
     _isLoadingFinished = true;
     notifyListeners();
 
     try {
-      final fixtures = await MatchService.getFixtures(
-          status: "finished", page: _finishedPage);
+      debugPrint("🏆 [MatchProvider] Awaiting API for finished...");
+      final fixtures =
+          await MatchService.getFinishedMatches(page: _finishedPage);
 
       if (fixtures != null) {
+        debugPrint(
+            "🏆 [MatchProvider] Fetched ${fixtures.length} finished matches.");
         if (fixtures.isEmpty) {
           _hasMoreFinished = false;
         } else {
@@ -179,11 +202,16 @@ class MatchProvider extends ChangeNotifier {
           _finishedPage++;
         }
       } else {
+        debugPrint(
+            "🏆 [MatchProvider] getFixtures returned null for finished.");
         _hasMoreFinished = false;
       }
-    } catch (e) {
-      debugPrint("Error fetching finished fixtures: $e");
+    } catch (e, stack) {
+      debugPrint("🏆 [MatchProvider] Error fetching finished fixtures: $e");
+      debugPrint("🏆 [MatchProvider] Stack: $stack");
     } finally {
+      debugPrint(
+          "🏆 [MatchProvider] Finished fetchFinishedMatches, setting isLoading to false.");
       _isLoadingFinished = false;
       notifyListeners();
     }
@@ -191,10 +219,12 @@ class MatchProvider extends ChangeNotifier {
 
   /// Fetch initial data
   Future<void> fetchFixtures() async {
+    debugPrint("🏆 [MatchProvider] fetchFixtures (All) started...");
     await Future.wait([
       fetchUpcomingMatches(refresh: true),
       fetchFinishedMatches(refresh: true),
     ]);
+    debugPrint("🏆 [MatchProvider] fetchFixtures (All) completed!");
   }
 
   /// Clear specific match data from cache (optional)
