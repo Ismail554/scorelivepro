@@ -59,7 +59,76 @@ class MatchProvider extends ChangeNotifier {
   bool _hasMoreUpcoming = true;
   bool _hasMoreFinished = true;
 
-  // Getters
+  // Filtering State
+  String _selectedLeagueLive = 'All';
+  String _selectedLeagueUpcoming = 'All';
+  String _selectedLeagueFinished = 'All';
+
+  DateTime? _selectedDateLive;
+  DateTime? _selectedDateUpcoming;
+  DateTime? _selectedDateFinished;
+
+  // Getters for selected leagues
+  String get selectedLeagueLive => _selectedLeagueLive;
+  String get selectedLeagueUpcoming => _selectedLeagueUpcoming;
+  String get selectedLeagueFinished => _selectedLeagueFinished;
+
+  // Getters for selected dates
+  DateTime? get selectedDateLive => _selectedDateLive;
+  DateTime? get selectedDateUpcoming => _selectedDateUpcoming;
+  DateTime? get selectedDateFinished => _selectedDateFinished;
+
+  List<String> getAvailableLeaguesForTab(int tabIndex) {
+    final Set<String> leagues = {'All'};
+    if (tabIndex == 0) {
+      // Live
+      final liveMatches = SocketService.instance.liveScoreNotifier.value?.data;
+      if (liveMatches != null) {
+        for (var match in liveMatches) {
+          if (match.league?.name != null) leagues.add(match.league!.name!);
+        }
+      }
+    } else if (tabIndex == 1) {
+      // Upcoming
+      for (var match in _upcomingMatches) {
+        if (match.league?.name != null) leagues.add(match.league!.name!);
+      }
+    } else if (tabIndex == 2) {
+      // Finished
+      for (var match in _finishedMatches) {
+        if (match.league?.name != null) leagues.add(match.league!.name!);
+      }
+    }
+    return leagues.toList();
+  }
+
+  void setSelectedLeague(int tabIndex, String league) {
+    if (tabIndex == 0 && _selectedLeagueLive != league) {
+      _selectedLeagueLive = league;
+      notifyListeners();
+    } else if (tabIndex == 1 && _selectedLeagueUpcoming != league) {
+      _selectedLeagueUpcoming = league;
+      notifyListeners();
+    } else if (tabIndex == 2 && _selectedLeagueFinished != league) {
+      _selectedLeagueFinished = league;
+      notifyListeners();
+    }
+  }
+
+  void setSelectedDate(int tabIndex, DateTime? date) {
+    if (tabIndex == 0 && _selectedDateLive != date) {
+      _selectedDateLive = date;
+      notifyListeners();
+      // For live, we might not refetch, just filter locally if date != today
+    } else if (tabIndex == 1 && _selectedDateUpcoming != date) {
+      _selectedDateUpcoming = date;
+      fetchUpcomingMatches(refresh: true); // refetch with new date
+    } else if (tabIndex == 2 && _selectedDateFinished != date) {
+      _selectedDateFinished = date;
+      fetchFinishedMatches(refresh: true); // refetch with new date
+    }
+  }
+
   List<Lineup>? getLineups(int matchId) => _lineups[matchId];
   List<Statistic>? getStatistics(int matchId) => _statistics[matchId];
   bool isLoading(int matchId) => _isLoading[matchId] ?? false;
@@ -67,8 +136,24 @@ class MatchProvider extends ChangeNotifier {
   /// Get the latest match data from socket cache or return null
   Data? getMatch(int matchId) => _activeMatches[matchId];
 
-  List<Data> get upcomingMatches => _upcomingMatches;
-  List<Data> get finishedMatches => _finishedMatches;
+  List<Data> get upcomingMatches {
+    List<Data> list = _upcomingMatches;
+    if (_selectedLeagueUpcoming != 'All') {
+      list =
+          list.where((m) => m.league?.name == _selectedLeagueUpcoming).toList();
+    }
+    return list;
+  }
+
+  List<Data> get finishedMatches {
+    List<Data> list = _finishedMatches;
+    if (_selectedLeagueFinished != 'All') {
+      list =
+          list.where((m) => m.league?.name == _selectedLeagueFinished).toList();
+    }
+    return list;
+  }
+
   bool get isLoadingFixtures => _isLoadingUpcoming || _isLoadingFinished;
   bool get isLoadingUpcoming => _isLoadingUpcoming;
   bool get isLoadingFinished => _isLoadingFinished;

@@ -35,6 +35,9 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    _tabController.addListener(() {
+      setState(() {});
+    });
     _tabPadding = EdgeInsets.symmetric(horizontal: 16.w);
     // Fixtures are now fetched in HomeScreen
   }
@@ -78,13 +81,16 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
           _buildDateCard(),
           _buildTabBar(),
           const SizedBox(height: 12),
+          _buildCategoryChips(),
+          const SizedBox(height: 12),
           Expanded(
             child: Consumer<MatchProvider>(
               builder: (context, provider, child) {
                 return TabBarView(
                   controller: _tabController,
                   children: [
-                    _buildRealLiveMatchesList(), // Still using socket list for Live
+                    _buildRealLiveMatchesList(
+                        provider), // Pass provider to filter Live matches
 
                     // Upcoming Matches
                     provider.isLoadingUpcoming &&
@@ -110,6 +116,63 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
   }
 
   /// ---------------- UI BUILDERS ----------------
+
+  /// Category Chips Builder
+  Widget _buildCategoryChips() {
+    return Consumer<MatchProvider>(
+      builder: (context, provider, child) {
+        final currentTabIndex = _tabController.index;
+        final leagues = provider.getAvailableLeaguesForTab(currentTabIndex);
+        if (leagues.isEmpty) return const SizedBox.shrink();
+
+        return SizedBox(
+          height: 38.h,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            itemCount: leagues.length,
+            itemBuilder: (context, index) {
+              final leagueName = leagues[index];
+              String selectedLeagueForTab = provider.selectedLeagueLive;
+              if (currentTabIndex == 1) {
+                selectedLeagueForTab = provider.selectedLeagueUpcoming;
+              } else if (currentTabIndex == 2) {
+                selectedLeagueForTab = provider.selectedLeagueFinished;
+              }
+
+              final isSelected = selectedLeagueForTab == leagueName;
+              return Padding(
+                padding: EdgeInsets.only(right: 8.w),
+                child: ChoiceChip(
+                  label: Text(leagueName),
+                  selected: isSelected,
+                  onSelected: (selected) {
+                    if (selected) {
+                      provider.setSelectedLeague(currentTabIndex, leagueName);
+                    }
+                  },
+                  selectedColor: AppColors.primaryColor,
+                  labelStyle: FontManager.bodyMedium(
+                    color: isSelected ? AppColors.white : AppColors.textPrimary,
+                  ),
+                  backgroundColor: AppColors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.r),
+                    side: BorderSide(
+                      color: isSelected
+                          ? AppColors.primaryColor
+                          : Colors.grey.shade300,
+                    ),
+                  ),
+                  showCheckmark: false,
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
 
   /// Shimmer loading list
   Widget _buildShimmerList() {
@@ -191,11 +254,18 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
   }
 
   /// 🔹 Real Live Matches List from Socket
-  Widget _buildRealLiveMatchesList() {
+  Widget _buildRealLiveMatchesList(MatchProvider provider) {
     return ValueListenableBuilder<LiveScoreModel?>(
       valueListenable: SocketService.instance.liveScoreNotifier,
       builder: (context, liveScore, child) {
-        final matches = liveScore?.data ?? [];
+        var matches = liveScore?.data ?? [];
+
+        // Filter by selected league
+        if (provider.selectedLeague != 'All') {
+          matches = matches
+              .where((m) => m.league?.name == provider.selectedLeague)
+              .toList();
+        }
 
         if (matches.isEmpty) {
           return Center(
