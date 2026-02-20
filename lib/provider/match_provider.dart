@@ -64,19 +64,19 @@ class MatchProvider extends ChangeNotifier {
   String _selectedLeagueUpcoming = 'All';
   String _selectedLeagueFinished = 'All';
 
-  DateTime? _selectedDateLive;
-  DateTime? _selectedDateUpcoming;
-  DateTime? _selectedDateFinished;
+  String _searchQueryLive = '';
+  String _searchQueryUpcoming = '';
+  String _searchQueryFinished = '';
 
   // Getters for selected leagues
   String get selectedLeagueLive => _selectedLeagueLive;
   String get selectedLeagueUpcoming => _selectedLeagueUpcoming;
   String get selectedLeagueFinished => _selectedLeagueFinished;
 
-  // Getters for selected dates
-  DateTime? get selectedDateLive => _selectedDateLive;
-  DateTime? get selectedDateUpcoming => _selectedDateUpcoming;
-  DateTime? get selectedDateFinished => _selectedDateFinished;
+  // Getters for search queries
+  String get searchQueryLive => _searchQueryLive;
+  String get searchQueryUpcoming => _searchQueryUpcoming;
+  String get searchQueryFinished => _searchQueryFinished;
 
   List<String> getAvailableLeaguesForTab(int tabIndex) {
     final Set<String> leagues = {'All'};
@@ -115,17 +115,16 @@ class MatchProvider extends ChangeNotifier {
     }
   }
 
-  void setSelectedDate(int tabIndex, DateTime? date) {
-    if (tabIndex == 0 && _selectedDateLive != date) {
-      _selectedDateLive = date;
+  void setSearchQuery(int tabIndex, String query) {
+    if (tabIndex == 0 && _searchQueryLive != query) {
+      _searchQueryLive = query;
       notifyListeners();
-      // For live, we might not refetch, just filter locally if date != today
-    } else if (tabIndex == 1 && _selectedDateUpcoming != date) {
-      _selectedDateUpcoming = date;
-      fetchUpcomingMatches(refresh: true); // refetch with new date
-    } else if (tabIndex == 2 && _selectedDateFinished != date) {
-      _selectedDateFinished = date;
-      fetchFinishedMatches(refresh: true); // refetch with new date
+    } else if (tabIndex == 1 && _searchQueryUpcoming != query) {
+      _searchQueryUpcoming = query;
+      notifyListeners();
+    } else if (tabIndex == 2 && _searchQueryFinished != query) {
+      _searchQueryFinished = query;
+      notifyListeners();
     }
   }
 
@@ -142,6 +141,14 @@ class MatchProvider extends ChangeNotifier {
       list =
           list.where((m) => m.league?.name == _selectedLeagueUpcoming).toList();
     }
+    if (_searchQueryUpcoming.isNotEmpty) {
+      final q = _searchQueryUpcoming.toLowerCase();
+      list = list.where((m) {
+        final home = m.homeTeam?.name?.toLowerCase() ?? '';
+        final away = m.awayTeam?.name?.toLowerCase() ?? '';
+        return home.contains(q) || away.contains(q);
+      }).toList();
+    }
     return list;
   }
 
@@ -150,6 +157,14 @@ class MatchProvider extends ChangeNotifier {
     if (_selectedLeagueFinished != 'All') {
       list =
           list.where((m) => m.league?.name == _selectedLeagueFinished).toList();
+    }
+    if (_searchQueryFinished.isNotEmpty) {
+      final q = _searchQueryFinished.toLowerCase();
+      list = list.where((m) {
+        final home = m.homeTeam?.name?.toLowerCase() ?? '';
+        final away = m.awayTeam?.name?.toLowerCase() ?? '';
+        return home.contains(q) || away.contains(q);
+      }).toList();
     }
     return list;
   }
@@ -225,6 +240,7 @@ class MatchProvider extends ChangeNotifier {
 
     try {
       debugPrint("🏆 [MatchProvider] Awaiting API for upcoming...");
+
       final fixtures =
           await MatchService.getUpcomingMatches(page: _upcomingPage);
 
@@ -274,6 +290,7 @@ class MatchProvider extends ChangeNotifier {
 
     try {
       debugPrint("🏆 [MatchProvider] Awaiting API for finished...");
+
       final fixtures =
           await MatchService.getFinishedMatches(page: _finishedPage);
 

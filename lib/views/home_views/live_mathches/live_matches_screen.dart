@@ -27,6 +27,7 @@ class LiveMatchesScreen extends StatefulWidget {
 class _LiveMatchesScreenState extends State<LiveMatchesScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  late List<TextEditingController> _searchControllers;
 
   /// Padding used around the tab bar – easy to tweak in one place
   late final EdgeInsets _tabPadding;
@@ -38,12 +39,20 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
     _tabController.addListener(() {
       setState(() {});
     });
+    _searchControllers = [
+      TextEditingController(),
+      TextEditingController(),
+      TextEditingController(),
+    ];
     _tabPadding = EdgeInsets.symmetric(horizontal: 16.w);
     // Fixtures are now fetched in HomeScreen
   }
 
   @override
   void dispose() {
+    for (var c in _searchControllers) {
+      c.dispose();
+    }
     _tabController.dispose();
     super.dispose();
   }
@@ -78,7 +87,7 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildDateCard(),
+          _buildSearchBar(),
           _buildTabBar(),
           const SizedBox(height: 12),
           _buildCategoryChips(),
@@ -187,38 +196,84 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
 
   /// ---------------- UI BUILDERS ----------------
 
-  /// Top date selector card
-  Widget _buildDateCard() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(
-            color: Colors.grey.shade300,
-          ),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.calendar_today_outlined,
-              color: Colors.grey.shade600,
-              size: 18.sp,
-            ),
-            SizedBox(width: 8.w),
-            Text(
-              'Today - Dec 1, 2025',
-              style: FontManager.bodyMedium(
-                color: Colors.grey.shade700,
-                fontSize: 14,
+  /// Top search bar
+  Widget _buildSearchBar() {
+    return Consumer<MatchProvider>(
+      builder: (context, provider, child) {
+        final currentTabIndex = _tabController.index;
+        String currentQuery = '';
+
+        if (currentTabIndex == 0) {
+          currentQuery = provider.searchQueryLive;
+        } else if (currentTabIndex == 1) {
+          currentQuery = provider.searchQueryUpcoming;
+        } else if (currentTabIndex == 2) {
+          currentQuery = provider.searchQueryFinished;
+        }
+
+        final controller = _searchControllers[currentTabIndex];
+        // Ensure controller text is in sync with provider (e.g. if cleared)
+        if (controller.text != currentQuery) {
+          controller.text = currentQuery;
+        }
+
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Container(
+            height: 48.h,
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12.r),
+              border: Border.all(
+                color: Colors.grey.shade300,
               ),
             ),
-          ],
-        ),
-      ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.search,
+                  color: Colors.grey.shade500,
+                  size: 20.sp,
+                ),
+                SizedBox(width: 8.w),
+                Expanded(
+                  child: TextFormField(
+                    controller: controller,
+                    onChanged: (value) {
+                      provider.setSearchQuery(currentTabIndex, value);
+                    },
+                    style: FontManager.bodyMedium(
+                      color: AppColors.textPrimary,
+                    ),
+                    decoration: InputDecoration(
+                      hintText: "Search team names...",
+                      hintStyle: FontManager.bodyMedium(
+                        color: Colors.grey.shade400,
+                      ),
+                      border: InputBorder.none,
+                      contentPadding:
+                          EdgeInsets.only(bottom: 4.h), // aligns text with icon
+                    ),
+                  ),
+                ),
+                if (currentQuery.isNotEmpty)
+                  GestureDetector(
+                    onTap: () {
+                      controller.clear();
+                      provider.setSearchQuery(currentTabIndex, '');
+                    },
+                    child: Icon(
+                      Icons.close,
+                      color: Colors.grey.shade500,
+                      size: 18.sp,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -261,10 +316,20 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
         var matches = liveScore?.data ?? [];
 
         // Filter by selected league
-        if (provider.selectedLeague != 'All') {
+        if (provider.selectedLeagueLive != 'All') {
           matches = matches
-              .where((m) => m.league?.name == provider.selectedLeague)
+              .where((m) => m.league?.name == provider.selectedLeagueLive)
               .toList();
+        }
+
+        // Filter by search query
+        if (provider.searchQueryLive.isNotEmpty) {
+          final query = provider.searchQueryLive.toLowerCase();
+          matches = matches.where((m) {
+            final home = m.homeTeam?.name?.toLowerCase() ?? '';
+            final away = m.awayTeam?.name?.toLowerCase() ?? '';
+            return home.contains(query) || away.contains(query);
+          }).toList();
         }
 
         if (matches.isEmpty) {

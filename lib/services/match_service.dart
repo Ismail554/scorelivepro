@@ -126,10 +126,14 @@ class MatchService {
     );
   }
 
-  static Future<List<Data>?> getUpcomingMatches({int? page}) async {
+  static Future<List<Data>?> getUpcomingMatches(
+      {int? page, String? date}) async {
     String url = ApiEndPoint.upcomingMatches;
     if (page != null) {
       url += "&page=$page";
+    }
+    if (date != null) {
+      url += "&date=$date";
     }
 
     debugPrint("🏆 [MatchService] Attempting to fetch Upcoming Matches: $url");
@@ -192,10 +196,14 @@ class MatchService {
     );
   }
 
-  static Future<List<Data>?> getFinishedMatches({int? page}) async {
+  static Future<List<Data>?> getFinishedMatches(
+      {int? page, String? date}) async {
     String url = ApiEndPoint.finishedMatches;
     if (page != null) {
       url += "&page=$page";
+    }
+    if (date != null) {
+      url += "&date=$date";
     }
 
     debugPrint("🏆 [MatchService] Attempting to fetch Finished Matches: $url");
