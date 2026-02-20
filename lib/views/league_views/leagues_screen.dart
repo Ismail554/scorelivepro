@@ -14,6 +14,7 @@ import 'package:scorelivepro/widget/leagues/widget_premium_upgrade_card.dart';
 import 'package:scorelivepro/widget/mini_widget/mw_notification_bell.dart';
 import 'package:scorelivepro/widget/favorites/widget_add_to_favorites_dialog.dart';
 import 'package:scorelivepro/core/assets_manager.dart';
+import 'package:scorelivepro/ads/floating_banner_ad.dart';
 
 class LeaguesScreen extends StatefulWidget {
   const LeaguesScreen({super.key});
@@ -244,85 +245,95 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      body: Column(
+      body: Stack(
         children: [
-          // Header Section
-          Container(
-            color: AppColors.white,
-            padding: EdgeInsets.only(
-              top: MediaQuery.of(context).padding.top,
-              bottom: 16.h,
-            ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              child: Column(
-                children: [
-                  // Title and Notification Bell
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Column(
+            children: [
+              // Header Section
+              Container(
+                color: AppColors.white,
+                padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).padding.top,
+                  bottom: 16.h,
+                ),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  child: Column(
                     children: [
-                      Text(
-                        AppStrings.leagues,
-                        style: FontManager.heading2(
-                          color: AppColors.textPrimary,
-                        ),
+                      // Title and Notification Bell
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            AppStrings.leagues,
+                            style: FontManager.heading2(
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                          NotificationBell(
+                            hasNotification: true,
+                            iconColor: AppColors.black,
+                            onTap: () {},
+                          ),
+                        ],
                       ),
-                      NotificationBell(
-                        hasNotification: true,
-                        iconColor: AppColors.black,
-                        onTap: () {},
+
+                      SizedBox(height: 16.h),
+
+                      // Search Bar
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 16.w, vertical: 12.h),
+                        decoration: BoxDecoration(
+                          color: AppColors.greyE8,
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.search,
+                              color: AppColors.textTertiary,
+                              size: 20.sp,
+                            ),
+                            SizedBox(width: 12.w),
+                            Expanded(
+                              child: TextField(
+                                controller: _searchController,
+                                decoration: InputDecoration(
+                                  hintText: "Search leagues...",
+                                  hintStyle: FontManager.bodyMedium(
+                                    color: AppColors.textTertiary,
+                                    fontSize: 14,
+                                  ),
+                                  border: InputBorder.none,
+                                  isDense: true,
+                                  contentPadding: EdgeInsets.zero,
+                                ),
+                                style: FontManager.bodyMedium(
+                                  color: AppColors.textPrimary,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
-
-                  SizedBox(height: 16.h),
-
-                  // Search Bar
-                  Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-                    decoration: BoxDecoration(
-                      color: AppColors.greyE8,
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.search,
-                          color: AppColors.textTertiary,
-                          size: 20.sp,
-                        ),
-                        SizedBox(width: 12.w),
-                        Expanded(
-                          child: TextField(
-                            controller: _searchController,
-                            decoration: InputDecoration(
-                              hintText: "Search leagues...",
-                              hintStyle: FontManager.bodyMedium(
-                                color: AppColors.textTertiary,
-                                fontSize: 14,
-                              ),
-                              border: InputBorder.none,
-                              isDense: true,
-                              contentPadding: EdgeInsets.zero,
-                            ),
-                            style: FontManager.bodyMedium(
-                              color: AppColors.textPrimary,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
-          ),
 
-          // Leagues List
-          Expanded(
-            child: _buildBody(),
+              // Leagues List
+              Expanded(
+                child: _buildBody(),
+              ),
+            ],
+          ),
+          const Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: FloatingBannerAd(),
           ),
         ],
       ),
@@ -376,7 +387,7 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
 
     return ListView.builder(
       controller: _scrollController,
-      padding: EdgeInsets.symmetric(vertical: 8.h),
+      padding: EdgeInsets.only(top: 8.h, bottom: 60.h),
       itemCount: _filteredLeagues.length + 1 + (_isMoreLoading ? 1 : 0),
       itemBuilder: (context, index) {
         // Loading indicator at the bottom

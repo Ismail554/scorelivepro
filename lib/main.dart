@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart' show Firebase;
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:scorelivepro/app.dart';
 import 'package:scorelivepro/config/language/lanugage_provider.dart';
 import 'package:scorelivepro/firebase_options.dart';
@@ -11,19 +12,19 @@ import 'package:scorelivepro/services/dio_service.dart';
 import 'package:provider/provider.dart';
 import 'package:scorelivepro/provider/team_provider.dart';
 import 'package:scorelivepro/services/firebase_service.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Initialize the Mobile Ads SDK.
+  MobileAds.instance.initialize();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await FirebaseService().initNotifications();
-  
 
   try {
     // Initialize EasyLocalization and MobileAds
-    
+
     await EasyLocalization.ensureInitialized();
-    MobileAds.instance.initialize();
+    // MobileAds.instance.initialize();
     // Initialize Dio Interceptors
     DioManager.init();
     // Get saved language from secure storage

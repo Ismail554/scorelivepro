@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:scorelivepro/ads/banner_ad_widget.dart';
 import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/app_spacing.dart';
 import 'package:scorelivepro/core/app_strings.dart';
@@ -268,11 +269,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       AppSpacing.h16,
 
                       // Sponsored Ad Card
-                      SponsoredAdCard(
-                        onTryFreeTap: () {
-                          // TODO: Handle try free action
-                        },
-                      ),
+                     BannerAdWidget(),
                       AppSpacing.h16,
                     ],
                   ),
