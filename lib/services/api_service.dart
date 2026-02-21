@@ -27,6 +27,13 @@ class ApiEndPoint {
   static String getFixtures(int id) => "$_baseUrl/sports/fixtures/$id/";
   static String getTeams(int id) =>
       "$_baseUrl/sports/teams/$id/"; // response: { "id": 311, "name": "Albirex Niigata", "logo": "https://media.api-sports.io/football/teams/311.png" }
+  
+  
+  static String leagueDetails(int id) => "$_baseUrl/sports/leagues/$id/"; // Response: { "id": 512, "name": "", "country": { "name": "", "code": "", "flag": "" }, "logo": "", "season_year": 2024 }
+  static String get leagueStandingDetails => "$_baseUrl/sports/standings/"; // body { "league": 311 } // Response: { "count": 378, "next": "https://api.scorelivepro.it/sports/standings/?page=2", "previous": null, "results": [ { "league": 318, "season": 2025, "data": [ [ { "all": { "win": 17, "draw": 3, "lose": 2, "goals": { "for": 55, "against": 15 }, "played": 22 }, "away": { "win": 8, "draw": 1, "lose": 2, "goals": { "for": 29, "against": 11 }, "played": 11 }, "form": "WWWWW", "home": { "win": 9, "draw": 2, "lose": 0, "goals": { "for": 26, "against": 4 }, "played": 11 }, "rank": 1, "team": { "id": 3402, "logo": "", "name": " " }, "group": "", "points": 54, "status": "", "update": "", "goalsDiff": 40, "description": "" }, { "all": { "win": 5, "draw": 7, "lose": 17, "goals": { "for": 23, "against": 42 }, "played": 29 }, "away": { "win": 3, "draw": 3, "lose": 9, "goals": { "for": 10, "against": 23 }, "played": 15 }, "form": "LDLWL", "home": { "win": 2, "draw": 4, "lose": 8, "goals": { "for": 13, "against": 19 }, "played": 14 }, "rank": 24, "team": { "id": 1351, "logo": "", "name": " " }, "group": "", "points": 22, "status": "", "update": "", "goalsDiff": -19, "description": "" } ] ], "updated_at": "" } ] }
+
+
+
 
   // ============= Notifications =============
   static String unreadNotificationsCount() =>

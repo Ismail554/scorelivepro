@@ -14,6 +14,7 @@ class LeagueHeaderCard extends StatelessWidget {
   final String country;
   final String season;
   final String? flagEmoji;
+  final String? logoUrl;
   final String? backgroundImagePath;
   final VoidCallback? onBackPressed;
   final VoidCallback? onNotificationPressed;
@@ -25,6 +26,7 @@ class LeagueHeaderCard extends StatelessWidget {
     required this.country,
     required this.season,
     this.flagEmoji,
+    this.logoUrl,
     this.backgroundImagePath,
     this.onBackPressed,
     this.onNotificationPressed,
@@ -114,17 +116,34 @@ class LeagueHeaderCard extends StatelessWidget {
                       color: AppColors.white.withOpacity(0.2),
                       shape: BoxShape.circle,
                     ),
+                    clipBehavior: Clip.antiAlias,
                     child: Center(
-                      child: flagEmoji != null
-                          ? Text(
-                              flagEmoji!,
-                              style: TextStyle(fontSize: 40.sp),
+                      child: logoUrl != null
+                          ? Image.network(
+                              logoUrl!,
+                              fit: BoxFit.contain,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  flagEmoji != null
+                                      ? Text(
+                                          flagEmoji!,
+                                          style: TextStyle(fontSize: 40.sp),
+                                        )
+                                      : Icon(
+                                          Icons.flag,
+                                          color: AppColors.white,
+                                          size: 40.sp,
+                                        ),
                             )
-                          : Icon(
-                              Icons.flag,
-                              color: AppColors.white,
-                              size: 40.sp,
-                            ),
+                          : flagEmoji != null
+                              ? Text(
+                                  flagEmoji!,
+                                  style: TextStyle(fontSize: 40.sp),
+                                )
+                              : Icon(
+                                  Icons.flag,
+                                  color: AppColors.white,
+                                  size: 40.sp,
+                                ),
                     ),
                   ),
 
@@ -160,4 +179,3 @@ class LeagueHeaderCard extends StatelessWidget {
     );
   }
 }
-

@@ -419,7 +419,8 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => DetailedLeaguesScreen()));
+                    builder: (context) =>
+                        DetailedLeaguesScreen(leagueId: league.id!)));
           },
         );
       },

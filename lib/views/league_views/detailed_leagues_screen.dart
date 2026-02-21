@@ -11,9 +11,12 @@ import 'package:scorelivepro/widget/leagues/widget_league_header_card.dart';
 import 'package:scorelivepro/widget/leagues/widget_standings_team_card.dart';
 import 'package:scorelivepro/widget/navigation/custom_bottom_nav_bar.dart';
 import 'package:scorelivepro/widget/navigation/transparent_tab_bar.dart';
+import 'package:scorelivepro/models/league_model.dart';
+import 'package:scorelivepro/services/league_service.dart';
 
 class DetailedLeaguesScreen extends StatefulWidget {
-  const DetailedLeaguesScreen({super.key});
+  final int leagueId;
+  const DetailedLeaguesScreen({super.key, required this.leagueId});
 
   @override
   State<DetailedLeaguesScreen> createState() => _DetailedLeaguesScreenState();
@@ -22,11 +25,27 @@ class DetailedLeaguesScreen extends StatefulWidget {
 class _DetailedLeaguesScreenState extends State<DetailedLeaguesScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  LeagueModel? _leagueDetails;
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
+    _fetchLeagueDetails();
+  }
+
+  Future<void> _fetchLeagueDetails() async {
+    setState(() {
+      _isLoading = true;
+    });
+    final details = await LeagueService.fetchLeagueDetails(widget.leagueId);
+    if (mounted) {
+      setState(() {
+        _leagueDetails = details;
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -56,14 +75,25 @@ class _DetailedLeaguesScreenState extends State<DetailedLeaguesScreen>
               child: Stack(
                 children: [
                   // League Header Card
-                  LeagueHeaderCard(
-                    leagueName: "Premier League",
-                    country: "England",
-                    season: "2024/25 Season",
-                    flagEmoji: "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
-                    onBackPressed: () => Navigator.pop(context),
-                    hasNotification: true,
-                  ),
+                  _isLoading
+                      ? SizedBox(
+                          height: 270.h,
+                          child: const Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.primaryColor,
+                            ),
+                          ),
+                        )
+                      : LeagueHeaderCard(
+                          leagueName: _leagueDetails?.name ?? "Unknown League",
+                          country: _leagueDetails?.country?.name ??
+                              "Unknown Country",
+                          season: "${_leagueDetails?.seasonYear ?? ""} Season",
+                          logoUrl: _leagueDetails?.logo ??
+                              _leagueDetails?.country?.flag,
+                          onBackPressed: () => Navigator.pop(context),
+                          hasNotification: false,
+                        ),
 
                   // Transparent Tab Bar (overlaid at bottom)
                   Positioned(

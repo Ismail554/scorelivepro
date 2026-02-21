@@ -109,4 +109,30 @@ class LeagueService {
       return null;
     }
   }
+
+  static Future<LeagueModel?> fetchLeagueDetails(int leagueId) async {
+    try {
+      final response = await DioManager.apiRequest(
+        url: ApiEndPoint.leagueDetails(leagueId),
+        methods: Methods.get,
+        skipAuth: true,
+      );
+
+      return response.fold(
+        (error) {
+          print("Error Fetching League Details: $error");
+          return null;
+        },
+        (data) {
+          if (data is Map<String, dynamic>) {
+            return LeagueModel.fromJson(data);
+          }
+          return null;
+        },
+      );
+    } catch (e) {
+      print("Exception Fetching League Details: $e");
+      return null;
+    }
+  }
 }
