@@ -12,6 +12,8 @@ import 'package:scorelivepro/widget/leagues/widget_standings_team_card.dart';
 import 'package:scorelivepro/widget/navigation/custom_bottom_nav_bar.dart';
 import 'package:scorelivepro/widget/navigation/transparent_tab_bar.dart';
 import 'package:scorelivepro/models/league_model.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:scorelivepro/models/standings_model.dart';
 import 'package:scorelivepro/services/league_service.dart';
 
 class DetailedLeaguesScreen extends StatefulWidget {
@@ -27,6 +29,8 @@ class _DetailedLeaguesScreenState extends State<DetailedLeaguesScreen>
   late TabController _tabController;
   LeagueModel? _leagueDetails;
   bool _isLoading = true;
+  List<StandingsModel>? _standings;
+  bool _isStandingsLoading = true;
 
   @override
   void initState() {
@@ -38,14 +42,38 @@ class _DetailedLeaguesScreenState extends State<DetailedLeaguesScreen>
   Future<void> _fetchLeagueDetails() async {
     setState(() {
       _isLoading = true;
+      _isStandingsLoading = true;
     });
-    final details = await LeagueService.fetchLeagueDetails(widget.leagueId);
-    if (mounted) {
-      setState(() {
-        _leagueDetails = details;
-        _isLoading = false;
-      });
-    }
+
+    LeagueService.fetchLeagueDetails(widget.leagueId).then((details) {
+      if (mounted) {
+        setState(() {
+          _leagueDetails = details;
+          _isLoading = false;
+        });
+      }
+    }).catchError((_) {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    });
+
+    LeagueService.fetchLeagueStandings(widget.leagueId).then((standings) {
+      if (mounted) {
+        setState(() {
+          _standings = standings;
+          _isStandingsLoading = false;
+        });
+      }
+    }).catchError((_) {
+      if (mounted) {
+        setState(() {
+          _isStandingsLoading = false;
+        });
+      }
+    });
   }
 
   @override
@@ -75,25 +103,21 @@ class _DetailedLeaguesScreenState extends State<DetailedLeaguesScreen>
               child: Stack(
                 children: [
                   // League Header Card
-                  _isLoading
-                      ? SizedBox(
-                          height: 270.h,
-                          child: const Center(
-                            child: CircularProgressIndicator(
-                              color: AppColors.primaryColor,
-                            ),
-                          ),
-                        )
-                      : LeagueHeaderCard(
-                          leagueName: _leagueDetails?.name ?? "Unknown League",
-                          country: _leagueDetails?.country?.name ??
-                              "Unknown Country",
-                          season: "${_leagueDetails?.seasonYear ?? ""} Season",
-                          logoUrl: _leagueDetails?.logo ??
-                              _leagueDetails?.country?.flag,
-                          onBackPressed: () => Navigator.pop(context),
-                          hasNotification: false,
-                        ),
+                  LeagueHeaderCard(
+                    leagueName: _isLoading
+                        ? "Loading..."
+                        : (_leagueDetails?.name ?? "Unknown League"),
+                    country: _isLoading
+                        ? "Loading..."
+                        : (_leagueDetails?.country?.name ?? "Unknown Country"),
+                    season: _isLoading
+                        ? "..."
+                        : "${_leagueDetails?.seasonYear ?? ""} Season",
+                    logoUrl:
+                        _leagueDetails?.logo ?? _leagueDetails?.country?.flag,
+                    onBackPressed: () => Navigator.pop(context),
+                    hasNotification: false,
+                  ),
 
                   // Transparent Tab Bar (overlaid at bottom)
                   Positioned(
@@ -134,105 +158,126 @@ class _DetailedLeaguesScreenState extends State<DetailedLeaguesScreen>
 
   /// Standings Tab Content
   Widget _buildStandingsTab() {
-    // Sample standings data
-    final standings = [
-      {
-        'rank': 1,
-        'team': 'Manchester City',
-        'points': 38,
-        'played': 15,
-        'wins': 12,
-        'draws': 2,
-        'losses': 1,
-        'goalsFor': 38,
-        'goalsAgainst': 12,
-        'goalDifference': 26,
-      },
-      {
-        'rank': 2,
-        'team': 'Arsenal',
-        'points': 36,
-        'played': 15,
-        'wins': 11,
-        'draws': 3,
-        'losses': 1,
-        'goalsFor': 35,
-        'goalsAgainst': 13,
-        'goalDifference': 22,
-      },
-      {
-        'rank': 3,
-        'team': 'Liverpool',
-        'points': 34,
-        'played': 15,
-        'wins': 10,
-        'draws': 4,
-        'losses': 1,
-        'goalsFor': 32,
-        'goalsAgainst': 15,
-        'goalDifference': 17,
-      },
-      {
-        'rank': 4,
-        'team': 'Manchester United',
-        'points': 30,
-        'played': 15,
-        'wins': 9,
-        'draws': 3,
-        'losses': 3,
-        'goalsFor': 28,
-        'goalsAgainst': 18,
-        'goalDifference': 10,
-      },
-      {
-        'rank': 5,
-        'team': 'Newcastle',
-        'points': 28,
-        'played': 15,
-        'wins': 8,
-        'draws': 4,
-        'losses': 3,
-        'goalsFor': 27,
-        'goalsAgainst': 17,
-        'goalDifference': 10,
-      },
-      {
-        'rank': 6,
-        'team': 'Tottenham',
-        'points': 27,
-        'played': 15,
-        'wins': 8,
-        'draws': 3,
-        'losses': 4,
-        'goalsFor': 29,
-        'goalsAgainst': 21,
-        'goalDifference': 8,
-      },
-      {
-        'rank': 7,
-        'team': 'Chelsea',
-        'points': 25,
-        'played': 15,
-        'wins': 7,
-        'draws': 4,
-        'losses': 4,
-        'goalsFor': 24,
-        'goalsAgainst': 19,
-        'goalDifference': 5,
-      },
-      {
-        'rank': 8,
-        'team': 'Brighton',
-        'points': 23,
-        'played': 15,
-        'wins': 6,
-        'draws': 5,
-        'losses': 4,
-        'goalsFor': 22,
-        'goalsAgainst': 20,
-        'goalDifference': 2,
-      },
-    ];
+    if (_isStandingsLoading) {
+      return ListView.builder(
+        padding: EdgeInsets.only(top: 20.h),
+        itemCount: 10,
+        itemBuilder: (context, index) {
+          return Container(
+            margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+            decoration: BoxDecoration(
+              color: AppColors.white,
+              borderRadius: BorderRadius.circular(16.r),
+              border: Border.all(color: Colors.grey.shade200, width: 1.w),
+            ),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Shimmer.fromColors(
+                      baseColor: Colors.grey.shade300,
+                      highlightColor: Colors.grey.shade100,
+                      child: Container(
+                        width: 36.w,
+                        height: 36.w,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                      ),
+                    ),
+                    AppSpacing.w12,
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Shimmer.fromColors(
+                            baseColor: Colors.grey.shade300,
+                            highlightColor: Colors.grey.shade100,
+                            child: Container(
+                              width: 32.w,
+                              height: 32.w,
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          ),
+                          AppSpacing.w12,
+                          Expanded(
+                            child: Shimmer.fromColors(
+                              baseColor: Colors.grey.shade300,
+                              highlightColor: Colors.grey.shade100,
+                              child: Container(
+                                height: 16.h,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Shimmer.fromColors(
+                      baseColor: Colors.grey.shade300,
+                      highlightColor: Colors.grey.shade100,
+                      child: Container(
+                        width: 60.w,
+                        height: 28.h,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20.r),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                AppSpacing.h16,
+                Divider(color: Colors.grey.shade200, thickness: 1.h),
+                AppSpacing.h16,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: List.generate(
+                    4,
+                    (index) => Column(
+                      children: [
+                        Shimmer.fromColors(
+                          baseColor: Colors.grey.shade300,
+                          highlightColor: Colors.grey.shade100,
+                          child: Container(
+                            height: 12.h,
+                            width: 30.w,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(height: 6.h),
+                        Shimmer.fromColors(
+                          baseColor: Colors.grey.shade300,
+                          highlightColor: Colors.grey.shade100,
+                          child: Container(
+                            height: 14.h,
+                            width: 40.w,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    }
+
+    if (_standings == null || _standings!.isEmpty) {
+      return Center(
+        child: Text(
+          "No standings available",
+          style: FontManager.bodyLarge(color: AppColors.textSecondary),
+        ),
+      );
+    }
 
     return SingleChildScrollView(
       padding: EdgeInsets.only(top: 8.h),
@@ -240,18 +285,19 @@ class _DetailedLeaguesScreenState extends State<DetailedLeaguesScreen>
         children: [
           AppSpacing.h12,
           // Standings List
-          ...standings.map((team) {
+          ..._standings!.map((team) {
             return StandingsTeamCard(
-              rank: team['rank'] as int,
-              teamName: team['team'] as String,
-              points: team['points'] as int,
-              played: team['played'] as int,
-              wins: team['wins'] as int,
-              draws: team['draws'] as int,
-              losses: team['losses'] as int,
-              goalsFor: team['goalsFor'] as int,
-              goalsAgainst: team['goalsAgainst'] as int,
-              goalDifference: team['goalDifference'] as int,
+              rank: team.rank ?? 0,
+              teamName: team.team?.name ?? "Unknown",
+              logoUrl: team.team?.logo,
+              points: team.points ?? 0,
+              played: team.all?.played ?? 0,
+              wins: team.all?.win ?? 0,
+              draws: team.all?.draw ?? 0,
+              losses: team.all?.lose ?? 0,
+              goalsFor: team.all?.goals?.goalsFor ?? 0,
+              goalsAgainst: team.all?.goals?.goalsAgainst ?? 0,
+              goalDifference: team.goalsDiff ?? 0,
             );
           }),
 

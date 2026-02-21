@@ -1,4 +1,5 @@
 import 'package:scorelivepro/models/league_model.dart';
+import 'package:scorelivepro/models/standings_model.dart';
 import 'package:scorelivepro/services/api_service.dart';
 import 'package:scorelivepro/services/dio_service.dart';
 
@@ -132,6 +133,47 @@ class LeagueService {
       );
     } catch (e) {
       print("Exception Fetching League Details: $e");
+      return null;
+    }
+  }
+
+  static Future<List<StandingsModel>?> fetchLeagueStandings(
+      int leagueId) async {
+    try {
+      print(
+          "🚀 [LeagueService] Calling fetchLeagueStandings with GET param league=$leagueId...");
+      final response = await DioManager.apiRequest(
+        url: ApiEndPoint.leagueStandingDetails(leagueId),
+        methods: Methods.get,
+        skipAuth: false,
+      );
+
+      return response.fold(
+        (error) {
+          print("❌ [LeagueService] Error Fetching League Standings: $error");
+          return null;
+        },
+        (data) {
+          print(
+              "✅ [LeagueService] Standings API Success! Raw Data Type: ${data.runtimeType}");
+          // Print a snippet of the data to avoid console overflow
+          print(
+              "➡️ [LeagueService] Standings Data Snippet: ${data.toString().substring(0, data.toString().length > 200 ? 200 : data.toString().length)}...");
+
+          if (data is Map<String, dynamic>) {
+            final standingsResponse = StandingsResponse.fromJson(data);
+            print(
+                "🏆 [LeagueService] Parsed Standings Rows Count: ${standingsResponse.results.length}");
+            return standingsResponse.results;
+          } else {
+            print(
+                "⚠️ [LeagueService] Standings Data is NOT a Map<String, dynamic>!");
+          }
+          return null;
+        },
+      );
+    } catch (e) {
+      print("🔥 [LeagueService] Exception Fetching League Standings: $e");
       return null;
     }
   }

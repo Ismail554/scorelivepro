@@ -9,6 +9,7 @@ import 'package:scorelivepro/views/league_views/standing_details/detailed_standi
 class StandingsTeamCard extends StatelessWidget {
   final int rank;
   final String teamName;
+  final String? logoUrl;
   final int points;
   final int played;
   final int wins;
@@ -22,6 +23,7 @@ class StandingsTeamCard extends StatelessWidget {
     super.key,
     required this.rank,
     required this.teamName,
+    this.logoUrl,
     required this.points,
     required this.played,
     required this.wins,
@@ -68,118 +70,128 @@ class StandingsTeamCard extends StatelessWidget {
         );
       },
       child: Container(
-      margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(16.r), // Rounded corner like image
-        border: Border.all(color: Colors.grey.shade200, width: 1.w),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          // ----------------- TOP SECTION (Rank, Team, Points) -----------------
-          Row(
-            children: [
-              // Rank Box (Rounded Square)
-              Container(
-                width: 36.w,
-                height: 36.w,
-                decoration: BoxDecoration(
-                  color: rankColor,
-                  borderRadius: BorderRadius.circular(12.r), // Rounded square
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  rank.toString(),
-                  style: FontManager.heading4(
-                    fontSize: 16,
-                    color: AppColors.white,
+        margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius:
+              BorderRadius.circular(16.r), // Rounded corner like image
+          border: Border.all(color: Colors.grey.shade200, width: 1.w),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.03),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            // ----------------- TOP SECTION (Rank, Team, Points) -----------------
+            Row(
+              children: [
+                // Rank Box (Rounded Square)
+                Container(
+                  width: 36.w,
+                  height: 36.w,
+                  decoration: BoxDecoration(
+                    color: rankColor,
+                    borderRadius: BorderRadius.circular(12.r), // Rounded square
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    rank.toString(),
+                    style: FontManager.heading4(
+                      fontSize: 16,
+                      color: AppColors.white,
+                    ),
                   ),
                 ),
-              ),
 
-              AppSpacing.w12,
+                AppSpacing.w12,
 
-              // Team Logo (Circle Avatar Placeholder) & Name
-              Expanded(
-                child: Row(
-                  children: [
-                    // Team Logo Background
-                    Container(
-                      width: 32.w,
-                      height: 32.w,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        shape: BoxShape.circle,
-                      ),
-                      padding: EdgeInsets.all(6.w),
-                      child: Image.asset(
-                        IconAssets
-                            .soccer_icon, // Replace with team logo url if available
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                    AppSpacing.w12,
-                    // Team Name
-                    Expanded(
-                      child: Text(
-                        teamName,
-                        style: FontManager.bodyMedium(
-                          fontSize: 16,
-                          color: AppColors.textPrimary,
+                // Team Logo (Circle Avatar Placeholder) & Name
+                Expanded(
+                  child: Row(
+                    children: [
+                      // Team Logo Background
+                      Container(
+                        width: 32.w,
+                        height: 32.w,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          shape: BoxShape.circle,
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                        padding: EdgeInsets.all(6.w),
+                        clipBehavior: Clip.antiAlias,
+                        child: logoUrl != null
+                            ? Image.network(
+                                logoUrl!,
+                                fit: BoxFit.contain,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Image.asset(IconAssets.soccer_icon,
+                                        fit: BoxFit.contain),
+                              )
+                            : Image.asset(
+                                IconAssets.soccer_icon,
+                                fit: BoxFit.contain,
+                              ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-
-              // Points Badge (Pill Shape)
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryColor,
-                  borderRadius: BorderRadius.circular(20.r),
-                ),
-                child: Text(
-                  "$points pts",
-                  style: FontManager.labelMedium(
-                    fontSize: 14,
-                    color: AppColors.white,
+                      AppSpacing.w12,
+                      // Team Name
+                      Expanded(
+                        child: Text(
+                          teamName,
+                          style: FontManager.bodyMedium(
+                            fontSize: 16,
+                            color: AppColors.textPrimary,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-            ],
-          ),
 
-          AppSpacing.h16,
+                // Points Badge (Pill Shape)
+                Container(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryColor,
+                    borderRadius: BorderRadius.circular(20.r),
+                  ),
+                  child: Text(
+                    "$points pts",
+                    style: FontManager.labelMedium(
+                      fontSize: 14,
+                      color: AppColors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
 
-          // ----------------- DIVIDER -----------------
-          Divider(color: Colors.grey.shade200, thickness: 1.h),
+            AppSpacing.h16,
 
-          AppSpacing.h16,
+            // ----------------- DIVIDER -----------------
+            Divider(color: Colors.grey.shade200, thickness: 1.h),
 
-          // ----------------- BOTTOM SECTION (Stats Grid) -----------------
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _buildStatColumn("Played", played.toString()),
-              _buildStatColumn("W-D-L", "$wins-$draws-$losses"),
-              _buildStatColumn("Goals", "$goalsFor-$goalsAgainst"),
-              _buildStatColumn("GD", gdText, valueColor: gdColor),
-            ],
-          ),
-        ],
-      ),
+            AppSpacing.h16,
+
+            // ----------------- BOTTOM SECTION (Stats Grid) -----------------
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _buildStatColumn("Played", played.toString()),
+                _buildStatColumn("W-D-L", "$wins-$draws-$losses"),
+                _buildStatColumn("Goals", "$goalsFor-$goalsAgainst"),
+                _buildStatColumn("GD", gdText, valueColor: gdColor),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
