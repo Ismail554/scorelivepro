@@ -15,7 +15,12 @@ import 'package:scorelivepro/models/league_model.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:scorelivepro/models/standings_model.dart';
 import 'package:scorelivepro/models/team_model.dart';
+import 'package:scorelivepro/models/live_ws_model.dart' as ws;
 import 'package:scorelivepro/services/league_service.dart';
+import 'package:scorelivepro/utils/match_status_helper.dart';
+import 'package:scorelivepro/views/home_views/live_mathches/live_match_details_screen.dart';
+import 'package:scorelivepro/views/home_views/live_mathches/lineups_screen.dart';
+import 'package:scorelivepro/widget/shimmer/match_card_shimmer.dart';
 
 class DetailedLeaguesScreen extends StatefulWidget {
   final int leagueId;
@@ -34,6 +39,8 @@ class _DetailedLeaguesScreenState extends State<DetailedLeaguesScreen>
   bool _isStandingsLoading = true;
   List<TeamModel>? _teams;
   bool _isTeamsLoading = true;
+  List<ws.Data>? _fixtures;
+  bool _isFixturesLoading = true;
 
   @override
   void initState() {
@@ -46,6 +53,8 @@ class _DetailedLeaguesScreenState extends State<DetailedLeaguesScreen>
     setState(() {
       _isLoading = true;
       _isStandingsLoading = true;
+      _isTeamsLoading = true;
+      _isFixturesLoading = true;
     });
 
     LeagueService.fetchLeagueDetails(widget.leagueId).then((details) {
@@ -89,6 +98,21 @@ class _DetailedLeaguesScreenState extends State<DetailedLeaguesScreen>
       if (mounted) {
         setState(() {
           _isTeamsLoading = false;
+        });
+      }
+    });
+
+    LeagueService.fetchLeagueFixtures(widget.leagueId).then((fixtures) {
+      if (mounted) {
+        setState(() {
+          _fixtures = fixtures;
+          _isFixturesLoading = false;
+        });
+      }
+    }).catchError((_) {
+      if (mounted) {
+        setState(() {
+          _isFixturesLoading = false;
         });
       }
     });
@@ -369,59 +393,77 @@ class _DetailedLeaguesScreenState extends State<DetailedLeaguesScreen>
     );
   }
 
-  /// Fixtures Tab Content (Upcoming Matches)
+  /// Fixtures Tab Content (All Matches for League)
   Widget _buildFixturesTab() {
-    return SingleChildScrollView(
+    if (_isFixturesLoading) {
+      return ListView.builder(
+        padding: EdgeInsets.only(top: 12.h, bottom: 16.h),
+        itemCount: 5,
+        itemBuilder: (context, index) => const MatchCardShimmer(),
+      );
+    }
+
+    if (_fixtures == null || _fixtures!.isEmpty) {
+      return Center(
+        child: Text(
+          "No fixtures available",
+          style: FontManager.bodyLarge(color: AppColors.textSecondary),
+        ),
+      );
+    }
+
+    return ListView.builder(
       padding: EdgeInsets.only(top: 8.h),
-      child: Column(
-        children: [
-          AppSpacing.h12,
-          // Upcoming Matches
-          MatchCard(
-            leagueName: "Premier League",
-            homeTeam: "Manchester City",
-            awayTeam: "Arsenal",
-            timeInfo: "Today, 18:30",
-            status: MatchStatus.upcoming,
-          ),
-          MatchCard(
-            leagueName: "Premier League",
-            homeTeam: "Liverpool",
-            awayTeam: "Chelsea",
-            timeInfo: "Today, 20:00",
-            status: MatchStatus.upcoming,
-          ),
-          MatchCard(
-            leagueName: "Premier League",
-            homeTeam: "Manchester United",
-            awayTeam: "Tottenham",
-            timeInfo: "Tomorrow, 15:00",
-            status: MatchStatus.upcoming,
-          ),
-          MatchCard(
-            leagueName: "Premier League",
-            homeTeam: "Newcastle",
-            awayTeam: "Brighton",
-            timeInfo: "Tomorrow, 17:30",
-            status: MatchStatus.upcoming,
-          ),
-          MatchCard(
-            leagueName: "Premier League",
-            homeTeam: "Aston Villa",
-            awayTeam: "West Ham",
-            timeInfo: "Tomorrow, 19:45",
-            status: MatchStatus.upcoming,
-          ),
-          MatchCard(
-            leagueName: "Premier League",
-            homeTeam: "Crystal Palace",
-            awayTeam: "Fulham",
-            timeInfo: "Sunday, 14:00",
-            status: MatchStatus.upcoming,
-          ),
-          AppSpacing.h24,
-        ],
-      ),
+      itemCount: _fixtures!.length + 1,
+      itemBuilder: (context, index) {
+        if (index == _fixtures!.length) return AppSpacing.h24; // Bottom spacing
+
+        final match = _fixtures![index];
+        final matchStatus = MatchStatusHelper.getMatchStatus(match.statusShort);
+        final isUpcoming = matchStatus == MatchStatus.upcoming;
+
+        // Custom Time Parsing for `MatchCard` internal comma parsing
+        String timeInfo = "-";
+        if (match.date != null) {
+          final localDate = DateTime.parse(match.date!).toLocal();
+          final dateStr = localDate.toString().substring(0, 10);
+          final timeStr = localDate.toString().substring(11, 16);
+          timeInfo = "$dateStr, $timeStr";
+        }
+
+        // Ensure live matches override date with minutes elapsed
+        if (matchStatus == MatchStatus.live) {
+          timeInfo = "${match.elapsed ?? 90}'";
+        }
+
+        return MatchCard(
+          leagueName: match.league?.name ?? _leagueDetails?.name ?? "Unknown",
+          homeTeam: match.homeTeam?.name ?? "Home",
+          awayTeam: match.awayTeam?.name ?? "Away",
+          homeScore: match.goals?.home,
+          awayScore: match.goals?.away,
+          timeInfo: timeInfo,
+          status: matchStatus,
+          onTap: () {
+            if (isUpcoming) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HomeLineupsScreen(matchData: match),
+                ),
+              );
+            } else {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      LiveMatchDetailsScreen(matchData: match),
+                ),
+              );
+            }
+          },
+        );
+      },
     );
   }
 
