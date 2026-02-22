@@ -96,14 +96,17 @@ class MatchHeaderInfo extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(child: _buildTeamInfo(homeTeam)),
-          Expanded(
-            child: Text(
-              score,
-              style: FontManager.matchScore(
-                fontSize: 34.sp,
-                color: AppColors.white,
+          Align(
+            alignment: Alignment.center,
+            child: Expanded(
+              child: Text(
+                score,
+                style: FontManager.matchScore(
+                  fontSize: 34.sp,
+                  color: AppColors.white,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
             ),
           ),
           Expanded(child: _buildTeamInfo(awayTeam)),

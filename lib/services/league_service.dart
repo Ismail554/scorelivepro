@@ -251,10 +251,7 @@ class LeagueService {
         },
         (data) {
           if (data is Map<String, dynamic>) {
-            final responseMap = data['response'];
-            if (responseMap != null && responseMap is Map<String, dynamic>) {
-              return H2HModel.fromJson(responseMap);
-            }
+            return H2HModel.fromJson(data);
           }
           return null;
         },

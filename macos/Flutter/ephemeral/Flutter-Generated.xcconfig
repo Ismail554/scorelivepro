@@ -1,7 +1,6 @@
 // This is a generated file; do not edit or check into version control.
-FLUTTER_ROOT=E:\Flutter\flutter
-FLUTTER_APPLICATION_PATH=E:\JVAI Projects\scorelivepro
-FLUTTER_FRAMEWORK_SWIFT_PACKAGE_PATH=E:\JVAI Projects\scorelivepro\macos\Flutter\ephemeral\Packages\.packages\FlutterFramework
+FLUTTER_ROOT=C:\dev_tools\flutter
+FLUTTER_APPLICATION_PATH=D:\Ismail_flutter\scorelivepro
 COCOAPODS_PARALLEL_CODE_SIGN=true
 FLUTTER_BUILD_DIR=build
 FLUTTER_BUILD_NAME=1.0.0

@@ -466,6 +466,8 @@ class _DetailedLeaguesScreenState extends State<DetailedLeaguesScreen>
                   fixtureId: match.id,
                   homeTeamId: match.homeTeam?.id,
                   awayTeamId: match.awayTeam?.id,
+                  leagueName:
+                      match.league?.name ?? _leagueDetails?.name ?? "Unknown",
                 ),
               ),
             );

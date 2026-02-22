@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/app_padding.dart';
-
 import 'package:scorelivepro/core/assets_manager.dart';
 import 'package:scorelivepro/core/font_manager.dart';
 import 'package:scorelivepro/utils/navigation_helper.dart';
@@ -36,19 +35,20 @@ class DetailedStandingsScreen extends StatefulWidget {
   final int? fixtureId;
   final int? homeTeamId;
   final int? awayTeamId;
+  final String? leagueName;
 
   const DetailedStandingsScreen({
     super.key,
     required this.teamName,
-    required this.rank,
-    required this.points,
-    required this.played,
-    required this.wins,
-    required this.draws,
-    required this.losses,
-    required this.goalsFor,
-    required this.goalsAgainst,
-    required this.goalDifference,
+    this.rank = 0,
+    this.points = 0,
+    this.played = 0,
+    this.wins = 0,
+    this.draws = 0,
+    this.losses = 0,
+    this.goalsFor = 0,
+    this.goalsAgainst = 0,
+    this.goalDifference = 0,
     this.awayTeam,
     this.score,
     this.matchTime,
@@ -56,6 +56,7 @@ class DetailedStandingsScreen extends StatefulWidget {
     this.fixtureId,
     this.homeTeamId,
     this.awayTeamId,
+    this.leagueName,
   });
 
   @override
@@ -193,7 +194,8 @@ class _DetailedStandingsScreenState extends State<DetailedStandingsScreen>
             child: Column(
               children: [
                 _buildHeader(), // Top Bar
-                const Spacer(), // Pushes content apart dynamically
+                SizedBox(height: 12.h),
+                // const Spacer(), // Pushes content apart dynamically
                 _buildMatchOverview(), // Match Score Info
                 SizedBox(height: 30.h), // Space reserved for the TabBar
               ],
@@ -221,20 +223,23 @@ class _DetailedStandingsScreenState extends State<DetailedStandingsScreen>
           ),
 
           // League Name Badge
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-            decoration: BoxDecoration(
-              color: AppColors.primaryColor.withOpacity(0.8),
-              borderRadius: BorderRadius.circular(20.r),
-            ),
-            child: Text(
-              "Premier League",
-              style: FontManager.labelMedium(
-                fontSize: 12,
-                color: AppColors.white,
+          if (widget.leagueName != null)
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+              decoration: BoxDecoration(
+                color: AppColors.primaryColor.withOpacity(0.8),
+                borderRadius: BorderRadius.circular(20.r),
               ),
-            ),
-          ),
+              child: Text(
+                widget.leagueName!,
+                style: FontManager.labelMedium(
+                  fontSize: 12,
+                  color: AppColors.white,
+                ),
+              ),
+            )
+          else
+            const SizedBox.shrink(),
 
           // Notification Bell
           NotificationBell(
@@ -250,7 +255,7 @@ class _DetailedStandingsScreenState extends State<DetailedStandingsScreen>
     return MatchHeaderInfo(
       homeTeam: widget.teamName,
       awayTeam: widget.awayTeam ?? "TBD",
-      score: widget.score ?? "- - -",
+      score: widget.score ?? "- : -",
       dateTime: widget.matchTime ?? "TBD",
       venue: widget.venue ?? "TBD",
       statusColor: AppColors.finishedMatch,
