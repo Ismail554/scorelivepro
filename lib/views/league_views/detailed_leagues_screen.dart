@@ -14,6 +14,7 @@ import 'package:scorelivepro/widget/navigation/transparent_tab_bar.dart';
 import 'package:scorelivepro/models/league_model.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:scorelivepro/models/standings_model.dart';
+import 'package:scorelivepro/models/team_model.dart';
 import 'package:scorelivepro/services/league_service.dart';
 
 class DetailedLeaguesScreen extends StatefulWidget {
@@ -31,6 +32,8 @@ class _DetailedLeaguesScreenState extends State<DetailedLeaguesScreen>
   bool _isLoading = true;
   List<StandingsModel>? _standings;
   bool _isStandingsLoading = true;
+  List<TeamModel>? _teams;
+  bool _isTeamsLoading = true;
 
   @override
   void initState() {
@@ -71,6 +74,21 @@ class _DetailedLeaguesScreenState extends State<DetailedLeaguesScreen>
       if (mounted) {
         setState(() {
           _isStandingsLoading = false;
+        });
+      }
+    });
+
+    LeagueService.fetchLeagueTeams(widget.leagueId).then((teams) {
+      if (mounted) {
+        setState(() {
+          _teams = teams;
+          _isTeamsLoading = false;
+        });
+      }
+    }).catchError((_) {
+      if (mounted) {
+        setState(() {
+          _isTeamsLoading = false;
         });
       }
     });
@@ -486,90 +504,124 @@ class _DetailedLeaguesScreenState extends State<DetailedLeaguesScreen>
 
   /// Teams Tab Content (Grid View)
   Widget _buildTeamsTab() {
-    final teams = [
-      "Manchester City",
-      "Arsenal",
-      "Liverpool",
-      "Manchester United",
-      "Newcastle",
-      "Tottenham",
-      "Chelsea",
-      "Brighton",
-      "Aston Villa",
-      "West Ham",
-      "Crystal Palace",
-      "Fulham",
-      "Everton",
-      "Bournemouth",
-      "Wolves",
-      "Brentford",
-      "Nottingham Forest",
-      "Burnley",
-      "Sheffield United",
-      "Luton Town",
-    ];
+    if (_isTeamsLoading) {
+      return GridView.builder(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+        physics: const BouncingScrollPhysics(),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 12.w,
+          mainAxisSpacing: 12.h,
+          childAspectRatio: 1.3,
+        ),
+        itemCount: 8, // Shimmer items count
+        itemBuilder: (context, index) {
+          return Container(
+            decoration: BoxDecoration(
+              color: AppColors.white,
+              borderRadius: BorderRadius.circular(16.r),
+              border: Border.all(color: Colors.grey.shade200, width: 1.w),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Shimmer.fromColors(
+                  baseColor: Colors.grey.shade300,
+                  highlightColor: Colors.grey.shade100,
+                  child: Container(
+                    width: 60.w,
+                    height: 60.w,
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+                AppSpacing.h12,
+                Shimmer.fromColors(
+                  baseColor: Colors.grey.shade300,
+                  highlightColor: Colors.grey.shade100,
+                  child: Container(
+                    width: 100.w,
+                    height: 14.h,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    }
+
+    if (_teams == null || _teams!.isEmpty) {
+      return Center(
+        child: Text(
+          "No teams available",
+          style: FontManager.bodyLarge(color: AppColors.textSecondary),
+        ),
+      );
+    }
 
     return GridView.builder(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-      physics: const BouncingScrollPhysics(), // Smooth scrolling
+      physics: const BouncingScrollPhysics(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2, // এক লাইনে ২টা কার্ড
-        crossAxisSpacing: 12.w, // ডানে-বামে গ্যাপ
-        mainAxisSpacing: 12.h, // উপরে-নিচে গ্যাপ
-        childAspectRatio:
-            1.3, // কার্ডের সাইজ (Width / Height) - এটা কমালে কার্ড লম্বা হবে
+        crossAxisCount: 2,
+        crossAxisSpacing: 12.w,
+        mainAxisSpacing: 12.h,
+        childAspectRatio: 1.3,
       ),
-      itemCount: teams.length,
+      itemCount: _teams!.length,
       itemBuilder: (context, index) {
+        final team = _teams![index];
         return Container(
           decoration: BoxDecoration(
             color: AppColors.white,
-            borderRadius:
-                BorderRadius.circular(16.r), // ছবির মতো রাউন্ডেড কর্নার
-            border: Border.all(
-              color: Colors.grey.shade200, // খুব হালকা বর্ডার
-              width: 1.w,
-            ),
+            borderRadius: BorderRadius.circular(16.r),
+            border: Border.all(color: Colors.grey.shade200, width: 1.w),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.03), // একদম হালকা শ্যাডো
+                color: Colors.black.withOpacity(0.03),
                 blurRadius: 6,
                 offset: const Offset(0, 2),
               ),
             ],
           ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center, // সবকিছু সেন্টারে
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Team Logo (Circle or Image)
-              // ছবির মতো রিয়েল লোগো না থাকলে প্লেসহোল্ডার
+              // Team Logo
               Container(
                 width: 80.w,
                 height: 80.w,
                 decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                 ),
-                child: Icon(
-                  Icons.star, // ডেমো আইকন, পরে ইমেজ দিও
-                  size: 62.sp,
-                  color: _getTeamColor(index), // জাস্ট একটু কালারফুল করার জন্য
-                ),
+                clipBehavior: Clip.antiAlias,
+                child: team.logo != null && team.logo!.isNotEmpty
+                    ? Image.network(
+                        team.logo!,
+                        fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) =>
+                            Icon(Icons.shield, size: 62.sp, color: Colors.grey),
+                      )
+                    : Icon(Icons.shield, size: 62.sp, color: Colors.grey),
               ),
 
-              AppSpacing.h12, // লোগো আর নামের মাঝের গ্যাপ
+              AppSpacing.h12,
 
               // Team Name
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8.w),
                 child: Text(
-                  teams[index],
-                  textAlign: TextAlign.center, // টেক্সট সেন্টারে থাকবে
+                  team.name ?? "Unknown",
+                  textAlign: TextAlign.center,
                   style: FontManager.bodyMedium(
-                    fontSize: 14, // ছবির ফন্ট সাইজ ছোট
-
+                    fontSize: 14,
                     color: AppColors.textPrimary,
                   ),
-                  maxLines: 2, // নাম বড় হলে ২ লাইনে যাবে
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -578,18 +630,5 @@ class _DetailedLeaguesScreenState extends State<DetailedLeaguesScreen>
         );
       },
     );
-  }
-
-  // লোগোর জন্য একটা ডেমো কালার জেনারেটর (অপশনাল)
-  Color _getTeamColor(int index) {
-    List<Color> colors = [
-      Colors.blue,
-      Colors.red,
-      Colors.teal,
-      Colors.redAccent,
-      Colors.black,
-      Colors.indigo
-    ];
-    return colors[index % colors.length];
   }
 }

@@ -10,7 +10,7 @@ class MatchHeaderInfo extends StatelessWidget {
   final String homeTeam;
   final String awayTeam;
   final String score;
-  final String? status; 
+  final String? status;
   final String dateTime;
   final String venue;
   final Color statusColor;
@@ -57,7 +57,7 @@ class MatchHeaderInfo extends StatelessWidget {
           // Teams and Score
           _buildScoreboard(),
 
-          SizedBox(height: 12.h),
+          // SizedBox(height: 6.h),
 
           // Date and Time
           Text(
@@ -69,7 +69,7 @@ class MatchHeaderInfo extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
 
-          SizedBox(height: 4.h),
+          // SizedBox(height: 4.h),
 
           // Venue
           Text(
@@ -79,9 +79,10 @@ class MatchHeaderInfo extends StatelessWidget {
               color: AppColors.white.withOpacity(0.9),
             ),
             textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
           ),
 
-          SizedBox(height: 8.h),
+          // SizedBox(height: 8.h),
         ],
       ),
     );

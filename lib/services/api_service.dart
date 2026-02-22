@@ -27,6 +27,7 @@ class ApiEndPoint {
 
   // ============= Leagues =============
   static String getFixtures(int id) => "$_baseUrl/sports/fixtures/$id/";
+  static String getFixturesByLeague(int leagueId) => "$_baseUrl/sports/fixtures/?league=$leagueId";
   static String getTeams(int id) =>
       "$_baseUrl/sports/teams/$id/"; // response: { "id": 311, "name": "Albirex Niigata", "logo": "https://media.api-sports.io/football/teams/311.png" }
 
@@ -40,8 +41,9 @@ class ApiEndPoint {
       "$_baseUrl/notifications/unread-count/"; // response body: { "unread_count": 0 }
 
   // ============= Teams & Leagues ==============
-  static String getAllTeams() =>
-      "$_baseUrl/sports/teams/"; // response body: { "count": 15214, "next": "https://api.scorelivepro.it/sports/teams/?page=2", "previous": null, "results": [ { "id": 18391, "name": "ADESG", "logo": "https://media.api-sports.io/football/teams/18391.png" } ] }
+  static String getAllTeams({int? leagueId}) => leagueId != null
+      ? "$_baseUrl/sports/teams/?leagues=$leagueId"
+      : "$_baseUrl/sports/teams/"; // response body: { "count": 15214, "next": "...", "results": [ { "id": 18391, "name": "ADESG", "logo": "..." } ] }
   static String getAllLeagues() => "$_baseUrl/sports/leagues/";
 
   static String addToFavoriteLeaques() =>

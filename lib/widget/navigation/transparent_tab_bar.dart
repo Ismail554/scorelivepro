@@ -35,7 +35,7 @@ class TransparentTabBar extends StatelessWidget implements PreferredSizeWidget {
           color: AppColors.white,
         ),
         unselectedLabelStyle: FontManager.labelMedium(
-          fontSize: 14,
+          fontSize: 12,
           color: AppColors.white.withOpacity(0.6),
         ),
       ),

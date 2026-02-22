@@ -1,5 +1,6 @@
 import 'package:scorelivepro/models/league_model.dart';
 import 'package:scorelivepro/models/standings_model.dart';
+import 'package:scorelivepro/models/team_model.dart';
 import 'package:scorelivepro/services/api_service.dart';
 import 'package:scorelivepro/services/dio_service.dart';
 
@@ -174,6 +175,33 @@ class LeagueService {
       );
     } catch (e) {
       print("🔥 [LeagueService] Exception Fetching League Standings: $e");
+      return null;
+    }
+  }
+
+  static Future<List<TeamModel>?> fetchLeagueTeams(int leagueId) async {
+    try {
+      final response = await DioManager.apiRequest(
+        url: ApiEndPoint.getAllTeams(leagueId: leagueId),
+        methods: Methods.get,
+        skipAuth: true,
+      );
+
+      return response.fold(
+        (error) {
+          print("Error Fetching League Teams: $error");
+          return null;
+        },
+        (data) {
+          if (data is Map<String, dynamic>) {
+            final teamResponse = TeamResponse.fromJson(data);
+            return teamResponse.results;
+          }
+          return null;
+        },
+      );
+    } catch (e) {
+      print("Exception Fetching League Teams: $e");
       return null;
     }
   }
