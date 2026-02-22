@@ -35,6 +35,8 @@ class ApiEndPoint {
       "$_baseUrl/sports/leagues/$id/"; // Response: { "id": 512, "name": "", "country": { "name": "", "code": "", "flag": "" }, "logo": "", "season_year": 2024 }
   static String leagueStandingDetails(int leagueId) =>
       "$_baseUrl/sports/standings/?league=$leagueId";
+  static String fixturesHeadToHead(int fixtureID) =>
+      "$_baseUrl/sports/fixtures/$fixtureID/h2h/";
 
   // ============= Notifications =============
   static String unreadNotificationsCount() =>

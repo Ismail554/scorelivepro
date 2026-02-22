@@ -8,58 +8,29 @@ import 'package:scorelivepro/views/league_views/standing_details/models/team_sta
 
 class OverviewTab extends StatelessWidget {
   final TeamStandingsData teamData;
+  final String homeTeam;
+  final String awayTeam;
+  final String score;
 
   const OverviewTab({
     super.key,
     required this.teamData,
+    required this.homeTeam,
+    required this.awayTeam,
+    required this.score,
   });
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       padding: AppPadding.h16,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          AppSpacing.h16,
-          // 1. Orange Match Summary Card
-          _buildMatchSummaryCard(),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        AppSpacing.h16,
+        // 1. Orange Match Summary Card
+        _buildMatchSummaryCard(),
 
-          AppSpacing.h24,
-
-          // 2. Match Events Section
-          Text(
-            "Match Events",
-            style: FontManager.heading3(
-              fontSize: 16,
-              color: AppColors.textPrimary, // Or Colors.black87
-            ),
-          ),
-          AppSpacing.h12,
-
-          // Events List
-          _buildEventCard(
-            time: "12'",
-            icon: Icons.sports_soccer,
-            iconColor: Colors.black87,
-            title: "Erling Haaland",
-            subtitle: "Assist: Kevin De Bruyne",
-            description: "Right footed shot from the centre of the box",
-          ),
-          AppSpacing.h12,
-          _buildEventCard(
-            time: "23'",
-            icon: Icons.square, // Yellow card look
-            iconColor: Colors.amber,
-            title: "Thomas Partey",
-            subtitle: "Foul on Bernardo Silva",
-            description: "", // No description for this one
-          ),
-
-          // Extra space at bottom
-          AppSpacing.h40,
-        ],
-      ),
+        AppSpacing.h24,
+      ]),
     );
   }
 
@@ -105,9 +76,17 @@ class OverviewTab extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _buildSingleStat("2", "Home Goals"),
-              _buildSingleStat("58%", "Possession"),
-              _buildSingleStat("1", "Away Goals"),
+              _buildSingleStat(
+                  score.isNotEmpty && score.contains("-")
+                      ? score.split("-")[0].trim()
+                      : "-",
+                  homeTeam),
+              _buildSingleStat("Match", "Status"),
+              _buildSingleStat(
+                  score.isNotEmpty && score.contains("-")
+                      ? score.split("-")[1].trim()
+                      : "-",
+                  awayTeam),
             ],
           ),
         ],

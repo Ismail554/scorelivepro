@@ -217,7 +217,6 @@ class LeagueService {
 
       return response.fold(
         (error) {
-          print("Error Fetching League Fixtures: $error");
           return null;
         },
         (data) {
@@ -230,6 +229,40 @@ class LeagueService {
       );
     } catch (e) {
       print("Exception Fetching League Fixtures: $e");
+      return null;
+    }
+  }
+
+  /// Fetch Head-to-Head Statistics
+  static Future<List<ws.Data>?> fetchH2H(int fixtureId) async {
+    try {
+      print("🚀 [LeagueService] Calling fetchH2H for fixture=$fixtureId...");
+      final response = await DioManager.apiRequest(
+        url: ApiEndPoint.fixturesHeadToHead(fixtureId),
+        methods: Methods.get,
+        skipAuth: false,
+      );
+
+      return response.fold(
+        (error) {
+          print("❌ [LeagueService] Error Fetching H2H: $error");
+          return null;
+        },
+        (data) {
+          if (data is Map<String, dynamic>) {
+            final responseList = data['response'] as List?;
+            if (responseList != null) {
+              return responseList
+                  .whereType<Map<String, dynamic>>()
+                  .map((e) => ws.Data.fromJson(e))
+                  .toList();
+            }
+          }
+          return null;
+        },
+      );
+    } catch (e) {
+      print("❌ [LeagueService] Exception Fetching H2H: $e");
       return null;
     }
   }

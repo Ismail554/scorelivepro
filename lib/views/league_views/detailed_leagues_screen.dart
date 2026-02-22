@@ -18,8 +18,7 @@ import 'package:scorelivepro/models/team_model.dart';
 import 'package:scorelivepro/models/live_ws_model.dart' as ws;
 import 'package:scorelivepro/services/league_service.dart';
 import 'package:scorelivepro/utils/match_status_helper.dart';
-import 'package:scorelivepro/views/home_views/live_mathches/live_match_details_screen.dart';
-import 'package:scorelivepro/views/home_views/live_mathches/lineups_screen.dart';
+import 'package:scorelivepro/views/league_views/standing_details/detailed_standings_screen.dart';
 import 'package:scorelivepro/widget/shimmer/match_card_shimmer.dart';
 
 class DetailedLeaguesScreen extends StatefulWidget {
@@ -420,7 +419,6 @@ class _DetailedLeaguesScreenState extends State<DetailedLeaguesScreen>
 
         final match = _fixtures![index];
         final matchStatus = MatchStatusHelper.getMatchStatus(match.statusShort);
-        final isUpcoming = matchStatus == MatchStatus.upcoming;
 
         // Custom Time Parsing for `MatchCard` internal comma parsing
         String timeInfo = "-";
@@ -445,22 +443,32 @@ class _DetailedLeaguesScreenState extends State<DetailedLeaguesScreen>
           timeInfo: timeInfo,
           status: matchStatus,
           onTap: () {
-            if (isUpcoming) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => HomeLineupsScreen(matchData: match),
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DetailedStandingsScreen(
+                  teamName: match.homeTeam?.name ?? "Unknown",
+                  rank: 0,
+                  points: 0,
+                  played: 0,
+                  wins: 0,
+                  draws: 0,
+                  losses: 0,
+                  goalsFor: match.goals?.home ?? 0,
+                  goalsAgainst: match.goals?.away ?? 0,
+                  goalDifference:
+                      (match.goals?.home ?? 0) - (match.goals?.away ?? 0),
+                  awayTeam: match.awayTeam?.name,
+                  score:
+                      "${match.goals?.home ?? '-'} - ${match.goals?.away ?? '-'}",
+                  matchTime: timeInfo,
+                  venue: match.venue?.name,
+                  fixtureId: match.id,
+                  homeTeamId: match.homeTeam?.id,
+                  awayTeamId: match.awayTeam?.id,
                 ),
-              );
-            } else {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      LiveMatchDetailsScreen(matchData: match),
-                ),
-              );
-            }
+              ),
+            );
           },
         );
       },

@@ -4,14 +4,76 @@ import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/app_padding.dart';
 import 'package:scorelivepro/core/app_spacing.dart';
 import 'package:scorelivepro/core/font_manager.dart';
+import 'package:scorelivepro/services/league_service.dart';
+import 'package:scorelivepro/models/live_ws_model.dart' as ws;
+import 'package:intl/intl.dart';
 
 /// H2H (Head to Head) Tab Widget
 /// Displays head-to-head statistics and last meetings
-class H2HTab extends StatelessWidget {
-  const H2HTab({super.key});
+class H2HTab extends StatefulWidget {
+  final int? fixtureId;
+
+  const H2HTab({super.key, this.fixtureId});
+
+  @override
+  State<H2HTab> createState() => _H2HTabState();
+}
+
+class _H2HTabState extends State<H2HTab> {
+  bool _isLoading = true;
+  List<ws.Data>? _h2hMatches;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchH2HData();
+  }
+
+  Future<void> _fetchH2HData() async {
+    if (widget.fixtureId == null) {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+      return;
+    }
+
+    final data = await LeagueService.fetchH2H(widget.fixtureId!);
+    if (mounted) {
+      setState(() {
+        _h2hMatches = data;
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(32.0),
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    if (_h2hMatches == null || _h2hMatches!.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: EdgeInsets.all(32.0),
+          child: Text(
+            "No Head-to-Head data available.",
+            style: FontManager.bodyMedium(
+              fontSize: 14,
+              color: AppColors.textSecondary,
+            ),
+          ),
+        ),
+      );
+    }
+
     return SingleChildScrollView(
       padding: AppPadding.h16,
       child: Column(
@@ -223,4 +285,3 @@ class _H2HMatchItem extends StatelessWidget {
     );
   }
 }
-

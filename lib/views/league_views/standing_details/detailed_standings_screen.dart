@@ -28,6 +28,15 @@ class DetailedStandingsScreen extends StatefulWidget {
   final int goalsAgainst;
   final int goalDifference;
 
+  // Added Match specific parameters for Fixtures/Results integration
+  final String? awayTeam;
+  final String? score;
+  final String? matchTime;
+  final String? venue;
+  final int? fixtureId;
+  final int? homeTeamId;
+  final int? awayTeamId;
+
   const DetailedStandingsScreen({
     super.key,
     required this.teamName,
@@ -40,6 +49,13 @@ class DetailedStandingsScreen extends StatefulWidget {
     required this.goalsFor,
     required this.goalsAgainst,
     required this.goalDifference,
+    this.awayTeam,
+    this.score,
+    this.matchTime,
+    this.venue,
+    this.fixtureId,
+    this.homeTeamId,
+    this.awayTeamId,
   });
 
   @override
@@ -111,10 +127,15 @@ class _DetailedStandingsScreenState extends State<DetailedStandingsScreen>
               child: TabBarView(
                 controller: _tabController,
                 children: [
-                  OverviewTab(teamData: _getTeamData()),
+                  OverviewTab(
+                    teamData: _getTeamData(),
+                    homeTeam: widget.teamName,
+                    awayTeam: widget.awayTeam ?? "Opponent",
+                    score: widget.score ?? "0 - 0",
+                  ),
                   const StatisticsTab(),
                   LineupsTab(teamName: widget.teamName),
-                  const H2HTab(),
+                  H2HTab(fixtureId: widget.fixtureId),
                 ],
               ),
             ),
@@ -216,14 +237,13 @@ class _DetailedStandingsScreenState extends State<DetailedStandingsScreen>
     );
   }
 
-  /// 🛠️ Fixed: Removed Positioned widget
   Widget _buildMatchOverview() {
     return MatchHeaderInfo(
       homeTeam: widget.teamName,
-      awayTeam: "Liverpool",
-      score: "2 - 1",
-      dateTime: "Sunday, Dec 7, 2025 - 16:30",
-      venue: "Etihad Stadium",
+      awayTeam: widget.awayTeam ?? "TBD",
+      score: widget.score ?? "- - -",
+      dateTime: widget.matchTime ?? "TBD",
+      venue: widget.venue ?? "TBD",
       statusColor: AppColors.finishedMatch,
     );
   }
