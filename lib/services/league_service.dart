@@ -1,5 +1,6 @@
 import 'package:scorelivepro/models/league_model.dart';
 import 'package:scorelivepro/models/standings_model.dart';
+import 'package:scorelivepro/models/h2h_model.dart';
 import 'package:scorelivepro/models/team_model.dart';
 import 'package:scorelivepro/models/live_ws_model.dart' as ws;
 import 'package:scorelivepro/services/api_service.dart';
@@ -234,7 +235,7 @@ class LeagueService {
   }
 
   /// Fetch Head-to-Head Statistics
-  static Future<List<ws.Data>?> fetchH2H(int fixtureId) async {
+  static Future<H2HModel?> fetchH2H(int fixtureId) async {
     try {
       print("🚀 [LeagueService] Calling fetchH2H for fixture=$fixtureId...");
       final response = await DioManager.apiRequest(
@@ -250,12 +251,9 @@ class LeagueService {
         },
         (data) {
           if (data is Map<String, dynamic>) {
-            final responseList = data['response'] as List?;
-            if (responseList != null) {
-              return responseList
-                  .whereType<Map<String, dynamic>>()
-                  .map((e) => ws.Data.fromJson(e))
-                  .toList();
+            final responseMap = data['response'];
+            if (responseMap != null && responseMap is Map<String, dynamic>) {
+              return H2HModel.fromJson(responseMap);
             }
           }
           return null;
@@ -263,6 +261,76 @@ class LeagueService {
       );
     } catch (e) {
       print("❌ [LeagueService] Exception Fetching H2H: $e");
+      return null;
+    }
+  }
+
+  /// Fetch Match Statistics
+  static Future<List<ws.Statistic>?> fetchMatchStatistics(int fixtureId) async {
+    try {
+      print(
+          "🚀 [LeagueService] Calling fetchMatchStatistics for fixture=$fixtureId...");
+      final response = await DioManager.apiRequest(
+        url: ApiEndPoint.statistics(fixtureId),
+        methods: Methods.get,
+        skipAuth: false,
+      );
+
+      return response.fold(
+        (error) {
+          print("❌ [LeagueService] Error Fetching Match Statistics: $error");
+          return null;
+        },
+        (data) {
+          if (data is Map<String, dynamic>) {
+            final responseList = data['response'] as List?;
+            if (responseList != null) {
+              return responseList
+                  .whereType<Map<String, dynamic>>()
+                  .map((e) => ws.Statistic.fromJson(e))
+                  .toList();
+            }
+          }
+          return null;
+        },
+      );
+    } catch (e) {
+      print("❌ [LeagueService] Exception Fetching Match Statistics: $e");
+      return null;
+    }
+  }
+
+  /// Fetch Match Lineups
+  static Future<List<ws.Lineup>?> fetchMatchLineups(int fixtureId) async {
+    try {
+      print(
+          "🚀 [LeagueService] Calling fetchMatchLineups for fixture=$fixtureId...");
+      final response = await DioManager.apiRequest(
+        url: ApiEndPoint.lineups(fixtureId),
+        methods: Methods.get,
+        skipAuth: false,
+      );
+
+      return response.fold(
+        (error) {
+          print("❌ [LeagueService] Error Fetching Match Lineups: $error");
+          return null;
+        },
+        (data) {
+          if (data is Map<String, dynamic>) {
+            final responseList = data['response'] as List?;
+            if (responseList != null) {
+              return responseList
+                  .whereType<Map<String, dynamic>>()
+                  .map((e) => ws.Lineup.fromJson(e))
+                  .toList();
+            }
+          }
+          return null;
+        },
+      );
+    } catch (e) {
+      print("❌ [LeagueService] Exception Fetching Match Lineups: $e");
       return null;
     }
   }

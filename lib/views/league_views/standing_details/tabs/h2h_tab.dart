@@ -5,6 +5,7 @@ import 'package:scorelivepro/core/app_padding.dart';
 import 'package:scorelivepro/core/app_spacing.dart';
 import 'package:scorelivepro/core/font_manager.dart';
 import 'package:scorelivepro/services/league_service.dart';
+import 'package:scorelivepro/models/h2h_model.dart';
 import 'package:scorelivepro/models/live_ws_model.dart' as ws;
 import 'package:intl/intl.dart';
 
@@ -21,7 +22,7 @@ class H2HTab extends StatefulWidget {
 
 class _H2HTabState extends State<H2HTab> {
   bool _isLoading = true;
-  List<ws.Data>? _h2hMatches;
+  H2HModel? _h2hData;
 
   @override
   void initState() {
@@ -42,7 +43,7 @@ class _H2HTabState extends State<H2HTab> {
     final data = await LeagueService.fetchH2H(widget.fixtureId!);
     if (mounted) {
       setState(() {
-        _h2hMatches = data;
+        _h2hData = data;
         _isLoading = false;
       });
     }
@@ -59,7 +60,9 @@ class _H2HTabState extends State<H2HTab> {
       );
     }
 
-    if (_h2hMatches == null || _h2hMatches!.isEmpty) {
+    if (_h2hData == null ||
+        _h2hData!.history == null ||
+        _h2hData!.history!.isEmpty) {
       return Center(
         child: Padding(
           padding: EdgeInsets.all(32.0),
@@ -74,28 +77,10 @@ class _H2HTabState extends State<H2HTab> {
       );
     }
 
-    // Calculate stats
-    int homeWins = 0;
-    int awayWins = 0;
-    int draws = 0;
-
-    // The API might return the matches in any order, so we have to count based on the home/away of the current team context.
-    // Actually, `fixturesHeadToHead` returns the matches exactly as they happened.
-    // To identify "Home Wins" we just count how many times the `homeTeam` in the Match Card won.
-    // Wait, the detailed standings screen was accessed for a specific `teamName`, which is our primary context team.
-    // We don't have the explicit team ID in H2HTab yet, but we just count home/away wins from the raw data.
-    for (var match in _h2hMatches!) {
-      final homeGoals = match.goals?.home ?? 0;
-      final awayGoals = match.goals?.away ?? 0;
-
-      if (homeGoals > awayGoals) {
-        homeWins++;
-      } else if (awayGoals > homeGoals) {
-        awayWins++;
-      } else {
-        draws++;
-      }
-    }
+    // Assign stats directly from API
+    int homeWins = _h2hData!.team1Wins ?? 0;
+    int awayWins = _h2hData!.team2Wins ?? 0;
+    int draws = _h2hData!.draws ?? 0;
 
     return SingleChildScrollView(
       padding: AppPadding.h16,
@@ -136,7 +121,7 @@ class _H2HTabState extends State<H2HTab> {
           AppSpacing.h16,
 
           // Last 5 Meetings List
-          ..._h2hMatches!.take(5).map((match) {
+          ..._h2hData!.history!.take(5).map((match) {
             String dateStr = "Unknown Date";
             if (match.date != null) {
               try {
@@ -148,10 +133,9 @@ class _H2HTabState extends State<H2HTab> {
             return Padding(
               padding: EdgeInsets.only(bottom: 12.h),
               child: _H2HMatchItem(
-                homeTeam: match.homeTeam?.name ?? "Unknown",
-                awayTeam: match.awayTeam?.name ?? "Unknown",
-                score:
-                    "${match.goals?.home ?? '-'} - ${match.goals?.away ?? '-'}",
+                homeTeam: match.homeName ?? "Unknown",
+                awayTeam: match.awayName ?? "Unknown",
+                score: match.score ?? "-",
                 date: dateStr,
               ),
             );

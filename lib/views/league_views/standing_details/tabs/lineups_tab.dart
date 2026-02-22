@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/app_colors.dart';
-
 import 'package:scorelivepro/core/font_manager.dart';
+import 'package:scorelivepro/services/league_service.dart';
+import 'package:scorelivepro/models/live_ws_model.dart' as ws;
 
 // Player Model (Data Class)
 class DetailedPlayer {
@@ -27,96 +28,114 @@ class DetailedPlayer {
   });
 }
 
-class LineupsTab extends StatelessWidget {
+class LineupsTab extends StatefulWidget {
   final String teamName;
+  final int? fixtureId;
+  final int? homeTeamId;
+  final int? awayTeamId;
 
-  const LineupsTab({super.key, required this.teamName});
+  const LineupsTab({
+    super.key,
+    required this.teamName,
+    this.fixtureId,
+    this.homeTeamId,
+    this.awayTeamId,
+  });
+
+  @override
+  State<LineupsTab> createState() => _LineupsTabState();
+}
+
+class _LineupsTabState extends State<LineupsTab> {
+  bool _isLoading = true;
+  List<ws.Lineup>? _lineupData;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchLineups();
+  }
+
+  Future<void> _fetchLineups() async {
+    if (widget.fixtureId == null) {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+      return;
+    }
+
+    final data = await LeagueService.fetchMatchLineups(widget.fixtureId!);
+    if (mounted) {
+      setState(() {
+        _lineupData = data;
+        _isLoading = false;
+      });
+    }
+  }
+
+  // Map API players to UI Models
+  List<DetailedPlayer> _mapPlayers(List<dynamic>? apiPlayers) {
+    if (apiPlayers == null) return [];
+
+    return apiPlayers.map((item) {
+      final p = item.player;
+
+      return DetailedPlayer(
+        number: p?.number?.toString() ?? "-",
+        name: p?.name ?? "Unknown",
+        position: p?.pos ?? "N/A",
+        // The API returns basics in lineup. rating/cards are usually in 'events'.
+        // For now, keeping defaults to avoid massive complex mappings
+        // until events data is explicitly passed/parsed for players.
+      );
+    }).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // --- Mock Data (তোমার আগের ডাটাই ব্যবহার করছি) ---
-    final homeStartingXI = [
-      const DetailedPlayer(
-          number: "31", name: "Ederson", position: "GK", rating: 7.2),
-      const DetailedPlayer(
-          number: "2",
-          name: "Kyle Walker",
-          position: "DEF",
-          rating: 7.0,
-          hasYellowCard: true),
-      const DetailedPlayer(
-          number: "3", name: "Rúben Dias", position: "DEF", rating: 7.5),
-      const DetailedPlayer(
-          number: "25", name: "Manuel Akanji", position: "DEF", rating: 7.3),
-      const DetailedPlayer(
-          number: "24", name: "Joško Gvardiol", position: "DEF", rating: 7.1),
-      const DetailedPlayer(
-          number: "16",
-          name: "Rodri",
-          position: "MID",
-          rating: 7.8,
-          hasYellowCard: true),
-      const DetailedPlayer(
-          number: "17",
-          name: "Kevin De Bruyne",
-          position: "MID",
-          rating: 8.2,
-          assists: 1),
-      const DetailedPlayer(
-          number: "47",
-          name: "Phil Foden",
-          position: "FWD",
-          rating: 8.5,
-          goals: 1),
-      const DetailedPlayer(
-          number: "9",
-          name: "Erling Haaland",
-          position: "FWD",
-          rating: 8.9,
-          goals: 1),
-      const DetailedPlayer(
-          number: "10", name: "Jack Grealish", position: "FWD", rating: 7.4),
-    ];
+    if (_isLoading) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(32.0),
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
 
-    final awayStartingXI = [
-      const DetailedPlayer(
-          number: "22", name: "David Raya", position: "GK", rating: 7.8),
-      const DetailedPlayer(
-          number: "4", name: "Ben White", position: "DEF", rating: 7.2),
-      const DetailedPlayer(
-          number: "2", name: "William Saliba", position: "DEF", rating: 7.4),
-      const DetailedPlayer(
-          number: "6", name: "Gabriel", position: "DEF", rating: 7.3),
-      const DetailedPlayer(
-          number: "35", name: "Zinchenko", position: "DEF", rating: 7.0),
-      const DetailedPlayer(
-          number: "41", name: "Declan Rice", position: "MID", rating: 7.5),
-      const DetailedPlayer(
-          number: "8",
-          name: "Martin Ødegaard",
-          position: "MID",
-          rating: 8.0,
-          hasRedCard: true), // Example Red
-      const DetailedPlayer(
-          number: "7",
-          name: "Bukayo Saka",
-          position: "FWD",
-          rating: 9.2,
-          goals: 2),
-    ];
+    if (_lineupData == null || _lineupData!.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: EdgeInsets.all(32.0),
+          child: Text(
+            "Lineup data not available yet.",
+            style: FontManager.bodyMedium(
+              fontSize: 14,
+              color: AppColors.textSecondary,
+            ),
+          ),
+        ),
+      );
+    }
 
-    final homeSubs = [
-      const DetailedPlayer(number: "18", name: "Stefan Ortega", position: "GK"),
-      const DetailedPlayer(number: "82", name: "Rico Lewis", position: "DEF"),
-      const DetailedPlayer(
-          number: "19", name: "Julián Álvarez", position: "FWD"),
-    ];
+    // Identify Home/Away teams
+    final homeLineup = _lineupData!.firstWhere(
+      (l) => l.team?.id == widget.homeTeamId,
+      orElse: () => _lineupData![0], // Fallback
+    );
 
-    final awaySubs = [
-      const DetailedPlayer(number: "1", name: "Ramsdale", position: "GK"),
-      const DetailedPlayer(number: "20", name: "Jorginho", position: "MID"),
-      const DetailedPlayer(number: "9", name: "Gabriel Jesus", position: "FWD"),
-    ];
+    final awayLineup = _lineupData!.firstWhere(
+      (l) => l.team?.id == widget.awayTeamId,
+      orElse: () => _lineupData!.length > 1 ? _lineupData![1] : _lineupData![0],
+    );
+
+    // Map the Starting XI and Substitutes
+    final homeStartingXI = _mapPlayers(homeLineup.startXI);
+    final homeSubs = _mapPlayers(homeLineup.substitutes);
+
+    final awayStartingXI = _mapPlayers(awayLineup.startXI);
+    final awaySubs = _mapPlayers(awayLineup.substitutes);
 
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
@@ -126,8 +145,8 @@ class LineupsTab extends StatelessWidget {
           // -------- Home Team Column --------
           Expanded(
             child: _buildTeamColumn(
-              teamName: "Man City",
-              formation: "4-3-3",
+              teamName: homeLineup.team?.name ?? "Home",
+              formation: homeLineup.formation ?? "-",
               startingXI: homeStartingXI,
               subs: homeSubs,
               color: AppColors.primaryColor, // Orange/Red
@@ -139,8 +158,8 @@ class LineupsTab extends StatelessWidget {
           // -------- Away Team Column --------
           Expanded(
             child: _buildTeamColumn(
-              teamName: "Liverpool",
-              formation: "4-3-3",
+              teamName: awayLineup.team?.name ?? "Away",
+              formation: awayLineup.formation ?? "-",
               startingXI: awayStartingXI,
               subs: awaySubs,
               color: AppColors.warning, // Yellow/Gold
