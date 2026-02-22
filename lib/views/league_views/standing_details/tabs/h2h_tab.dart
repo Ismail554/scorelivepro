@@ -74,6 +74,29 @@ class _H2HTabState extends State<H2HTab> {
       );
     }
 
+    // Calculate stats
+    int homeWins = 0;
+    int awayWins = 0;
+    int draws = 0;
+
+    // The API might return the matches in any order, so we have to count based on the home/away of the current team context.
+    // Actually, `fixturesHeadToHead` returns the matches exactly as they happened.
+    // To identify "Home Wins" we just count how many times the `homeTeam` in the Match Card won.
+    // Wait, the detailed standings screen was accessed for a specific `teamName`, which is our primary context team.
+    // We don't have the explicit team ID in H2HTab yet, but we just count home/away wins from the raw data.
+    for (var match in _h2hMatches!) {
+      final homeGoals = match.goals?.home ?? 0;
+      final awayGoals = match.goals?.away ?? 0;
+
+      if (homeGoals > awayGoals) {
+        homeWins++;
+      } else if (awayGoals > homeGoals) {
+        awayWins++;
+      } else {
+        draws++;
+      }
+    }
+
     return SingleChildScrollView(
       padding: AppPadding.h16,
       child: Column(
@@ -93,7 +116,11 @@ class _H2HTabState extends State<H2HTab> {
           AppSpacing.h16,
 
           // H2H Stats
-          _H2HStatsCard(),
+          _H2HStatsCard(
+            homeWins: homeWins,
+            draws: draws,
+            awayWins: awayWins,
+          ),
 
           AppSpacing.h24,
 
@@ -109,40 +136,26 @@ class _H2HTabState extends State<H2HTab> {
           AppSpacing.h16,
 
           // Last 5 Meetings List
-          _H2HMatchItem(
-            homeTeam: "Arsenal",
-            awayTeam: "Man City",
-            score: "1-0",
-            date: "Oct 2025",
-          ),
-          AppSpacing.h12,
-          _H2HMatchItem(
-            homeTeam: "Man City",
-            awayTeam: "Arsenal",
-            score: "4-1",
-            date: "Apr 2025",
-          ),
-          AppSpacing.h12,
-          _H2HMatchItem(
-            homeTeam: "Arsenal",
-            awayTeam: "Man City",
-            score: "1-3",
-            date: "Feb 2025",
-          ),
-          AppSpacing.h12,
-          _H2HMatchItem(
-            homeTeam: "Man City",
-            awayTeam: "Arsenal",
-            score: "2-2",
-            date: "Oct 2024",
-          ),
-          AppSpacing.h12,
-          _H2HMatchItem(
-            homeTeam: "Arsenal",
-            awayTeam: "Man City",
-            score: "0-0",
-            date: "Apr 2024",
-          ),
+          ..._h2hMatches!.take(5).map((match) {
+            String dateStr = "Unknown Date";
+            if (match.date != null) {
+              try {
+                dateStr =
+                    DateFormat('MMM yyyy').format(DateTime.parse(match.date!));
+              } catch (_) {}
+            }
+
+            return Padding(
+              padding: EdgeInsets.only(bottom: 12.h),
+              child: _H2HMatchItem(
+                homeTeam: match.homeTeam?.name ?? "Unknown",
+                awayTeam: match.awayTeam?.name ?? "Unknown",
+                score:
+                    "${match.goals?.home ?? '-'} - ${match.goals?.away ?? '-'}",
+                date: dateStr,
+              ),
+            );
+          }),
 
           AppSpacing.h24,
         ],
@@ -153,7 +166,15 @@ class _H2HTabState extends State<H2HTab> {
 
 /// H2H Stats Card Widget
 class _H2HStatsCard extends StatelessWidget {
-  const _H2HStatsCard();
+  final int homeWins;
+  final int draws;
+  final int awayWins;
+
+  const _H2HStatsCard({
+    required this.homeWins,
+    required this.draws,
+    required this.awayWins,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -171,17 +192,17 @@ class _H2HStatsCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _H2HStatItem(
-            value: "8",
+            value: homeWins.toString(),
             label: "Home Wins",
             color: AppColors.primaryColor,
           ),
           _H2HStatItem(
-            value: "3",
+            value: draws.toString(),
             label: "Draws",
             color: AppColors.grey,
           ),
           _H2HStatItem(
-            value: "5",
+            value: awayWins.toString(),
             label: "Away Wins",
             color: AppColors.primaryColor,
           ),
