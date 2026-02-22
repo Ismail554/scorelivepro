@@ -242,10 +242,7 @@ class _DetailedStandingsScreenState extends State<DetailedStandingsScreen>
             const SizedBox.shrink(),
 
           // Notification Bell
-          NotificationBell(
-            hasNotification: true,
-            onTap: () {},
-          ),
+          NotificationBell(hasNotification: true),
         ],
       ),
     );

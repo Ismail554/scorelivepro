@@ -90,7 +90,6 @@ class LeagueHeaderCard extends StatelessWidget {
                     // Notification Bell
                     NotificationBell(
                       hasNotification: hasNotification,
-                      onTap: onNotificationPressed ?? () {},
                     ),
                   ],
                 ),

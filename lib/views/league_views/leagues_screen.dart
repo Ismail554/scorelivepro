@@ -273,7 +273,6 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
                           NotificationBell(
                             hasNotification: true,
                             iconColor: AppColors.black,
-                            onTap: () {},
                           ),
                         ],
                       ),

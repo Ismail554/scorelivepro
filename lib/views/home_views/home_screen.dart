@@ -78,9 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Positioned(
                     top: 45,
                     right: 16,
-                    child: NotificationBell(
-                      hasNotification: true,
-                    ),
+                    child: NotificationBell(hasNotification: true),
                   ),
 
                   /// 👋 Welcome Text (Bottom Left)
