@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:scorelivepro/services/notification_service.dart';
 import 'package:scorelivepro/views/notification_views/models/notification_model.dart';
+import 'package:scorelivepro/services/api_service.dart';
+import 'package:scorelivepro/services/dio_service.dart';
 
 class NotificationProvider extends ChangeNotifier {
   int _unreadCount = 0;
@@ -106,6 +108,35 @@ class NotificationProvider extends ChangeNotifier {
       }
       _notifications.removeWhere((n) => n.id == id);
       notifyListeners();
+    }
+  }
+
+  Future<bool> registerDevice(String fcmToken, bool active) async {
+    try {
+      final result = await DioManager.apiRequest(
+        url: ApiEndPoint.registerDevice(),
+        methods: Methods.post,
+        body: {
+          "registration_id": fcmToken,
+          "type":
+              "ios", // Or dynamically determine android/ios based on platform
+          "active": active,
+        },
+      );
+
+      return result.fold(
+        (error) {
+          debugPrint("Error registering device notifications: $error");
+          return false;
+        },
+        (data) {
+          debugPrint("Successfully registered device notifications: $active");
+          return true;
+        },
+      );
+    } catch (e) {
+      debugPrint("Exception registering device: $e");
+      return false;
     }
   }
 }

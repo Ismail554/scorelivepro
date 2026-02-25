@@ -29,7 +29,53 @@ body: {
 response body: 
 
 
-4. Edit Profile 
+4. Get Profile 
+validation with access_token
+GET https://api.scorelivepro.it/auth/profile/
+response body: {
+    "id": "",
+    "email": "",
+    "role": "Fan",
+    "first_name": "",
+    "last_name": "",
+    "profile_image": "",
+    "date_joined": "",
+    "last_login": "",
+    "profile_data": {
+        "favorite_teams": [
+            {
+                "id": 26311,
+                "name": "1 de Enero",
+                "logo": "https://media.api-sports.io/football/teams/26311.png",
+                "code": null,
+                "country": "Paraguay",
+                "updated_at": "2026-02-25T21:55:19.807681Z",
+                "venue": null,
+                "leagues": [
+                    501
+                ]
+            }
+        ],
+        "favorite_leagues": [
+             "country": "Albania"
+            },
+            {
+                "id": 322,
+                "name": "Premier League",
+                "type": "League",
+                "logo": "https://media.api-sports.io/football/leagues/322.png",
+                "season_year": 2025,
+                "updated_at": "2026-02-25T21:47:41.629045Z",
+                "has_standings": true,
+                "country": "Jamaica"
+            }
+        ],
+        "receive_live_notifications": true,
+        "receive_news_updates": true
+    }
+}
+
+5. Edit Profile 
 validation with access_token
 PATCH https://api.scorelivepro.it/auth/profile/
 body: {
@@ -38,3 +84,20 @@ body: {
   "profile_image": "string"
 }
 
+6. Change Password 
+validation with access_token
+POST https://api.scorelivepro.it/auth/profile/change-password/
+body: {
+  "old_password": "string",
+  "new_password": "stringst",
+  "confirm_password": "stringst"
+}
+
+7. Notifications active/inactive
+validation with access_token
+POST https://api.scorelivepro.it/notifications/devices/register/
+body: {
+  "registration_id": "send the fcm token here",
+  "type": "ios",
+  "active": true
+}

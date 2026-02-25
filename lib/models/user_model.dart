@@ -3,6 +3,7 @@ class User {
   final String? email;
   final String? firstName;
   final String? lastName;
+  final String? profileImage;
   final String? role;
 
   User({
@@ -10,6 +11,7 @@ class User {
     this.email,
     this.firstName,
     this.lastName,
+    this.profileImage,
     this.role,
   });
 
@@ -19,6 +21,7 @@ class User {
       email: json['email'],
       firstName: json['first_name'],
       lastName: json['last_name'],
+      profileImage: json['profile_image'],
       role: json['role'],
     );
   }
@@ -29,6 +32,7 @@ class User {
       'email': email,
       'first_name': firstName,
       'last_name': lastName,
+      'profile_image': profileImage,
       'role': role,
     };
   }

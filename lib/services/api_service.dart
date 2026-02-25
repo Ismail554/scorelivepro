@@ -64,7 +64,15 @@ class ApiEndPoint {
       "$_baseUrl/auth/password-reset-verify-otp/"; // body: { "email": "user@example.com", "otp": "string"}
   static String passwordResetConfirm() =>
       "$_baseUrl/auth/password-reset-confirm/"; // body: { "email": "user@example.com", "otp": "string", "password": "stringst", "confirm_password": "stringst"}
+
+  static String getProfile() =>
+      "$_baseUrl/auth/profile/"; // GET to retrieve, PATCH to edit body: { "first_name": "string", "last_name": "string", "profile_image": "string" }
+  static String changePassword() =>
+      "$_baseUrl/auth/profile/change-password/"; // POST body: { "old_password": "string", "new_password": "stringst", "confirm_password": "stringst" }
+
   // =================== Notifications ===========
+  static String registerDevice() =>
+      "$_baseUrl/notifications/devices/register/"; // POST body: { "registration_id": "string", "type": "ios", "active": true }
   static String getNotifications() =>
       "$_baseUrl/notifications/inbox/"; // response body: [ { "id": 82149, "title": "📅 Premier League Schedule", "body": "There are 1 matches starting tomorrow in Premier League. Don't miss out!", "data": { "type": "SCHEDULE", "reason": "Following Premier League", "league_id": "322" }, "event_type": "MATCH_START", "created_at": "2026-02-17T08:00:13.960913Z", "time_ago": "3 days, 11 hours", "is_read": false }, { "id": 19290, "title": "📅 Premier League Schedule", "body": "There are 1 matches starting tomorrow in Premier League. Don't miss out!", "data": {}, "event_type": "MATCH_START", "created_at": "2026-01-28T21:31:35.331422Z", "time_ago": "3 weeks, 1 day", "is_read": false } ]
   static String markAllRead() =>

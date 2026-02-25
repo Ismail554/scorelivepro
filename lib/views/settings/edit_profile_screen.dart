@@ -24,8 +24,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void initState() {
     super.initState();
     final user = context.read<AuthProvider>().user;
-    _firstNameController = TextEditingController(text: user?.firstName ?? "");
-    _lastNameController = TextEditingController(text: user?.lastName ?? "");
+    _firstNameController = TextEditingController(
+        text: (user?.firstName != null && user!.firstName!.isNotEmpty)
+            ? user.firstName!
+            : "John");
+    _lastNameController = TextEditingController(
+        text: (user?.lastName != null && user!.lastName!.isNotEmpty)
+            ? user.lastName!
+            : "Doe");
     _emailController = TextEditingController(text: user?.email ?? "");
   }
 
@@ -81,8 +87,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 children: [
                   CircleAvatar(
                     radius: 50.r,
-                    backgroundImage: const NetworkImage(
-                        "https://avatar.iran.liara.run/public"), // Placeholder
+                    backgroundImage: context
+                                    .watch<AuthProvider>()
+                                    .user
+                                    ?.profileImage !=
+                                null &&
+                            context
+                                .watch<AuthProvider>()
+                                .user!
+                                .profileImage!
+                                .isNotEmpty
+                        ? NetworkImage(
+                            context.watch<AuthProvider>().user!.profileImage!)
+                        : const NetworkImage(
+                            "https://avatar.iran.liara.run/public"), // Placeholder
                     onBackgroundImageError: (exception, stackTrace) {
                       debugPrint("Avatar load error: $exception");
                     },
@@ -161,26 +179,96 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             Row(
               children: [
                 Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // TODO: Implement Save Logic using AuthProvider
-                      Navigator.pop(context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFFF6B00),
-                      padding: EdgeInsets.symmetric(vertical: 14.h),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.r),
+                  child: Consumer<AuthProvider>(builder: (context, auth, _) {
+                    return ElevatedButton(
+                      onPressed: auth.isLoading
+                          ? null
+                          : () async {
+                              bool profileUpdated = false;
+                              bool passwordUpdated = false;
+
+                              // 1. Update Profile if names changed
+                              if (_firstNameController.text !=
+                                      (auth.user?.firstName ?? "") ||
+                                  _lastNameController.text !=
+                                      (auth.user?.lastName ?? "")) {
+                                final success = await auth.updateProfile(
+                                    _firstNameController.text,
+                                    _lastNameController.text,
+                                    null); // Not passing image for now
+                                if (success) profileUpdated = true;
+                              }
+
+                              // 2. Change password if fields are filled
+                              if (_currentPassController.text.isNotEmpty &&
+                                  _newPassController.text.isNotEmpty &&
+                                  _confirmPassController.text.isNotEmpty) {
+                                if (_newPassController.text !=
+                                    _confirmPassController.text) {
+                                  if (context.mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text(
+                                              "New passwords do not match")),
+                                    );
+                                  }
+                                  return;
+                                }
+
+                                final success = await auth.changePassword(
+                                    _currentPassController.text,
+                                    _newPassController.text,
+                                    _confirmPassController.text);
+                                if (success) passwordUpdated = true;
+                              }
+
+                              if (context.mounted) {
+                                if (profileUpdated || passwordUpdated) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text("Updated successfully!" +
+                                            (passwordUpdated
+                                                ? " Password changed."
+                                                : ""))),
+                                  );
+                                  Navigator.pop(context);
+                                } else if (_currentPassController
+                                        .text.isNotEmpty ||
+                                    _newPassController.text.isNotEmpty) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text(
+                                            "Failed to update password. Please check your current password.")),
+                                  );
+                                } else {
+                                  // No changes made
+                                  Navigator.pop(context);
+                                }
+                              }
+                            },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFFF6B00),
+                        padding: EdgeInsets.symmetric(vertical: 14.h),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.r),
+                        ),
                       ),
-                    ),
-                    child: Text(
-                      "Save changes",
-                      style: TextStyle(
-                          fontSize: 14.sp,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600),
-                    ),
-                  ),
+                      child: auth.isLoading
+                          ? SizedBox(
+                              height: 20.h,
+                              width: 20.h,
+                              child: const CircularProgressIndicator(
+                                  color: Colors.white, strokeWidth: 2),
+                            )
+                          : Text(
+                              "Save changes",
+                              style: TextStyle(
+                                  fontSize: 14.sp,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                    );
+                  }),
                 ),
                 SizedBox(width: 12.w),
                 Expanded(

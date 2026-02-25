@@ -4,8 +4,21 @@ import 'package:provider/provider.dart';
 import 'package:scorelivepro/provider/auth_provider.dart';
 import 'package:scorelivepro/views/settings/edit_profile_screen.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<AuthProvider>().fetchUserProfile();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,43 +63,46 @@ class ProfileScreen extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 50.r,
-                    backgroundImage: const NetworkImage(
-                        "https://avatar.iran.liara.run/public"), // Placeholder as in design
+                    backgroundImage: user?.profileImage != null &&
+                            user!.profileImage!.isNotEmpty
+                        ? NetworkImage(user.profileImage!)
+                        : const NetworkImage(
+                            "https://avatar.iran.liara.run/public"), // Placeholder
                     onBackgroundImageError: (exception, stackTrace) {
                       debugPrint("Avatar load error: $exception");
                     },
                   ),
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: Container(
-                      padding: EdgeInsets.all(6.w),
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFFF6B00), // Orange
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(Icons.camera_alt,
-                          color: Colors.white, size: 18.sp),
-                    ),
-                  ),
+                  // Positioned(
+                  //   bottom: 0,
+                  //   right: 0,
+                  //   child: Container(
+                  //     padding: EdgeInsets.all(6.w),
+                  //     decoration: const BoxDecoration(
+                  //       color: Color(0xFFFF6B00), // Orange
+                  //       shape: BoxShape.circle,
+                  //     ),
+                  //     child: Icon(Icons.camera_alt,
+                  //         color: Colors.white, size: 18.sp),
+                  //   ),
+                  // ),
                 ],
               ),
             ),
             SizedBox(height: 10.h),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade300),
-                borderRadius: BorderRadius.circular(20.r),
-              ),
-              child: Text(
-                "Change Photo",
-                style: TextStyle(
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black),
-              ),
-            ),
+            // Container(
+            //   padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+            //   decoration: BoxDecoration(
+            //     border: Border.all(color: Colors.grey.shade300),
+            //     borderRadius: BorderRadius.circular(20.r),
+            //   ),
+            //   child: Text(
+            //     "Change Photo",
+            //     style: TextStyle(
+            //         fontSize: 12.sp,
+            //         fontWeight: FontWeight.w500,
+            //         color: Colors.black),
+            //   ),
+            // ),
             SizedBox(height: 30.h),
 
             // Personal Details Card
@@ -119,9 +135,17 @@ class ProfileScreen extends StatelessWidget {
                       height: 24.h, thickness: 1, color: Colors.grey.shade200),
 
                   // Fields
-                  _buildReadOnlyField("First Name", user?.firstName ?? "John"),
+                  _buildReadOnlyField(
+                      "First Name",
+                      (user?.firstName != null && user!.firstName!.isNotEmpty)
+                          ? user.firstName!
+                          : "John"),
                   SizedBox(height: 16.h),
-                  _buildReadOnlyField("Last Name", user?.lastName ?? "Doe"),
+                  _buildReadOnlyField(
+                      "Last Name",
+                      (user?.lastName != null && user!.lastName!.isNotEmpty)
+                          ? user.lastName!
+                          : "Doe"),
                   SizedBox(height: 16.h),
                   _buildReadOnlyField(
                       "Email Address", user?.email ?? "john.doe@example.com",

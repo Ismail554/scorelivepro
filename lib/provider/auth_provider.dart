@@ -314,10 +314,111 @@ class AuthProvider extends ChangeNotifier {
     if (authResponse.user != null) {
       _user = authResponse.user;
       await SecureStorageHelper.saveUser(jsonEncode(_user!.toJson()));
+
+      // Fetch the full profile after a successful login to get the latest profile image etc.
+      fetchUserProfile();
     }
 
     _isLoading = false;
     notifyListeners();
+  }
+
+  Future<void> fetchUserProfile() async {
+    try {
+      final result = await DioManager.apiRequest(
+        url: ApiEndPoint.getProfile(),
+        methods: Methods.get,
+      );
+
+      result.fold(
+        (error) {
+          print("Error fetching profile: $error");
+        },
+        (data) async {
+          _user = User.fromJson(data);
+          await SecureStorageHelper.saveUser(jsonEncode(_user!.toJson()));
+          notifyListeners();
+        },
+      );
+    } catch (e) {
+      print("Exception fetching profile: $e");
+    }
+  }
+
+  Future<bool> updateProfile(
+      String firstName, String lastName, String? profileImage) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final body = {
+        "first_name": firstName,
+        "last_name": lastName,
+      };
+
+      if (profileImage != null && profileImage.isNotEmpty) {
+        body["profile_image"] = profileImage;
+      }
+
+      final result = await DioManager.apiRequest(
+        url: ApiEndPoint.getProfile(), // Uses the same endpoint but with PATCH
+        methods: Methods.patch,
+        body: body,
+      );
+
+      return result.fold(
+        (error) {
+          _isLoading = false;
+          notifyListeners();
+          return false;
+        },
+        (data) async {
+          await fetchUserProfile(); // Refresh profile data
+          _isLoading = false;
+          notifyListeners();
+          return true;
+        },
+      );
+    } catch (e) {
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> changePassword(
+      String oldPassword, String newPassword, String confirmPassword) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final result = await DioManager.apiRequest(
+        url: ApiEndPoint.changePassword(),
+        methods: Methods.post,
+        body: {
+          "old_password": oldPassword,
+          "new_password": newPassword,
+          "confirm_password": confirmPassword,
+        },
+      );
+
+      return result.fold(
+        (error) {
+          _isLoading = false;
+          notifyListeners();
+          return false;
+        },
+        (data) {
+          _isLoading = false;
+          notifyListeners();
+          return true;
+        },
+      );
+    } catch (e) {
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
   }
 
   Future<void> logout() async {

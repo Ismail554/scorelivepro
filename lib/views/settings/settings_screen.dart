@@ -6,6 +6,7 @@ import 'package:scorelivepro/views/settings/app_info_screen.dart';
 import 'package:scorelivepro/views/settings/language_selection_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:scorelivepro/provider/auth_provider.dart';
+import 'package:scorelivepro/provider/notification_provider.dart';
 import 'package:scorelivepro/views/settings/profile_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -138,13 +139,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 _buildSettingsTile(
                   icon: Icons.notifications_outlined,
                   title: AppStrings.notifications,
-                  subtitle: AppStrings.enabled,
+                  subtitle:
+                      _notificationsEnabled ? AppStrings.enabled : "Disabled",
                   isSwitch: true,
                   switchValue: _notificationsEnabled,
-                  onToggle: (val) {
+                  onToggle: (val) async {
                     setState(() {
                       _notificationsEnabled = val;
                     });
+
+                    // Call the API with the dummy token (update to real FCM token when available)
+                    final success = await context
+                        .read<NotificationProvider>()
+                        .registerDevice("dummy_fcm_token_for_now", val);
+                    if (!success && context.mounted) {
+                      // Revert if API failed
+                      setState(() {
+                        _notificationsEnabled = !val;
+                      });
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content:
+                                Text("Failed to update notification settings")),
+                      );
+                    }
                   },
                 ),
                 _buildDivider(), // Line between items
