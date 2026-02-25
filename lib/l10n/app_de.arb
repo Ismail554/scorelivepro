@@ -1,0 +1,16 @@
+{
+  "@@locale": "de",
+  "welcome_back": "Willkommen zurück",
+  "liveMatches": "Live-Spiele",
+  "noLiveMatches": "Im Moment keine Live-Spiele",
+  "upcomingMatches": "Kommende Spiele",
+  "noUpcomingMatches": "Keine kommenden Spiele",
+  "quickActions": "Schnellzugriffe",
+  "myFavorites": "Meine Favoriten",
+  "latestNews": "Neueste Nachrichten",
+  "unknownLeague": "Unbekannte Liga",
+  "home": "Heim",
+  "away": "Auswärts",
+  "upcoming": "Kommend",
+  "language": "Sprache"
+}

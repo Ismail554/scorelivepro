@@ -1,0 +1,6 @@
+﻿warning - Unused import: 'package:easy_localization/easy_localization.dart' - lib\app.dart:1:8 - unused_import
+warning - Unused import: 'package:scorelivepro/widget/home/sponsored_ad_card.dart' - lib\views\home_views\home_screen.dart:14:8 - unused_import
+   info - Use a 'SizedBox' to add whitespace to a layout - lib\views\home_views\home_screen.dart:43:13 - sized_box_for_whitespace
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\views\home_views\home_screen.dart:69:42 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\views\home_views\home_screen.dart:70:42 - deprecated_member_use
+

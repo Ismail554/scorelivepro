@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:scorelivepro/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/ads/banner_ad_widget.dart';
 import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/app_spacing.dart';
-import 'package:scorelivepro/core/app_strings.dart';
 import 'package:scorelivepro/core/assets_manager.dart';
 import 'package:scorelivepro/core/font_manager.dart';
 import 'package:scorelivepro/views/home_views/live_mathches/live_match_details_screen.dart';
 import 'package:scorelivepro/widget/home/match_card.dart';
 import 'package:scorelivepro/widget/home/quick_action_card.dart';
 import 'package:scorelivepro/widget/home/section_header.dart';
-import 'package:scorelivepro/widget/home/sponsored_ad_card.dart';
 import 'package:scorelivepro/services/socket_service.dart';
 import 'package:scorelivepro/models/live_ws_model.dart';
 import 'package:scorelivepro/utils/match_status_helper.dart';
@@ -40,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: SizedBox(
         height: double.maxFinite,
         width: double.maxFinite,
         child: Column(
@@ -66,8 +65,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                           colors: [
-                            Colors.black.withOpacity(0.4),
-                            Colors.black.withOpacity(0.2),
+                            Colors.black.withValues(alpha: 0.4),
+                            Colors.black.withValues(alpha: 0.2),
                           ],
                         ),
                       ),
@@ -89,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          AppStrings.welcome_back,
+                          AppLocalizations.of(context).welcome_back,
                           style: FontManager.heading3(color: Colors.white),
                         ),
                         const SizedBox(height: 4),
@@ -115,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       // Live Matches Section
                       SectionHeader(
-                        title: AppStrings.liveMatches,
+                        title: AppLocalizations.of(context).liveMatches,
                         onSeeAllTap: () {},
                       ),
                       ValueListenableBuilder<LiveScoreModel?>(
@@ -129,7 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               padding: EdgeInsets.symmetric(
                                   horizontal: 16.w, vertical: 8.h),
                               child: Text(
-                                "No live matches at the moment",
+                                AppLocalizations.of(context).noLiveMatches,
                                 style: FontManager.bodyMedium(
                                     color: AppColors.textSecondary),
                               ),
@@ -147,10 +146,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             itemBuilder: (context, index) {
                               final match = displayMatches[index];
                               return MatchCard(
-                                leagueName:
-                                    match.league?.name ?? "Unknown League",
-                                homeTeam: match.homeTeam?.name ?? "Home",
-                                awayTeam: match.awayTeam?.name ?? "Away",
+                                leagueName: match.league?.name ??
+                                    AppLocalizations.of(context).unknownLeague,
+                                homeTeam: match.homeTeam?.name ??
+                                    AppLocalizations.of(context).home,
+                                awayTeam: match.awayTeam?.name ??
+                                    AppLocalizations.of(context).away,
                                 homeScore: match.goals?.home,
                                 awayScore: match.goals?.away,
                                 timeInfo: "${match.elapsed ?? 0}'",
@@ -175,7 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                       // Upcoming Matches Section
                       SectionHeader(
-                        title: AppStrings.upcomingMatches,
+                        title: AppLocalizations.of(context).upcomingMatches,
                         onSeeAllTap: () {
                           // TODO: Navigate to upcoming matches screen
                         },
@@ -193,7 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               padding: EdgeInsets.symmetric(
                                   horizontal: 16.w, vertical: 8.h),
                               child: Text(
-                                "No upcoming matches",
+                                AppLocalizations.of(context).noUpcomingMatches,
                                 style: FontManager.bodyMedium(
                                     color: AppColors.textSecondary),
                               ),
@@ -212,14 +213,16 @@ class _HomeScreenState extends State<HomeScreen> {
                             itemBuilder: (context, index) {
                               final match = upcomingDisplay[index];
                               return MatchCard(
-                                leagueName:
-                                    match.league?.name ?? "Unknown League",
-                                homeTeam: match.homeTeam?.name ?? "Home",
-                                awayTeam: match.awayTeam?.name ?? "Away",
+                                leagueName: match.league?.name ??
+                                    AppLocalizations.of(context).unknownLeague,
+                                homeTeam: match.homeTeam?.name ??
+                                    AppLocalizations.of(context).home,
+                                awayTeam: match.awayTeam?.name ??
+                                    AppLocalizations.of(context).away,
                                 timeInfo: match.date != null
                                     ? DateFormat('EEE, HH:mm').format(
                                         DateTime.parse(match.date!).toLocal())
-                                    : "Upcoming",
+                                    : AppLocalizations.of(context).upcoming,
                                 status: MatchStatus.upcoming,
                                 onTap: () {
                                   // TODO: Navigate to match details
@@ -236,7 +239,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         padding: EdgeInsets.symmetric(
                             horizontal: 16.w, vertical: 16.h),
                         child: Text(
-                          'Quick Actions',
+                          AppLocalizations.of(context).quickActions,
                           style: FontManager.heading3(
                               color: AppColors.textPrimary),
                         ),
@@ -247,7 +250,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             QuickActionCard(
                               icon: Icons.star,
-                              title: AppStrings.myFavorites,
+                              title: AppLocalizations.of(context).myFavorites,
                               iconColor: AppColors.warning,
                               onTap: () {
                                 // TODO: Navigate to favorites screen
@@ -255,7 +258,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             QuickActionCard(
                               icon: Icons.newspaper,
-                              title: AppStrings.latestNews,
+                              title: AppLocalizations.of(context).latestNews,
                               iconColor: AppColors.info,
                               onTap: () {
                                 // TODO: Navigate to news screen
@@ -267,7 +270,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       AppSpacing.h16,
 
                       // Sponsored Ad Card
-                     BannerAdWidget(),
+                      BannerAdWidget(),
                       AppSpacing.h16,
                     ],
                   ),

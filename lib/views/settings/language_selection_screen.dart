@@ -1,12 +1,13 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:scorelivepro/config/language/lanugage_provider.dart';
+import 'package:scorelivepro/l10n/app_localizations.dart';
 import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/app_padding.dart';
 import 'package:scorelivepro/core/app_strings.dart';
 import 'package:scorelivepro/core/font_manager.dart';
 import 'package:scorelivepro/core/language_manager.dart';
+import 'package:scorelivepro/provider/language_provider.dart';
 import 'package:scorelivepro/widget/settings/language_card.dart';
 
 class LanguageSelectionScreen extends StatefulWidget {
@@ -18,8 +19,6 @@ class LanguageSelectionScreen extends StatefulWidget {
 }
 
 class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
-  Locale? _currentLocale;
-
   // List of all supported languages
   final List<Locale> _languages = LanguageManager.supportedLocales;
 
@@ -57,34 +56,11 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
     },
   };
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // Get current locale from context after dependencies are available
-    if (_currentLocale == null) {
-      _currentLocale = context.locale;
-    }
-  }
-
   Future<void> _changeLanguage(Locale locale) async {
-    if (_currentLocale == locale) return;
+    final provider = Provider.of<LanguageProvider>(context, listen: false);
+    if (provider.currentLocale == locale) return;
 
-    setState(() {
-      _currentLocale = locale;
-    });
-
-    // Change language using EasyLocalization
-    await context.setLocale(locale);
-
-    // Save language preference using SecureStorageLanguageHelper
-    // Format should match what's expected in main.dart (e.g., "English", "Spanish", etc.)
-    try {
-      // Get the English name for the language (matching main.dart switch cases)
-      final languageName = _getLanguageNameForStorage(locale);
-      await SecureStorageLanguageHelper.setLanguage(languageName);
-    } catch (e) {
-      debugPrint("Error saving language: $e");
-    }
+    await provider.changeLanguage(locale);
 
     // Show success message
     if (mounted) {
@@ -101,21 +77,16 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
     }
   }
 
-  /// Get language name in English format for storage (matching main.dart switch cases)
-  String _getLanguageNameForStorage(Locale locale) {
-    return _languageData[locale]?['english'] ?? 'English';
-  }
-
   @override
   Widget build(BuildContext context) {
-    // Use context.locale if _currentLocale is not yet initialized
-    final currentLocale = _currentLocale ?? context.locale;
+    // Get Locale from Provider
+    final currentLocale = Provider.of<LanguageProvider>(context).currentLocale;
 
     return Scaffold(
       backgroundColor: AppColors.bgColor,
       appBar: AppBar(
         title: Text(
-          AppStrings.language,
+          AppLocalizations.of(context).language,
           style: FontManager.heading2(),
         ),
         backgroundColor: AppColors.white,

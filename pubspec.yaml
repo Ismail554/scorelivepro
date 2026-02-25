@@ -62,6 +62,7 @@ dev_dependencies:
 
 # The following section is for Flutter-specific configuration
 flutter:
+  generate: true
 
   # The property 'uses-material-design' must be directly under 'flutter:'
   # and its value is a boolean (true/false)
