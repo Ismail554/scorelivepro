@@ -40,7 +40,7 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> login(String email, String password) async {
+  Future<String?> login(String email, String password) async {
     _isLoading = true;
     notifyListeners();
 
@@ -59,24 +59,24 @@ class AuthProvider extends ChangeNotifier {
         (error) {
           _isLoading = false;
           notifyListeners();
-          return false;
+          return error.toString();
         },
         (data) async {
           try {
             await _handleAuthSuccess(data);
-            return true;
+            return null; // Return null on success
           } catch (e) {
             print("Parsing error: $e");
             _isLoading = false;
             notifyListeners();
-            return false;
+            return "Cannot parse response";
           }
         },
       );
     } catch (e) {
       _isLoading = false;
       notifyListeners();
-      return false;
+      return "An unexpected error occurred.";
     }
   }
 
@@ -164,6 +164,71 @@ class AuthProvider extends ChangeNotifier {
         body: {
           "email": email,
           "otp": otp,
+        },
+        skipAuth: true,
+      );
+
+      return result.fold((error) {
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }, (data) {
+        _isLoading = false;
+        notifyListeners();
+        return true;
+      });
+    } catch (e) {
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> verifyPasswordResetOtp(String email, String otp) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final result = await DioManager.apiRequest(
+        url: ApiEndPoint.passwordResetVerifyOtp(),
+        methods: Methods.post,
+        body: {
+          "email": email,
+          "otp": otp,
+        },
+        skipAuth: true,
+      );
+
+      return result.fold((error) {
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }, (data) {
+        _isLoading = false;
+        notifyListeners();
+        return true;
+      });
+    } catch (e) {
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> passwordResetConfirm(
+      String email, String otp, String password, String confirmPassword) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final result = await DioManager.apiRequest(
+        url: ApiEndPoint.passwordResetConfirm(),
+        methods: Methods.post,
+        body: {
+          "email": email,
+          "otp": otp,
+          "password": password,
+          "confirm_password": confirmPassword,
         },
         skipAuth: true,
       );

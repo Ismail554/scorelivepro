@@ -480,6 +480,12 @@ class DioManager {
       }
 
       if (data is Map<String, dynamic>) {
+        if (data['error_code'] is List && data['error_code'].isNotEmpty) {
+          if (data['error_code'][0] == 'account_unverified_otp_sent') {
+            return "UNVERIFIED_ACCOUNT_OTP_SENT";
+          }
+        }
+
         // Try multiple common error message fields
         String? msg = data['error'] ??
             data['detail'] ??

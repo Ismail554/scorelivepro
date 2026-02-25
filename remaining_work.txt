@@ -1,0 +1,40 @@
+[API ERROR] ❌ [400] https://api.scorelivepro.it/auth/login/
+I/flutter ( 6300): ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+I/flutter ( 6300): ❌ API ERROR [400]
+I/flutter ( 6300): URL: https://api.scorelivepro.it/auth/login/
+I/flutter ( 6300): Method: POST
+I/flutter ( 6300): Request Body: {"email":"apon.wasik2001@gmail.com","password":"password"}
+I/flutter ( 6300): Response: {"detail":["Account is not verified. A new OTP has been sent to your email."],"error_code":["account_unverified_otp_sent"],"email":["apon.wasik2001@gmail.com"]}
+
+when account is created but didn't verified by otp.
+
+password flow: 
+1.https://api.scorelivepro.it/auth/password-reset-request/
+response: { "message": "OTP sent."}
+
+2. verify OTP
+https://api.scorelivepro.it/auth/password-reset-verify-otp/ 
+api body: { "email": "user@example.com", "otp": "string"}
+Response body: { "message": "OTP is valid."}
+
+3. Pass reset confirm
+https://api.scorelivepro.it/auth/password-reset-confirm/
+body: {
+  "email": "ismailshuvo554@gmail.com",
+  "otp": "string",
+  "password": "stringst",
+  "confirm_password": "stringst"
+}
+
+response body: 
+
+
+4. Edit Profile 
+validation with access_token
+PATCH https://api.scorelivepro.it/auth/profile/
+body: {
+  "first_name": "string",
+  "last_name": "string",
+  "profile_image": "string"
+}
+

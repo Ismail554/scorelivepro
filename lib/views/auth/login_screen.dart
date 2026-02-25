@@ -12,6 +12,7 @@ import 'package:scorelivepro/views/auth/forgot_password/forgot_password_screen.d
 import 'package:scorelivepro/views/auth/sign_up/sign_up_screen.dart';
 import 'package:scorelivepro/views/home_views/home_screen.dart';
 import 'package:scorelivepro/views/main_navigation/main_navigation_screen.dart';
+import 'package:scorelivepro/views/auth/sign_up/otp_verifiy_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -41,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              AppColors.primaryColor, 
+              AppColors.primaryColor,
               Colors.white,
             ],
             stops: [
@@ -176,11 +177,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                 );
                                 return;
                               }
-                              final success = await auth.login(
+                              final errorMsg = await auth.login(
                                 _emailController.text,
                                 _passwordController.text,
                               );
-                              if (success && context.mounted) {
+                              if (errorMsg == null && context.mounted) {
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
@@ -188,10 +189,23 @@ class _LoginScreenState extends State<LoginScreen> {
                                         const MainNavigationScreen(),
                                   ),
                                 );
+                              } else if (errorMsg ==
+                                      "UNVERIFIED_ACCOUNT_OTP_SENT" &&
+                                  context.mounted) {
+                                // Specific flow for unverified users
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => OtpVerifyScreen(
+                                      email: _emailController.text,
+                                      isPasswordReset: false,
+                                    ),
+                                  ),
+                                );
                               } else if (context.mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text(
+                                  SnackBar(
+                                      content: Text(errorMsg ??
                                           "Login failed. Please check your credentials.")),
                                 );
                               }

@@ -7,11 +7,16 @@ import 'package:scorelivepro/core/font_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:scorelivepro/provider/auth_provider.dart';
 import 'package:scorelivepro/views/auth/sign_up/congratulation_screen.dart';
+import 'package:scorelivepro/views/auth/forgot_password/create_new_password_screen.dart';
 import 'dart:async';
 
 class OtpVerifyScreen extends StatefulWidget {
   final String email;
-  const OtpVerifyScreen({super.key, this.email = "you@company.com"});
+  final bool isPasswordReset;
+  const OtpVerifyScreen(
+      {super.key,
+      this.email = "you@company.com",
+      this.isPasswordReset = false});
 
   @override
   State<OtpVerifyScreen> createState() => _OtpVerifyScreenState();
@@ -211,19 +216,40 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                                   return;
                                 }
 
-                                final success = await auth.verifyEmail(
-                                  widget.email,
-                                  _pinController.text,
-                                );
+                                final bool success;
+                                if (widget.isPasswordReset) {
+                                  success = await auth.verifyPasswordResetOtp(
+                                    widget.email,
+                                    _pinController.text,
+                                  );
+                                } else {
+                                  success = await auth.verifyEmail(
+                                    widget.email,
+                                    _pinController.text,
+                                  );
+                                }
 
                                 if (success && context.mounted) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const CongratulationScreen(),
-                                    ),
-                                  );
+                                  if (widget.isPasswordReset) {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            CreateNewPasswordScreen(
+                                          email: widget.email,
+                                          otp: _pinController.text,
+                                        ),
+                                      ),
+                                    );
+                                  } else {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const CongratulationScreen(),
+                                      ),
+                                    );
+                                  }
                                 } else if (context.mounted) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
@@ -275,8 +301,14 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                     return TextButton(
                       onPressed: (_isResendEnabled && !auth.isLoading)
                           ? () async {
-                              final success =
-                                  await auth.resendOtp(widget.email);
+                              final bool success;
+                              if (widget.isPasswordReset) {
+                                success =
+                                    await auth.forgotPassword(widget.email);
+                              } else {
+                                success = await auth.resendOtp(widget.email);
+                              }
+
                               if (context.mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
