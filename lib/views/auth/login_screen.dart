@@ -11,8 +11,9 @@ import 'package:scorelivepro/provider/auth_provider.dart';
 import 'package:scorelivepro/views/auth/forgot_password/forgot_password_screen.dart';
 import 'package:scorelivepro/views/auth/sign_up/sign_up_screen.dart';
 import 'package:scorelivepro/views/home_views/home_screen.dart';
-import 'package:scorelivepro/views/main_navigation/main_navigation_screen.dart';
 import 'package:scorelivepro/views/auth/sign_up/otp_verifiy_screen.dart';
+import 'package:scorelivepro/views/main_navigation/main_navigation_screen.dart';
+import 'package:scorelivepro/provider/notification_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -168,20 +169,33 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPressed: auth.isLoading
                           ? null
                           : () async {
-                              if (_emailController.text.isEmpty ||
-                                  _passwordController.text.isEmpty) {
+                              final email = _emailController.text.trim();
+                              final password = _passwordController.text;
+
+                              if (email.isEmpty || password.isEmpty) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                       content: Text(
-                                          "Please enter email and password")),
+                                          "Email and password cannot be empty.")),
                                 );
                                 return;
                               }
-                              final errorMsg = await auth.login(
-                                _emailController.text,
-                                _passwordController.text,
-                              );
-                              if (errorMsg == null && context.mounted) {
+
+                              final authResult =
+                                  await auth.login(email, password);
+
+                              if (!context.mounted) return;
+
+                              if (authResult == null) {
+                                // Success: register device and navigate
+                                context
+                                    .read<NotificationProvider>()
+                                    .registerDevice(true);
+
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text("Login Successful!")),
+                                );
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
@@ -189,7 +203,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         const MainNavigationScreen(),
                                   ),
                                 );
-                              } else if (errorMsg ==
+                              } else if (authResult ==
                                       "UNVERIFIED_ACCOUNT_OTP_SENT" &&
                                   context.mounted) {
                                 // Specific flow for unverified users
@@ -205,7 +219,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               } else if (context.mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                      content: Text(errorMsg ??
+                                      content: Text(authResult ??
                                           "Login failed. Please check your credentials.")),
                                 );
                               }

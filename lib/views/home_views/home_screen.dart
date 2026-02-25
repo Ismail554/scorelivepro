@@ -7,6 +7,7 @@ import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/app_spacing.dart';
 import 'package:scorelivepro/core/assets_manager.dart';
 import 'package:scorelivepro/core/font_manager.dart';
+import 'package:scorelivepro/views/favorites_views/favorites_screen.dart';
 import 'package:scorelivepro/views/home_views/live_mathches/live_match_details_screen.dart';
 import 'package:scorelivepro/widget/home/match_card.dart';
 import 'package:scorelivepro/widget/home/quick_action_card.dart';
@@ -253,7 +254,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               title: AppLocalizations.of(context).myFavorites,
                               iconColor: AppColors.warning,
                               onTap: () {
-                                // TODO: Navigate to favorites screen
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const FavoritesScreen(),
+                                    ));
                               },
                             ),
                             QuickActionCard(

@@ -119,4 +119,18 @@ class SecureStorageHelper {
   static Future<void> clearUser() async {
     await _storage.delete(key: _userKey);
   }
+
+  // Notification toggle key
+  static const String _notificationsKey = 'notifications_enabled';
+
+  /// Save notification status
+  static Future<void> saveNotificationStatus(bool isEnabled) async {
+    await _storage.write(key: _notificationsKey, value: isEnabled.toString());
+  }
+
+  /// Get notification status (default true)
+  static Future<bool> getNotificationStatus() async {
+    final val = await _storage.read(key: _notificationsKey);
+    return val == null || val == 'true'; // Default to true if not set
+  }
 }

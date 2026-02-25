@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:scorelivepro/services/notification_service.dart';
 import 'package:scorelivepro/views/notification_views/models/notification_model.dart';
 import 'package:scorelivepro/services/api_service.dart';
@@ -111,15 +113,24 @@ class NotificationProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> registerDevice(String fcmToken, bool active) async {
+  Future<bool> registerDevice(bool active) async {
     try {
+      // 1. Fetch real FCM Token
+      String? fcmToken = await FirebaseMessaging.instance.getToken();
+      if (fcmToken == null || fcmToken.isEmpty) {
+        debugPrint("Failed to get FCM token");
+        return false;
+      }
+
+      // 2. Detect OS
+      String osType = Platform.isAndroid ? 'android' : 'ios';
+
       final result = await DioManager.apiRequest(
         url: ApiEndPoint.registerDevice(),
         methods: Methods.post,
         body: {
           "registration_id": fcmToken,
-          "type":
-              "ios", // Or dynamically determine android/ios based on platform
+          "type": osType,
           "active": active,
         },
       );
@@ -130,7 +141,8 @@ class NotificationProvider extends ChangeNotifier {
           return false;
         },
         (data) {
-          debugPrint("Successfully registered device notifications: $active");
+          debugPrint(
+              "Successfully registered device notifications ($osType): $active");
           return true;
         },
       );

@@ -346,7 +346,7 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<bool> updateProfile(
-      String firstName, String lastName, String? profileImage) async {
+      String firstName, String lastName, String? profileImagePath) async {
     _isLoading = true;
     notifyListeners();
 
@@ -356,15 +356,25 @@ class AuthProvider extends ChangeNotifier {
         "last_name": lastName,
       };
 
-      if (profileImage != null && profileImage.isNotEmpty) {
-        body["profile_image"] = profileImage;
-      }
+      Either<String, dynamic> result;
 
-      final result = await DioManager.apiRequest(
-        url: ApiEndPoint.getProfile(), // Uses the same endpoint but with PATCH
-        methods: Methods.patch,
-        body: body,
-      );
+      // Use multipart request if an image is provided
+      if (profileImagePath != null && profileImagePath.isNotEmpty) {
+        result = await DioManager.multipartRequest(
+          url: ApiEndPoint.getProfile(),
+          method: Methods.patch,
+          fields: body,
+          filePath: profileImagePath,
+          fileFieldName: 'profile_image',
+        );
+      } else {
+        // Otherwise use standard JSON request
+        result = await DioManager.apiRequest(
+          url: ApiEndPoint.getProfile(),
+          methods: Methods.patch,
+          body: body,
+        );
+      }
 
       return result.fold(
         (error) {

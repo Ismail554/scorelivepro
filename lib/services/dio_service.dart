@@ -119,12 +119,22 @@ class DioManager {
 
           if (options.data != null) {
             if (options.data is FormData) {
-              log(
-                '📦 Sending FormData with ${options.data.fields.length} fields and ${options.data.files.length} files',
-                name: "BODY",
-              );
+              final formData = options.data as FormData;
+              final fieldsData = {
+                for (var e in formData.fields) e.key: e.value
+              };
+              final filesData = [
+                for (var e in formData.files)
+                  {'field': e.key, 'filename': e.value.filename}
+              ];
+              final formDataStr =
+                  jsonEncode({'fields': fieldsData, 'files': filesData});
+
+              log('📦 Sending FormData: $formDataStr', name: "BODY");
+              print('📤 Request Body (FormData): $formDataStr');
             } else {
               log('📤 Request Body: ${jsonEncode(options.data)}', name: "BODY");
+              print('📤 Request Body: ${jsonEncode(options.data)}');
             }
           } else if (options.queryParameters.isNotEmpty) {
             log(

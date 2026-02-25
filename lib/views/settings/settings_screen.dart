@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:scorelivepro/provider/auth_provider.dart';
 import 'package:scorelivepro/provider/notification_provider.dart';
 import 'package:scorelivepro/views/settings/profile_screen.dart';
+import 'package:scorelivepro/config/storage/secure_storage_helper.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -18,6 +19,21 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   bool _notificationsEnabled = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadNotificationPreference();
+  }
+
+  Future<void> _loadNotificationPreference() async {
+    final isEnabled = await SecureStorageHelper.getNotificationStatus();
+    if (mounted) {
+      setState(() {
+        _notificationsEnabled = isEnabled;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -148,10 +164,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       _notificationsEnabled = val;
                     });
 
-                    // Call the API with the dummy token (update to real FCM token when available)
+                    // Call the API
                     final success = await context
                         .read<NotificationProvider>()
-                        .registerDevice("dummy_fcm_token_for_now", val);
+                        .registerDevice(val);
                     if (!success && context.mounted) {
                       // Revert if API failed
                       setState(() {
@@ -162,6 +178,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             content:
                                 Text("Failed to update notification settings")),
                       );
+                    } else if (success) {
+                      // Save state locally
+                      await SecureStorageHelper.saveNotificationStatus(val);
                     }
                   },
                 ),

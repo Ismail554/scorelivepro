@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:scorelivepro/provider/auth_provider.dart';
 
@@ -19,6 +21,58 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController _currentPassController = TextEditingController();
   final TextEditingController _newPassController = TextEditingController();
   final TextEditingController _confirmPassController = TextEditingController();
+
+  File? _selectedImage;
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _pickImage(ImageSource source) async {
+    try {
+      final XFile? pickedFile = await _picker.pickImage(
+        source: source,
+        maxWidth: 800,
+        maxHeight: 800,
+        imageQuality: 80,
+      );
+      if (pickedFile != null) {
+        setState(() {
+          _selectedImage = File(pickedFile.path);
+        });
+      }
+    } catch (e) {
+      debugPrint("Error picking image: $e");
+    }
+  }
+
+  void _showImagePickerBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+      ),
+      builder: (context) => SafeArea(
+        child: Wrap(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.photo_library),
+              title: const Text('Gallery'),
+              onTap: () {
+                Navigator.pop(context);
+                _pickImage(ImageSource.gallery);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.camera_alt),
+              title: const Text('Camera'),
+              onTap: () {
+                Navigator.pop(context);
+                _pickImage(ImageSource.camera);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   void initState() {
@@ -85,55 +139,65 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             Center(
               child: Stack(
                 children: [
-                  CircleAvatar(
-                    radius: 50.r,
-                    backgroundImage: context
-                                    .watch<AuthProvider>()
-                                    .user
-                                    ?.profileImage !=
-                                null &&
-                            context
-                                .watch<AuthProvider>()
-                                .user!
-                                .profileImage!
-                                .isNotEmpty
-                        ? NetworkImage(
-                            context.watch<AuthProvider>().user!.profileImage!)
-                        : const NetworkImage(
-                            "https://avatar.iran.liara.run/public"), // Placeholder
-                    onBackgroundImageError: (exception, stackTrace) {
-                      debugPrint("Avatar load error: $exception");
-                    },
+                  GestureDetector(
+                    onTap: _showImagePickerBottomSheet,
+                    child: CircleAvatar(
+                      radius: 50.r,
+                      backgroundImage: _selectedImage != null
+                          ? FileImage(_selectedImage!) as ImageProvider
+                          : (context.watch<AuthProvider>().user?.profileImage !=
+                                      null &&
+                                  context
+                                      .watch<AuthProvider>()
+                                      .user!
+                                      .profileImage!
+                                      .isNotEmpty
+                              ? NetworkImage(context
+                                  .watch<AuthProvider>()
+                                  .user!
+                                  .profileImage!)
+                              : const NetworkImage(
+                                  "https://avatar.iran.liara.run/public")), // Placeholder
+                      onBackgroundImageError: (exception, stackTrace) {
+                        debugPrint("Avatar load error: $exception");
+                      },
+                    ),
                   ),
                   Positioned(
                     bottom: 0,
                     right: 0,
-                    child: Container(
-                      padding: EdgeInsets.all(6.w),
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFFF6B00),
-                        shape: BoxShape.circle,
+                    child: GestureDetector(
+                      onTap: _showImagePickerBottomSheet,
+                      child: Container(
+                        padding: EdgeInsets.all(6.w),
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFFF6B00),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(Icons.camera_alt,
+                            color: Colors.white, size: 18.sp),
                       ),
-                      child: Icon(Icons.camera_alt,
-                          color: Colors.white, size: 18.sp),
                     ),
                   ),
                 ],
               ),
             ),
             SizedBox(height: 10.h),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade300),
-                borderRadius: BorderRadius.circular(20.r),
-              ),
-              child: Text(
-                "Change Photo",
-                style: TextStyle(
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black),
+            GestureDetector(
+              onTap: _showImagePickerBottomSheet,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey.shade300),
+                  borderRadius: BorderRadius.circular(20.r),
+                ),
+                child: Text(
+                  "Change Photo",
+                  style: TextStyle(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black),
+                ),
               ),
             ),
             SizedBox(height: 30.h),
@@ -187,15 +251,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               bool profileUpdated = false;
                               bool passwordUpdated = false;
 
-                              // 1. Update Profile if names changed
+                              // 1. Update Profile if names changed or image selected
                               if (_firstNameController.text !=
                                       (auth.user?.firstName ?? "") ||
                                   _lastNameController.text !=
-                                      (auth.user?.lastName ?? "")) {
+                                      (auth.user?.lastName ?? "") ||
+                                  _selectedImage != null) {
                                 final success = await auth.updateProfile(
                                     _firstNameController.text,
                                     _lastNameController.text,
-                                    null); // Not passing image for now
+                                    _selectedImage?.path); // Pass image path
                                 if (success) profileUpdated = true;
                               }
 
