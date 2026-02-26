@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/app_colors.dart';
@@ -23,6 +24,7 @@ class FavoritesTeamsScreen extends StatefulWidget {
 
 class _FavoritesTeamsScreenState extends State<FavoritesTeamsScreen> {
   final TextEditingController _searchController = TextEditingController();
+  Timer? _debounce;
 
   final ScrollController _scrollController = ScrollController();
 
@@ -46,10 +48,18 @@ class _FavoritesTeamsScreenState extends State<FavoritesTeamsScreen> {
     }
   }
 
+  void _onSearchChanged(String query) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      Provider.of<TeamProvider>(context, listen: false).setSearchQuery(query);
+    });
+  }
+
   @override
   void dispose() {
     _searchController.dispose();
     _scrollController.dispose();
+    _debounce?.cancel();
     super.dispose();
   }
 
@@ -109,7 +119,7 @@ class _FavoritesTeamsScreenState extends State<FavoritesTeamsScreen> {
                         Expanded(
                           child: TextField(
                             controller: _searchController,
-                            onChanged: (_) => setState(() {}),
+                            onChanged: _onSearchChanged,
                             decoration: InputDecoration(
                               hintText: "Search teams...",
                               hintStyle: FontManager.bodyMedium(
@@ -150,7 +160,7 @@ class _FavoritesTeamsScreenState extends State<FavoritesTeamsScreen> {
                       return const ShimmerLoading();
                     }
 
-                    if (provider.teams.isEmpty) {
+                    if (provider.teams.isEmpty && !provider.isLoading) {
                       return LayoutBuilder(
                         builder: (context, constraints) {
                           return SingleChildScrollView(
@@ -162,13 +172,15 @@ class _FavoritesTeamsScreenState extends State<FavoritesTeamsScreen> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Icon(
-                                      Icons.sports_soccer,
+                                      Icons.search_off,
                                       size: 64.sp,
                                       color: AppColors.grey,
                                     ),
                                     SizedBox(height: 16.h),
                                     Text(
-                                      AppStrings.noTeams,
+                                      provider.searchQuery.isEmpty
+                                          ? AppStrings.noTeams
+                                          : 'No teams found for "${provider.searchQuery}"',
                                       style: FontManager.bodyLarge(
                                         color: AppColors.textSecondary,
                                       ),

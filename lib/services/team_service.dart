@@ -4,10 +4,16 @@ import 'package:scorelivepro/services/api_service.dart';
 import 'package:scorelivepro/services/dio_service.dart';
 
 class TeamService {
-  static Future<TeamResponse?> fetchTeams({int page = 1}) async {
+  static Future<TeamResponse?> fetchTeams(
+      {int page = 1, String? search}) async {
     try {
+      String url = "${ApiEndPoint.getAllTeams()}?page=$page";
+      if (search != null && search.isNotEmpty) {
+        url += "&search=$search";
+      }
+
       final response = await DioManager.apiRequest(
-        url: "${ApiEndPoint.getAllTeams()}?page=$page",
+        url: url,
         methods: Methods.get,
         skipAuth: true,
       );

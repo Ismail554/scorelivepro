@@ -8,10 +8,19 @@ class TeamProvider extends ChangeNotifier {
   bool _isLoading = false;
   bool _hasMore = true;
   int _currentPage = 1;
+  String _searchQuery = '';
 
   List<TeamModel> get teams => _teams;
   bool get isLoading => _isLoading;
   bool get hasMore => _hasMore;
+  String get searchQuery => _searchQuery;
+
+  void setSearchQuery(String query) {
+    if (_searchQuery != query) {
+      _searchQuery = query;
+      fetchTeams(refresh: true);
+    }
+  }
 
   Future<void> fetchTeams({bool refresh = false}) async {
     if (refresh) {
@@ -25,7 +34,8 @@ class TeamProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    final response = await TeamService.fetchTeams(page: _currentPage);
+    final response =
+        await TeamService.fetchTeams(page: _currentPage, search: _searchQuery);
 
     if (response != null) {
       if (response.results.isNotEmpty) {
