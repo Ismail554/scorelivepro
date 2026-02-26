@@ -438,4 +438,37 @@ class AuthProvider extends ChangeNotifier {
     _user = null;
     notifyListeners();
   }
+
+  Future<bool> deleteAccount() async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      // DioManager handles the access token automatically via Interceptors
+      final result = await DioManager.apiRequest(
+        url: ApiEndPoint.deleteAccount(),
+        methods: Methods.delete,
+        successCode: 200,
+        altCodes: [204, 202, 201], // DELETE requests often return 204
+      );
+
+      return result.fold(
+        (error) {
+          _isLoading = false;
+          notifyListeners();
+          return false;
+        },
+        (data) async {
+          _isLoading = false;
+          notifyListeners();
+          await logout();
+          return true;
+        },
+      );
+    } catch (e) {
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
 }

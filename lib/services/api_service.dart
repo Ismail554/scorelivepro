@@ -79,4 +79,8 @@ class ApiEndPoint {
       "$_baseUrl/notifications/mark-read/"; // use method POST
   static String deleteNotification(int id) =>
       "$_baseUrl/notifications/remove/$id/"; // use method DELETE
+
+
+
+  static String deleteAccount() => "$_baseUrl/auth/profile/delete/"; // use method DELETE
 }

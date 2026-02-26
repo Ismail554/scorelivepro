@@ -1,6 +1,13 @@
 import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
+Future<void> handleBackgroundMessage(RemoteMessage message) async {
+  print('--- Push Notification Received (Background) ---');
+  print('Title: ${message.notification?.title}');
+  print('Body: ${message.notification?.body}');
+  print('Payload: ${message.data}');
+}
+
 class FirebaseService {
   // create an instance of firebase messaging
   final _firebaseMessaging = FirebaseMessaging.instance;
@@ -33,9 +40,35 @@ class FirebaseService {
     final FCMToken = await _firebaseMessaging.getToken();
     // print the token
     print("FCM Token: " + FCMToken.toString());
+
+    initPushNotifications();
   }
 
   // fuction to handle recieved notifications
+  void handleMessage(RemoteMessage? message) {
+    if (message == null) return;
+    print('--- Navigating to Notification from Push ---');
+    print('Payload: ${message.data}');
+    // Navigation or handling logic can be added here
+  }
 
   // function to initialize foreground and background notifications settings
+  Future<void> initPushNotifications() async {
+    // handle notification if the app was terminated and now opened
+    FirebaseMessaging.instance.getInitialMessage().then(handleMessage);
+
+    // attach event listeners for when a notification opens the app
+    FirebaseMessaging.onMessageOpenedApp.listen(handleMessage);
+
+    // attach background foreground handler
+    FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
+
+    // foreground notifications
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('--- Push Notification Received (Foreground) ---');
+      print('Title: ${message.notification?.title}');
+      print('Body: ${message.notification?.body}');
+      print('Payload: ${message.data}');
+    });
+  }
 }

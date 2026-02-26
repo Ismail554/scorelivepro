@@ -197,6 +197,68 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             builder: (context) => LanguageSelectionScreen()));
                   },
                 ),
+                Consumer<AuthProvider>(
+                  builder: (context, authProvider, child) {
+                    if (authProvider.isLoggedIn) {
+                      return Column(
+                        children: [
+                          _buildDivider(), // Line between items
+                          _buildSettingsTile(
+                            icon: Icons.delete_outline,
+                            iconColor: Colors.red,
+                            iconBgColor: const Color(0xFFFFF1EB),
+                            title: "Delete Account",
+                            subtitle: "Permanently delete your account",
+                            showChevron: true,
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: const Text("Delete Account"),
+                                  content: const Text(
+                                      "Are you sure you want to permanently delete your account? This action cannot be undone."),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: const Text("Cancel"),
+                                    ),
+                                    TextButton(
+                                      onPressed: () async {
+                                        Navigator.pop(context); // Close dialog
+                                        final success =
+                                            await authProvider.deleteAccount();
+                                        if (success && context.mounted) {
+                                          Navigator.pushAndRemoveUntil(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    LoginScreen()),
+                                            (route) => false,
+                                          );
+                                        } else if (context.mounted) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              content: Text(
+                                                  "Failed to delete account"),
+                                            ),
+                                          );
+                                        }
+                                      },
+                                      child: const Text("Delete",
+                                          style: TextStyle(color: Colors.red)),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
               ],
             ),
 
