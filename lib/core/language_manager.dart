@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class LanguageManager {
   // Supported languages (matching translation file names)
   static const Locale english = Locale('en', 'US');
-  static const Locale spanish = Locale('sp', 'ES'); // Note: 'sp' not 'es'
+  static const Locale spanish = Locale('es', 'ES');
   static const Locale french = Locale('fr', 'FR');
   static const Locale german = Locale('de', 'GM'); // Note: 'GM' not 'DE'
   static const Locale italian = Locale('it', 'IT');
@@ -34,7 +34,7 @@ class LanguageManager {
 
   // Language codes (primary language code)
   static const String englishCode = 'en';
-  static const String spanishCode = 'sp'; // Note: 'sp' not 'es'
+  static const String spanishCode = 'es';
   static const String frenchCode = 'fr';
   static const String germanCode = 'de';
   static const String italianCode = 'it';
@@ -50,8 +50,7 @@ class LanguageManager {
     switch (code.toLowerCase()) {
       case 'en':
         return english;
-      case 'sp':
-      case 'es': // Support both 'sp' and 'es' for Spanish
+      case 'es':
         return spanish;
       case 'fr':
         return french;

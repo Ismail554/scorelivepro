@@ -44,7 +44,7 @@ class _DetailedLeaguesScreenState extends State<DetailedLeaguesScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
     _fetchLeagueDetails();
   }
 
@@ -170,7 +170,6 @@ class _DetailedLeaguesScreenState extends State<DetailedLeaguesScreen>
                       tabs: [
                         AppLocalizations.of(context).standings,
                         AppLocalizations.of(context).fixtures,
-                        AppLocalizations.of(context).results,
                         AppLocalizations.of(context).teams,
                       ],
                     ),
@@ -186,7 +185,7 @@ class _DetailedLeaguesScreenState extends State<DetailedLeaguesScreen>
                 children: [
                   _buildStandingsTab(),
                   _buildFixturesTab(),
-                  _buildResultsTab(),
+                  // _buildResultsTab(),
                   _buildTeamsTab(),
                 ],
               ),

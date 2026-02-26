@@ -43,14 +43,19 @@ class LanguageProvider extends ChangeNotifier {
       case "English":
         return LanguageManager.englishCode;
       case "Spanish":
+      case "Español":
         return LanguageManager.spanishCode;
       case "French":
+      case "Français":
         return LanguageManager.frenchCode;
       case "German":
+      case "Deutsch":
         return LanguageManager.germanCode;
       case "Italian":
+      case "Italiano":
         return LanguageManager.italianCode;
       case "Portuguese":
+      case "Português":
         return LanguageManager.portugueseCode;
       default:
         return LanguageManager.englishCode;

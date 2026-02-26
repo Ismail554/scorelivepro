@@ -23,7 +23,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
   final List<Locale> _languages = LanguageManager.supportedLocales;
 
   // Language data with English name, native name, and flag emoji
-  static final Map<Locale, Map<String, String>> _languageData = {
+  final Map<Locale, Map<String, String>> _languageData = {
     LanguageManager.english: {
       'english': 'English',
       'native': 'English',
