@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:scorelivepro/core/assets_manager.dart';
 import 'package:scorelivepro/l10n/app_localizations.dart';
 import 'package:scorelivepro/views/auth/login_screen.dart';
 import 'package:scorelivepro/views/settings/app_info_screen.dart';
@@ -300,6 +301,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
 
             SizedBox(height: 40.h),
+            //
 
             // 4. BRANDING & LOGO
             Center(
@@ -307,14 +309,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 children: [
                   Container(
                     width: 60.w,
-                    height: 60.w,
+                    height: 60.h,
                     decoration: BoxDecoration(
-                      color: const Color(0xFFFF6B00), // Orange Brand Color
-                      borderRadius: BorderRadius.circular(16.r),
+                      color: const Color(
+                          0xFFFF7A28), // Orange background from design
+                      borderRadius: BorderRadius.circular(14.r),
                     ),
-                    child: Icon(Icons.emoji_events,
-                        color: Colors.white,
-                        size: 30.sp), // Placeholder for Logo Asset
+                    padding: EdgeInsets.all(16.r),
+                    child: Image.asset(
+                      IconAssets.trophy, // Using existing asset
+                      fit: BoxFit.contain,
+                    ),
                   ),
                   SizedBox(height: 12.h),
                   Text(
