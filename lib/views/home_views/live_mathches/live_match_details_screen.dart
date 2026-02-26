@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/app_padding.dart';
 import 'package:scorelivepro/core/app_spacing.dart';
-import 'package:scorelivepro/core/app_strings.dart';
+import 'package:scorelivepro/l10n/app_localizations.dart';
 import 'package:scorelivepro/core/assets_manager.dart';
 import 'package:scorelivepro/core/font_manager.dart';
 import 'package:scorelivepro/utils/navigation_helper.dart';
@@ -80,10 +80,10 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
                     right: 0,
                     child: TransparentTabBar(
                       tabController: _tabController,
-                      tabs: const [
-                        AppStrings.timeline,
-                        AppStrings.lineups,
-                        AppStrings.stats,
+                      tabs: [
+                        AppLocalizations.of(context).timeline,
+                        AppLocalizations.of(context).lineups,
+                        AppLocalizations.of(context).stats,
                         // AppStrings.commentary,
                       ],
                     ),

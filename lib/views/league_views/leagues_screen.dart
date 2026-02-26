@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/app_spacing.dart';
-import 'package:scorelivepro/core/app_strings.dart';
+import 'package:scorelivepro/l10n/app_localizations.dart';
 import 'package:scorelivepro/core/font_manager.dart';
 import 'package:scorelivepro/models/league_model.dart';
 import 'package:scorelivepro/services/league_service.dart';
@@ -265,7 +265,7 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            AppStrings.leagues,
+                            AppLocalizations.of(context).leagues,
                             style: FontManager.heading2(
                               color: AppColors.textPrimary,
                             ),
@@ -355,7 +355,7 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
             SizedBox(height: 16.h),
             ElevatedButton(
               onPressed: _fetchLeagues,
-              child: Text("Retry"),
+              child: Text(AppLocalizations.of(context).retry),
             ),
           ],
         ),
@@ -374,7 +374,7 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
             ),
             AppSpacing.h16,
             Text(
-              AppStrings.noLeagues,
+              AppLocalizations.of(context).noLeagues,
               style: FontManager.bodyLarge(
                 color: AppColors.textSecondary,
               ),

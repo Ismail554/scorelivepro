@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scorelivepro/l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:scorelivepro/core/app_colors.dart';
@@ -22,7 +23,7 @@ class AppInfoScreen extends StatelessWidget {
         elevation: 0,
         leading: const Icon(Icons.arrow_back, color: Colors.black),
         title: Text(
-          "App Information",
+          AppLocalizations.of(context).appInformation,
           style: TextStyle(
               color: textColor, fontWeight: FontWeight.bold, fontSize: 18),
         ),
@@ -38,33 +39,39 @@ class AppInfoScreen extends StatelessWidget {
             const SizedBox(height: 25),
 
             // 2. Key Features Section
-            _buildSectionTitle("Key Features"),
+            _buildSectionTitle(AppLocalizations.of(context).keyFeatures),
             _buildCard(
               child: Column(
                 children: [
-                  _buildFeatureItem(Icons.bolt, "Real-Time Scores",
-                      "Get live updates from matches around the world"),
+                  _buildFeatureItem(
+                      Icons.bolt,
+                      AppLocalizations.of(context).realTimeScores,
+                      AppLocalizations.of(context).realTimeScoresDesc),
                   _buildDivider(),
-                  _buildFeatureItem(Icons.language, "Global Coverage",
-                      "Follow leagues and teams from all over the world"),
+                  _buildFeatureItem(
+                      Icons.language,
+                      AppLocalizations.of(context).globalCoverage,
+                      AppLocalizations.of(context).globalCoverageDesc),
                   _buildDivider(),
                   _buildFeatureItem(
                       Icons.star_outline,
-                      "Personalized Favorites",
-                      "Save your favorite teams and get quick access"),
+                      AppLocalizations.of(context).personalizedFavorites,
+                      AppLocalizations.of(context).personalizedFavoritesDesc),
                   _buildDivider(),
-                  _buildFeatureItem(Icons.shield_outlined, "Match Statistics",
-                      "Detailed stats, line-ups, and match timelines"),
+                  _buildFeatureItem(
+                      Icons.shield_outlined,
+                      AppLocalizations.of(context).matchStatistics,
+                      AppLocalizations.of(context).matchStatisticsDesc),
                 ],
               ),
             ),
 
             // 3. About Section
             const SizedBox(height: 20),
-            _buildSectionTitle("About"),
+            _buildSectionTitle(AppLocalizations.of(context).about),
             _buildCard(
               child: Text(
-                "ScoreLivePRO is your ultimate companion for staying updated with football scores, news, and stats. Our mission is to provide football fans with the fastest and most accurate information.\n\nWhether you're following your favorite team or exploring new leagues, ScoreLivePRO offers a seamless experience.",
+                AppLocalizations.of(context).aboutDescription,
                 style:
                     TextStyle(color: subTextColor, height: 1.5, fontSize: 13),
               ),
@@ -72,17 +79,21 @@ class AppInfoScreen extends StatelessWidget {
 
             // 4. Technical Information
             const SizedBox(height: 20),
-            _buildSectionTitle("Technical Information"),
+            _buildSectionTitle(
+                AppLocalizations.of(context).technicalInformation),
             _buildCard(
               child: Column(
                 children: [
-                  _buildInfoRow("Version", "1.0.0"),
+                  _buildInfoRow(AppLocalizations.of(context).version, "1.0.0"),
                   _buildDivider(),
-                  _buildInfoRow("Build Number", "100"),
+                  _buildInfoRow(
+                      AppLocalizations.of(context).buildNumber, "100"),
                   _buildDivider(),
-                  _buildInfoRow("Last Updated", "December 2, 2024"),
+                  _buildInfoRow(AppLocalizations.of(context).lastUpdated,
+                      "December 2, 2024"),
                   _buildDivider(),
-                  _buildInfoRow("Platform", "iOS & Android"),
+                  _buildInfoRow(
+                      AppLocalizations.of(context).platform, "iOS & Android"),
                 ],
               ),
             ),
@@ -111,14 +122,16 @@ class AppInfoScreen extends StatelessWidget {
 
             // 6. Contact & Support
             const SizedBox(height: 20),
-            _buildSectionTitle("Contact & Support"),
+            _buildSectionTitle(AppLocalizations.of(context).contactAndSupport),
             _buildCard(
               child: Column(
                 children: [
-                  _buildContactRow("Email Support", "support@scorelivepro.com",
+                  _buildContactRow(AppLocalizations.of(context).emailSupport,
+                      "support@scorelivepro.com",
                       isLink: true),
                   _buildDivider(),
-                  _buildContactRow("Website", "www.scorelivepro.com",
+                  _buildContactRow(AppLocalizations.of(context).website,
+                      "www.scorelivepro.com",
                       isLink: true),
                   _buildDivider(),
                   Padding(
@@ -126,7 +139,7 @@ class AppInfoScreen extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("Follow Us",
+                        Text(AppLocalizations.of(context).followUs,
                             style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
@@ -154,7 +167,7 @@ class AppInfoScreen extends StatelessWidget {
             const SizedBox(height: 30),
             Center(
               child: Text(
-                "© 2024 ScoreLivePRO. All rights reserved.\nMade with ❤️ for football fans worldwide",
+                AppLocalizations.of(context).footerCopyright,
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.grey[400], fontSize: 11),
               ),

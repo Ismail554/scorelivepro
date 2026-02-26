@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:scorelivepro/l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -115,7 +116,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Edit Profile",
+              AppLocalizations.of(context).editProfile,
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 18.sp,
@@ -123,7 +124,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ),
             Text(
-              "View and manage your personal information",
+              AppLocalizations.of(context).viewAndManageInfo,
               style: TextStyle(fontSize: 12.sp, color: Colors.grey),
             ),
           ],
@@ -192,7 +193,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   borderRadius: BorderRadius.circular(20.r),
                 ),
                 child: Text(
-                  "Change Photo",
+                  AppLocalizations.of(context).changePhoto,
                   style: TextStyle(
                       fontSize: 12.sp,
                       fontWeight: FontWeight.w500,
@@ -204,16 +205,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
             // Personal Details Card
             _buildSectionCard(
-              title: "Personal Details",
+              title: AppLocalizations.of(context).personalDetails,
               icon: Icons.person_outline,
               children: [
-                _buildLabel("First Name"),
+                _buildLabel(AppLocalizations.of(context).firstName),
                 _buildTextField(_firstNameController, "John"),
                 SizedBox(height: 16.h),
-                _buildLabel("Last Name"),
+                _buildLabel(AppLocalizations.of(context).lastName),
                 _buildTextField(_lastNameController, "Doe"),
                 SizedBox(height: 16.h),
-                _buildLabel("Email Address"),
+                _buildLabel(AppLocalizations.of(context).emailAddress),
                 _buildReadOnlyTextField(_emailController),
               ],
             ),
@@ -222,18 +223,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
             // Security Details Card
             _buildSectionCard(
-              title: "Security Details",
+              title: AppLocalizations.of(context).securityDetails,
               icon: Icons.shield_outlined,
               children: [
-                _buildLabel("Current password"),
-                _buildPasswordField(
-                    _currentPassController, "Enter current password"),
+                _buildLabel(AppLocalizations.of(context).currentPassword),
+                _buildPasswordField(_currentPassController,
+                    AppLocalizations.of(context).enterCurrentPassword),
                 SizedBox(height: 16.h),
-                _buildLabel("New password"),
-                _buildPasswordField(_newPassController, "Enter new password"),
+                _buildLabel(AppLocalizations.of(context).newPassword),
+                _buildPasswordField(_newPassController,
+                    AppLocalizations.of(context).enterNewPassword),
                 SizedBox(height: 16.h),
-                _buildLabel("Confirm password"),
-                _buildPasswordField(_confirmPassController, "Confirm password"),
+                _buildLabel(AppLocalizations.of(context).confirmPassword),
+                _buildPasswordField(_confirmPassController,
+                    AppLocalizations.of(context).confirmPasswordHint),
               ],
             ),
 
@@ -272,9 +275,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     _confirmPassController.text) {
                                   if (context.mounted) {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
+                                      SnackBar(
                                           content: Text(
-                                              "New passwords do not match")),
+                                              AppLocalizations.of(context)
+                                                  .newPasswordsDoNotMatch)),
                                     );
                                   }
                                   return;
@@ -291,9 +295,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 if (profileUpdated || passwordUpdated) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                        content: Text("Updated successfully!" +
+                                        content: Text(AppLocalizations.of(
+                                                    context)
+                                                .updatedSuccessfully +
                                             (passwordUpdated
-                                                ? " Password changed."
+                                                ? AppLocalizations.of(context)
+                                                    .passwordChanged
                                                 : ""))),
                                   );
                                   Navigator.pop(context);
@@ -301,9 +308,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         .text.isNotEmpty ||
                                     _newPassController.text.isNotEmpty) {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
+                                    SnackBar(
                                         content: Text(
-                                            "Failed to update password. Please check your current password.")),
+                                            AppLocalizations.of(context)
+                                                .failedUpdatePassword)),
                                   );
                                 } else {
                                   // No changes made
@@ -326,7 +334,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   color: Colors.white, strokeWidth: 2),
                             )
                           : Text(
-                              "Save changes",
+                              AppLocalizations.of(context).saveChanges,
                               style: TextStyle(
                                   fontSize: 14.sp,
                                   color: Colors.white,
@@ -349,7 +357,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
                     ),
                     child: Text(
-                      "Cancel",
+                      AppLocalizations.of(context).cancel,
                       style: TextStyle(
                           fontSize: 14.sp,
                           color: Colors.black,

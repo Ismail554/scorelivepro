@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/app_colors.dart';
-import 'package:scorelivepro/core/app_strings.dart';
+import 'package:scorelivepro/l10n/app_localizations.dart';
 import 'package:scorelivepro/core/font_manager.dart';
 import 'package:scorelivepro/core/assets_manager.dart';
 import 'package:scorelivepro/widget/favorites/widget_add_to_favorites_dialog.dart';
@@ -86,7 +86,7 @@ class _FavoritesTeamsScreenState extends State<FavoritesTeamsScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        AppStrings.browseTeams,
+                        AppLocalizations.of(context).browseTeams,
                         style: FontManager.heading2(
                           color: AppColors.textPrimary,
                         ),
@@ -179,7 +179,7 @@ class _FavoritesTeamsScreenState extends State<FavoritesTeamsScreen> {
                                     SizedBox(height: 16.h),
                                     Text(
                                       provider.searchQuery.isEmpty
-                                          ? AppStrings.noTeams
+                                          ? AppLocalizations.of(context).noTeams
                                           : 'No teams found for "${provider.searchQuery}"',
                                       style: FontManager.bodyLarge(
                                         color: AppColors.textSecondary,

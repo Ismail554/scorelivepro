@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/app_padding.dart';
 import 'package:scorelivepro/core/app_spacing.dart';
-import 'package:scorelivepro/core/app_strings.dart';
+import 'package:scorelivepro/l10n/app_localizations.dart';
 import 'package:scorelivepro/core/font_manager.dart';
 import 'package:scorelivepro/utils/navigation_helper.dart';
 import 'package:scorelivepro/widget/home/match_card.dart';
@@ -167,11 +167,11 @@ class _DetailedLeaguesScreenState extends State<DetailedLeaguesScreen>
                     right: 0,
                     child: TransparentTabBar(
                       tabController: _tabController,
-                      tabs: const [
-                        AppStrings.standings,
-                        AppStrings.fixtures,
-                        AppStrings.results,
-                        AppStrings.teams,
+                      tabs: [
+                        AppLocalizations.of(context).standings,
+                        AppLocalizations.of(context).fixtures,
+                        AppLocalizations.of(context).results,
+                        AppLocalizations.of(context).teams,
                       ],
                     ),
                   ),

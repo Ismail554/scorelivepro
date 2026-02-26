@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scorelivepro/l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:scorelivepro/core/app_colors.dart';
@@ -165,8 +166,9 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
                               if (_passwordController.text.isEmpty ||
                                   _confirmPasswordController.text.isEmpty) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text("Please fill all fields")),
+                                  SnackBar(
+                                      content: Text(AppLocalizations.of(context)
+                                          .pleaseFillAllFields)),
                                 );
                                 return;
                               }
@@ -174,8 +176,9 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
                               if (_passwordController.text !=
                                   _confirmPasswordController.text) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text("Passwords do not match")),
+                                  SnackBar(
+                                      content: Text(AppLocalizations.of(context)
+                                          .passwordsDoNotMatch)),
                                 );
                                 return;
                               }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/assets_manager.dart';
-import 'package:scorelivepro/core/app_strings.dart';
+import 'package:scorelivepro/l10n/app_localizations.dart';
 import 'package:scorelivepro/widget/onboarding/onboarding_base_widget.dart';
 
 class OnboadingScreen2 extends StatelessWidget {
@@ -23,10 +23,9 @@ class OnboadingScreen2 extends StatelessWidget {
         size: 60.sp,
         color: const Color(0xFFFDC300),
       ),
-      title: AppStrings.onboardingTitle2, 
-      description: AppStrings
-          .onboardingDescription2, 
-      buttonText: AppStrings.next, 
+      title: AppLocalizations.of(context).onboardingTitle2,
+      description: AppLocalizations.of(context).onboardingDescription2,
+      buttonText: AppLocalizations.of(context).next,
       isLastScreen: false,
       onNext: onNext,
       onSkip: onSkip,

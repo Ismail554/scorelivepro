@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/app_colors.dart';
-import 'package:scorelivepro/core/app_strings.dart';
+import 'package:scorelivepro/l10n/app_localizations.dart';
 import 'package:scorelivepro/core/font_manager.dart';
 import 'package:scorelivepro/views/auth/login_screen.dart';
 
@@ -66,12 +66,12 @@ class CongratulationScreen extends StatelessWidget {
 
                 // Title
                 Text(
-                  AppStrings.congratulations,
+                  AppLocalizations.of(context).congratulations,
                   style: FontManager.heading2(fontSize: 24),
                 ),
                 SizedBox(height: 12.h),
                 Text(
-                  AppStrings.your_account_has_been_created_successfully,
+                  AppLocalizations.of(context).yourAccountCreated,
                   textAlign: TextAlign.center,
                   style: FontManager.bodySmall(
                     color: AppColors.textSecondary,
@@ -105,7 +105,7 @@ class CongratulationScreen extends StatelessWidget {
                         elevation: 0,
                       ),
                       child: Text(
-                        AppStrings.go_to_login,
+                        AppLocalizations.of(context).goToLogin,
                         style: FontManager.labelLarge(
                           color: Colors.white,
                           fontSize: 16,

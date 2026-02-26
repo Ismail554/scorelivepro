@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:scorelivepro/core/app_colors.dart';
-import 'package:scorelivepro/core/app_strings.dart';
+import 'package:scorelivepro/l10n/app_localizations.dart';
 import 'package:scorelivepro/core/font_manager.dart';
 import 'package:scorelivepro/utils/navigation_helper.dart';
 import 'package:scorelivepro/views/home_views/live_mathches/lineups_screen.dart';
@@ -65,7 +65,7 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
         backgroundColor: AppColors.white,
         elevation: 0,
         title: Text(
-          AppStrings.matches,
+          AppLocalizations.of(context).matches,
           style: FontManager.heading3(),
         ),
         actions: [

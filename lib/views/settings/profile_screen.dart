@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scorelivepro/l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:scorelivepro/provider/auth_provider.dart';
@@ -37,7 +38,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "User Profile",
+              AppLocalizations.of(context).userProfile,
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 18.sp,
@@ -45,7 +46,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             Text(
-              "View and manage your personal information",
+              AppLocalizations.of(context).viewAndManageInfo,
               style: TextStyle(fontSize: 12.sp, color: Colors.grey),
             ),
           ],
@@ -122,7 +123,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           color: const Color(0xFFFF6B00), size: 20.sp),
                       SizedBox(width: 8.w),
                       Text(
-                        "Personal Details",
+                        AppLocalizations.of(context).personalDetails,
                         style: TextStyle(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.bold,
@@ -136,19 +137,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   // Fields
                   _buildReadOnlyField(
-                      "First Name",
+                      AppLocalizations.of(context).firstName,
                       (user?.firstName != null && user!.firstName!.isNotEmpty)
                           ? user.firstName!
                           : "John"),
                   SizedBox(height: 16.h),
                   _buildReadOnlyField(
-                      "Last Name",
+                      AppLocalizations.of(context).lastName,
                       (user?.lastName != null && user!.lastName!.isNotEmpty)
                           ? user.lastName!
                           : "Doe"),
                   SizedBox(height: 16.h),
-                  _buildReadOnlyField(
-                      "Email Address", user?.email ?? "john.doe@example.com",
+                  _buildReadOnlyField(AppLocalizations.of(context).emailAddress,
+                      user?.email ?? "john.doe@example.com",
                       icon: Icons.email_outlined),
                 ],
               ),
@@ -170,7 +171,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       );
                     },
                     child: Text(
-                      "Edit profile",
+                      AppLocalizations.of(context).editProfile,
                       style: TextStyle(
                           fontSize: 14.sp,
                           color: Colors.white,
@@ -192,7 +193,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                     child: Text(
-                      "Cancel",
+                      AppLocalizations.of(context).cancel,
                       style: TextStyle(
                           fontSize: 14.sp,
                           color: Colors.black,

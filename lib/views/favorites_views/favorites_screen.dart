@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/app_spacing.dart';
-import 'package:scorelivepro/core/app_strings.dart';
+import 'package:scorelivepro/l10n/app_localizations.dart';
 import 'package:scorelivepro/core/font_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:scorelivepro/provider/auth_provider.dart';
@@ -280,7 +280,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                AppStrings.myFavorites,
+                                AppLocalizations.of(context).myFavorites,
                                 style: FontManager.heading2(
                                   color: AppColors.textPrimary,
                                 ),
@@ -337,7 +337,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
 
                       // Upcoming Matches Section
                       SectionHeader(
-                        title: AppStrings.upcomingMatches,
+                        title: AppLocalizations.of(context).upcomingMatches,
                         onSeeAllTap: null,
                       ),
                       Consumer<MatchProvider>(
@@ -392,7 +392,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              AppStrings.favoriteTeams,
+                              AppLocalizations.of(context).favoriteTeams,
                               style: FontManager.heading3(
                                 color: AppColors.textPrimary,
                               ),
@@ -426,7 +426,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              AppStrings.favoriteLeagues,
+                              AppLocalizations.of(context).favoriteLeagues,
                               style: FontManager.heading3(
                                 color: AppColors.textPrimary,
                               ),
@@ -483,7 +483,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     if (_favoriteTeams.isEmpty) {
       return Padding(
         padding: EdgeInsets.all(16.w),
-        child: Text("No favorite teams added yet.",
+        child: Text(AppLocalizations.of(context).noFavoriteTeams,
             style: FontManager.bodyMedium(color: AppColors.textSecondary)),
       );
     }
@@ -526,7 +526,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     if (_favoriteLeagues.isEmpty) {
       return Padding(
         padding: EdgeInsets.all(16.w),
-        child: Text("No favorite leagues added yet.",
+        child: Text(AppLocalizations.of(context).noFavoriteLeagues,
             style: FontManager.bodyMedium(color: AppColors.textSecondary)),
       );
     }

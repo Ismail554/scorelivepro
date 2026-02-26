@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/app_spacing.dart';
-import 'package:scorelivepro/core/app_strings.dart';
+import 'package:scorelivepro/l10n/app_localizations.dart';
 import 'package:scorelivepro/core/assets_manager.dart';
 import 'package:scorelivepro/core/font_manager.dart';
 import 'package:scorelivepro/widget/news/widget_news_card.dart';
@@ -120,7 +120,7 @@ class _NewsScreenState extends State<NewsScreen> {
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      AppStrings.news,
+                      AppLocalizations.of(context).news,
                       style: FontManager.heading2(
                         color: AppColors.textPrimary,
                       ),
@@ -209,7 +209,7 @@ class _NewsScreenState extends State<NewsScreen> {
                         ),
                         AppSpacing.h16,
                         Text(
-                          AppStrings.noNews,
+                          AppLocalizations.of(context).noNews,
                           style: FontManager.bodyLarge(
                             color: AppColors.textSecondary,
                           ),

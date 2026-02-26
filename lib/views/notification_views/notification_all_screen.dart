@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:scorelivepro/provider/notification_provider.dart';
 import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/app_spacing.dart';
-import 'package:scorelivepro/core/app_strings.dart';
+import 'package:scorelivepro/l10n/app_localizations.dart';
 import 'package:scorelivepro/core/font_manager.dart';
 import 'package:scorelivepro/widget/notifications/widget_notification_card.dart';
 
@@ -116,7 +116,7 @@ class _NotificationAllScreenState extends State<NotificationAllScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  AppStrings.notifications,
+                  AppLocalizations.of(context).notifications,
                   style: FontManager.heading2(
                     fontSize: 20,
                     color: AppColors.textPrimary,
@@ -217,7 +217,7 @@ class _NotificationAllScreenState extends State<NotificationAllScreen> {
           ),
           AppSpacing.h16,
           Text(
-            AppStrings.noNotifications,
+            AppLocalizations.of(context).noNotifications,
             style: FontManager.bodyLarge(
               color: AppColors.textSecondary,
             ),

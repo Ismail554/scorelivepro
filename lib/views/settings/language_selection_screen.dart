@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/l10n/app_localizations.dart';
 import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/app_padding.dart';
-import 'package:scorelivepro/core/app_strings.dart';
+
 import 'package:scorelivepro/core/font_manager.dart';
 import 'package:scorelivepro/core/language_manager.dart';
 import 'package:scorelivepro/provider/language_provider.dart';
@@ -67,7 +67,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            "${AppStrings.language} ${AppStrings.changed}",
+            "${AppLocalizations.of(context).language} ${AppLocalizations.of(context).changed}",
             style: FontManager.bodyMedium(color: AppColors.white),
           ),
           backgroundColor: AppColors.primaryColor,
@@ -99,7 +99,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
             width: double.infinity,
             padding: AppPadding.h16 + EdgeInsets.only(top: 16.h, bottom: 8.h),
             child: Text(
-              "Select your preferred language for the app.",
+              AppLocalizations.of(context).selectLanguage,
               style: FontManager.bodyMedium(
                 fontSize: 14,
                 color: AppColors.textSecondary,
@@ -141,7 +141,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
               borderRadius: AppPadding.c12,
             ),
             child: Text(
-              AppStrings.langChangeAlert,
+              AppLocalizations.of(context).langChangeAlert,
               style: FontManager.bodySmall(
                 fontSize: 12,
                 color: AppColors.textSecondary,

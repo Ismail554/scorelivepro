@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scorelivepro/l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:scorelivepro/core/app_colors.dart';
@@ -110,8 +111,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           : () async {
                               if (_emailController.text.isEmpty) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text("Please enter your email")),
+                                  SnackBar(
+                                      content: Text(AppLocalizations.of(context)
+                                          .pleaseEnterYourEmail)),
                                 );
                                 return;
                               }
@@ -121,8 +123,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
                               if (success && context.mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text("OTP sent successfully")),
+                                  SnackBar(
+                                      content: Text(AppLocalizations.of(context)
+                                          .otpSentSuccessfully)),
                                 );
                                 NavigateToOtp();
                               } else if (context.mounted) {

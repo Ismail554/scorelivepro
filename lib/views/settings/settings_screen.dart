@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:scorelivepro/core/app_strings.dart';
+import 'package:scorelivepro/l10n/app_localizations.dart';
 import 'package:scorelivepro/views/auth/login_screen.dart';
 import 'package:scorelivepro/views/settings/app_info_screen.dart';
 import 'package:scorelivepro/views/settings/language_selection_screen.dart';
@@ -46,7 +46,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         title: Padding(
           padding: EdgeInsets.only(left: 8.w),
           child: Text(
-            AppStrings.settings,
+            AppLocalizations.of(context).settings,
             style: TextStyle(
               color: Colors.black,
               fontSize: 28.sp,
@@ -63,12 +63,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title: const Text("Logout"),
-                        content: const Text("Are you sure about logout?"),
+                        title: Text(AppLocalizations.of(context).logout),
+                        content:
+                            Text(AppLocalizations.of(context).logoutConfirm),
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(context),
-                            child: const Text("Cancel"),
+                            child: Text(AppLocalizations.of(context).cancel),
                           ),
                           TextButton(
                             onPressed: () {
@@ -82,15 +83,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     false, // Remove all previous routes to prevent back navigation
                               );
                             },
-                            child: const Text("Yes",
-                                style: TextStyle(color: Colors.red)),
+                            child: Text(AppLocalizations.of(context).yes,
+                                style: const TextStyle(color: Colors.red)),
                           ),
                         ],
                       ),
                     );
                   },
                   icon: const Icon(Icons.logout, color: Colors.red),
-                  tooltip: AppStrings.signOut,
+                  tooltip: AppLocalizations.of(context).signOut,
                 );
               }
               return const SizedBox.shrink();
@@ -105,7 +106,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // 1. ACCOUNT SECTION
-            _buildSectionHeader(AppStrings.account),
+            _buildSectionHeader(AppLocalizations.of(context).account),
             _buildSettingsGroup(
               children: [
                 Consumer<AuthProvider>(
@@ -115,8 +116,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         icon: Icons.person_outline,
                         iconColor: const Color(0xFFFF6B00), // Orange Icon
                         iconBgColor: const Color(0xFFFFF1EB), // Light Orange BG
-                        title: "User Profile",
-                        subtitle: "View and edit profile",
+                        title: AppLocalizations.of(context).userProfile,
+                        subtitle:
+                            AppLocalizations.of(context).viewAndEditProfile,
                         showChevron: true,
                         onTap: () {
                           Navigator.push(
@@ -130,8 +132,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         icon: Icons.login,
                         iconColor: const Color(0xFFFF6B00), // Orange Icon
                         iconBgColor: const Color(0xFFFFF1EB), // Light Orange BG
-                        title: "Login / Sign Up",
-                        subtitle: AppStrings.syncFavorites,
+                        title: AppLocalizations.of(context).loginSignUp,
+                        subtitle: AppLocalizations.of(context).syncFavorites,
                         showChevron: true,
                         onTap: () {
                           Navigator.push(
@@ -149,14 +151,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
             SizedBox(height: 24.h),
 
             // 2. PREFERENCES SECTION
-            _buildSectionHeader(AppStrings.preferences),
+            _buildSectionHeader(AppLocalizations.of(context).preferences),
             _buildSettingsGroup(
               children: [
                 _buildSettingsTile(
                   icon: Icons.notifications_outlined,
-                  title: AppStrings.notifications,
-                  subtitle:
-                      _notificationsEnabled ? AppStrings.enabled : "Disabled",
+                  title: AppLocalizations.of(context).notifications,
+                  subtitle: _notificationsEnabled
+                      ? AppLocalizations.of(context).enabled
+                      : AppLocalizations.of(context).disabled,
                   isSwitch: true,
                   switchValue: _notificationsEnabled,
                   onToggle: (val) async {
@@ -174,9 +177,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         _notificationsEnabled = !val;
                       });
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content:
-                                Text("Failed to update notification settings")),
+                        SnackBar(
+                            content: Text(AppLocalizations.of(context)
+                                .failedNotificationUpdate)),
                       );
                     } else if (success) {
                       // Save state locally
@@ -187,8 +190,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 _buildDivider(), // Line between items
                 _buildSettingsTile(
                   icon: Icons.language,
-                  title: "Language",
-                  subtitle: "English",
+                  title: AppLocalizations.of(context).language,
+                  subtitle: AppLocalizations.of(context).language,
                   showChevron: true,
                   onTap: () {
                     Navigator.push(
@@ -207,20 +210,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             icon: Icons.delete_outline,
                             iconColor: Colors.red,
                             iconBgColor: const Color(0xFFFFF1EB),
-                            title: "Delete Account",
-                            subtitle: "Permanently delete your account",
+                            title: AppLocalizations.of(context).deleteAccount,
+                            subtitle: AppLocalizations.of(context)
+                                .permanentlyDeleteAccount,
                             showChevron: true,
                             onTap: () {
                               showDialog(
                                 context: context,
                                 builder: (context) => AlertDialog(
-                                  title: const Text("Delete Account"),
-                                  content: const Text(
-                                      "Are you sure you want to permanently delete your account? This action cannot be undone."),
+                                  title: Text(AppLocalizations.of(context)
+                                      .deleteAccount),
+                                  content: Text(AppLocalizations.of(context)
+                                      .deleteAccountConfirm),
                                   actions: [
                                     TextButton(
                                       onPressed: () => Navigator.pop(context),
-                                      child: const Text("Cancel"),
+                                      child: Text(
+                                          AppLocalizations.of(context).cancel),
                                     ),
                                     TextButton(
                                       onPressed: () async {
@@ -238,15 +244,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                         } else if (context.mounted) {
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(
-                                            const SnackBar(
+                                            SnackBar(
                                               content: Text(
-                                                  "Failed to delete account"),
+                                                  AppLocalizations.of(context)
+                                                      .failedDeleteAccount),
                                             ),
                                           );
                                         }
                                       },
-                                      child: const Text("Delete",
-                                          style: TextStyle(color: Colors.red)),
+                                      child: Text(
+                                          AppLocalizations.of(context).delete,
+                                          style: const TextStyle(
+                                              color: Colors.red)),
                                     ),
                                   ],
                                 ),
@@ -265,13 +274,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
             SizedBox(height: 24.h),
 
             // 3. ABOUT SECTION
-            _buildSectionHeader(AppStrings.about),
+            _buildSectionHeader(AppLocalizations.of(context).about),
             _buildSettingsGroup(
               children: [
                 _buildSettingsTile(
                   icon: Icons.info_outline,
-                  title: AppStrings.appInfo,
-                  subtitle: "Version 1.0.0",
+                  title: AppLocalizations.of(context).appInfo,
+                  subtitle: AppLocalizations.of(context).versionNumber,
                   showChevron: true,
                   onTap: () {
                     Navigator.push(
@@ -283,7 +292,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 _buildDivider(),
                 _buildSettingsTile(
                   icon: Icons.lock_outline,
-                  title: AppStrings.termsOfService,
+                  title: AppLocalizations.of(context).termsOfService,
                   showChevron: true,
                   onTap: () {},
                 ),
@@ -309,18 +318,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   SizedBox(height: 12.h),
                   Text(
-                    AppStrings.appName,
+                    AppLocalizations.of(context).appName,
                     style:
                         TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600),
                   ),
                   SizedBox(height: 4.h),
                   Text(
-                    AppStrings.realScoreNews,
+                    AppLocalizations.of(context).realScoreNews,
                     style: TextStyle(fontSize: 12.sp, color: Colors.grey),
                   ),
                   SizedBox(height: 4.h),
                   Text(
-                    AppStrings.copywrite,
+                    AppLocalizations.of(context).copywrite,
                     style: TextStyle(fontSize: 11.sp, color: Colors.grey),
                   ),
                 ],
@@ -338,7 +347,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 borderRadius: BorderRadius.circular(12.r),
               ),
               child: Text(
-                AppStrings.infoDesc,
+                AppLocalizations.of(context).infoDesc,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontSize: 11.sp, color: Colors.grey[600], height: 1.4),
