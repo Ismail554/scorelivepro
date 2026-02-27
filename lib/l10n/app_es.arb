@@ -127,5 +127,12 @@
   "noTeams": "No hay equipos disponibles",
   "news": "Noticias",
   "noNews": "No hay noticias disponibles",
-  "noNotifications": "Sin notificaciones"
+  "noNotifications": "Sin notificaciones",
+  "favorites": "Favoritos",
+  "syncYourFavorites": "Sincroniza tus favoritos",
+  "syncFavoritesDescription": "Inicia sesión para sincronizar tus favoritos en todos los dispositivos",
+  "loginToSync": "Iniciar sesión para sincronizar",
+  "manageFavorites": "Gestiona tus equipos y ligas favoritas",
+  "markAllRead": "Marcar todo como leído",
+  "unreadNotifications": "{count} notificaciones sin leer"
 }

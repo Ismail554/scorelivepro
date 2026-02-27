@@ -873,6 +873,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No notifications'**
   String get noNotifications;
+
+  /// No description provided for @favorites.
+  ///
+  /// In en, this message translates to:
+  /// **'Favorites'**
+  String get favorites;
+
+  /// No description provided for @syncYourFavorites.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync Your Favorites'**
+  String get syncYourFavorites;
+
+  /// No description provided for @syncFavoritesDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Login to sync your favorites across all devices'**
+  String get syncFavoritesDescription;
+
+  /// No description provided for @loginToSync.
+  ///
+  /// In en, this message translates to:
+  /// **'Login to Sync'**
+  String get loginToSync;
+
+  /// No description provided for @manageFavorites.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage your favorite teams and leagues'**
+  String get manageFavorites;
+
+  /// No description provided for @markAllRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark all read'**
+  String get markAllRead;
+
+  /// No description provided for @unreadNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} unread notifications'**
+  String unreadNotifications(int count);
 }
 
 class _AppLocalizationsDelegate

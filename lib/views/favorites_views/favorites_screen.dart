@@ -287,10 +287,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                               ),
                               SizedBox(height: 6.h),
                               Text(
-                                "Manage your favorite teams and leagues",
+                                AppLocalizations.of(context).manageFavorites,
                                 style: FontManager.bodySmall(
                                   color: AppColors.textSecondary,
-                                  fontSize: 13,
+                                  fontSize: 12,
                                 ),
                               ),
                             ],

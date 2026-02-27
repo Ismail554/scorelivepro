@@ -127,5 +127,19 @@
   "noTeams": "No teams available",
   "news": "News",
   "noNews": "No news available",
-  "noNotifications": "No notifications"
+  "noNotifications": "No notifications",
+  "favorites": "Favorites",
+  "syncYourFavorites": "Sync Your Favorites",
+  "syncFavoritesDescription": "Login to sync your favorites across all devices",
+  "loginToSync": "Login to Sync",
+  "manageFavorites": "Manage your favorite teams and leagues",
+  "markAllRead": "Mark all read",
+  "unreadNotifications": "{count} unread notifications",
+  "@unreadNotifications": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

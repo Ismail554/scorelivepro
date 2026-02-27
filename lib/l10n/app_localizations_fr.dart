@@ -408,4 +408,28 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get noNotifications => 'Aucune notification';
+
+  @override
+  String get favorites => 'Favoris';
+
+  @override
+  String get syncYourFavorites => 'Synchronisez vos favoris';
+
+  @override
+  String get syncFavoritesDescription =>
+      'Connectez-vous pour synchroniser vos favoris sur tous vos appareils';
+
+  @override
+  String get loginToSync => 'Se connecter pour synchroniser';
+
+  @override
+  String get manageFavorites => 'Gérez vos équipes et ligues favorites';
+
+  @override
+  String get markAllRead => 'Tout marquer comme lu';
+
+  @override
+  String unreadNotifications(int count) {
+    return '$count notifications non lues';
+  }
 }

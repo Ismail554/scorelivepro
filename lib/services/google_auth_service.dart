@@ -101,7 +101,7 @@ class GoogleAuthService {
       methods: Methods.post,
       body: {
         "code": authCode,
-        "callback_url": "",
+        "callback_url": "postmessage",
       },
       skipAuth: true,
     );

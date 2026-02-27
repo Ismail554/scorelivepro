@@ -127,5 +127,12 @@
   "noTeams": "Keine Teams verfügbar",
   "news": "Nachrichten",
   "noNews": "Keine Nachrichten verfügbar",
-  "noNotifications": "Keine Benachrichtigungen"
+  "noNotifications": "Keine Benachrichtigungen",
+  "favorites": "Favoriten",
+  "syncYourFavorites": "Favoriten synchronisieren",
+  "syncFavoritesDescription": "Melden Sie sich an, um Ihre Favoriten auf allen Geräten zu synchronisieren",
+  "loginToSync": "Anmelden zum Synchronisieren",
+  "manageFavorites": "Verwalten Sie Ihre Lieblingsteams und -ligen",
+  "markAllRead": "Alle als gelesen markieren",
+  "unreadNotifications": "{count} ungelesene Benachrichtigungen"
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/font_manager.dart';
+import 'package:scorelivepro/l10n/app_localizations.dart';
 
 /// Sync favorites card widget
 class SyncFavoritesCard extends StatelessWidget {
@@ -35,7 +36,7 @@ class SyncFavoritesCard extends StatelessWidget {
               SizedBox(width: 12.w),
               // Title
               Text(
-                "Sync Your Favorites",
+                AppLocalizations.of(context).syncYourFavorites,
                 style: FontManager.labelMedium(
                   color: AppColors.primaryColor,
                   fontSize: 16,
@@ -46,7 +47,7 @@ class SyncFavoritesCard extends StatelessWidget {
           SizedBox(height: 12.h),
           // Description
           Text(
-            "Login to sync your favorites across all devices",
+            AppLocalizations.of(context).syncFavoritesDescription,
             style: FontManager.bodySmall(
               color: AppColors.textSecondary,
               fontSize: 14,
@@ -67,7 +68,7 @@ class SyncFavoritesCard extends StatelessWidget {
               //   elevation: 0,
               // ),
               child: Text(
-                "Login to Sync",
+                AppLocalizations.of(context).loginToSync,
                 style: FontManager.labelMedium(
                   color: AppColors.white,
                   fontSize: 14,

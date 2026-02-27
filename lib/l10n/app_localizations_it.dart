@@ -406,4 +406,28 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get noNotifications => 'Nessuna notifica';
+
+  @override
+  String get favorites => 'Preferiti';
+
+  @override
+  String get syncYourFavorites => 'Sincronizza i tuoi preferiti';
+
+  @override
+  String get syncFavoritesDescription =>
+      'Accedi per sincronizzare i tuoi preferiti su tutti i dispositivi';
+
+  @override
+  String get loginToSync => 'Accedi per sincronizzare';
+
+  @override
+  String get manageFavorites => 'Gestisci le tue squadre e leghe preferite';
+
+  @override
+  String get markAllRead => 'Segna tutto come letto';
+
+  @override
+  String unreadNotifications(int count) {
+    return '$count notifiche non lette';
+  }
 }

@@ -95,7 +95,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          DateFormat('EEEE, d MMM, yyyy')
+                          DateFormat('EEEE, d MMM, yyyy',
+                                  Localizations.localeOf(context).languageCode)
                               .format(DateTime.now()),
                           style: FontManager.heading4(color: Colors.white),
                         ),

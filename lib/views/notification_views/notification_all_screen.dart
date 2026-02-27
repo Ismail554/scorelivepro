@@ -137,7 +137,8 @@ class _NotificationAllScreenState extends State<NotificationAllScreen> {
                     Consumer<NotificationProvider>(
                       builder: (context, provider, child) {
                         return Text(
-                          '${provider.unreadCount} unread notifications',
+                          AppLocalizations.of(context)
+                              .unreadNotifications(provider.unreadCount),
                           style: FontManager.bodySmall(
                             fontSize: 11,
                             color: AppColors.textSecondary,
@@ -173,7 +174,7 @@ class _NotificationAllScreenState extends State<NotificationAllScreen> {
                 SizedBox(width: 4.w),
                 Flexible(
                   child: Text(
-                    'Mark all read',
+                    AppLocalizations.of(context).markAllRead,
                     style: FontManager.labelMedium(
                       fontSize: 14,
                       color: AppColors.primaryColor,

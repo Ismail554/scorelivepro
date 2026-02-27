@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/app_colors.dart';
-import 'package:scorelivepro/core/app_strings.dart';
+import 'package:scorelivepro/l10n/app_localizations.dart';
 import 'package:scorelivepro/core/font_manager.dart';
 
 /// Custom Bottom Navigation Bar matching Figma design
@@ -41,31 +41,31 @@ class CustomBottomNavBar extends StatelessWidget {
             children: [
               _buildNavItem(
                 icon: Icons.sports_soccer,
-                label: AppStrings.matches,
+                label: AppLocalizations.of(context).matches,
                 index: 0,
                 isSelected: currentIndex == 0,
               ),
               _buildNavItem(
                 icon: Icons.star_border,
-                label: AppStrings.favorites,
+                label: AppLocalizations.of(context).favorites,
                 index: 1,
                 isSelected: currentIndex == 1,
               ),
               _buildNavItem(
                 icon: Icons.newspaper_outlined,
-                label: AppStrings.news,
+                label: AppLocalizations.of(context).news,
                 index: 2,
                 isSelected: currentIndex == 2,
               ),
               _buildNavItem(
                 icon: Icons.emoji_events_outlined,
-                label: AppStrings.leagues,
+                label: AppLocalizations.of(context).leagues,
                 index: 3,
                 isSelected: currentIndex == 3,
               ),
               _buildNavItem(
                 icon: Icons.settings_outlined,
-                label: AppStrings.settings,
+                label: AppLocalizations.of(context).settings,
                 index: 4,
                 isSelected: currentIndex == 4,
               ),
