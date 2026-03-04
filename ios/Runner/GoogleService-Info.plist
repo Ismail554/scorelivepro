@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CLIENT_ID</key>
+	<string>641571105178-aeugeakmoj0kjjibrptgv47dikgrklhv.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.641571105178-aeugeakmoj0kjjibrptgv47dikgrklhv</string>
 	<key>ANDROID_CLIENT_ID</key>
 	<string>641571105178-brdjpvqttg4jj0j1nfg1qleh8ka766oi.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
@@ -11,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.scorelivepro.app.dev</string>
+	<string>com.scorelivepro.app</string>
 	<key>PROJECT_ID</key>
 	<string>scorelivepro-67f37</string>
 	<key>STORAGE_BUCKET</key>
@@ -27,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:641571105178:ios:00a4d620b66960334d3223</string>
+	<string>1:641571105178:ios:b67d564eb6f46a4d4d3223</string>
 </dict>
 </plist>

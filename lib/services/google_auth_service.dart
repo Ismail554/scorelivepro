@@ -6,7 +6,7 @@ import 'package:scorelivepro/services/dio_service.dart';
 class GoogleAuthService {
   // 🔴 YOUR WEB CLIENT ID
   final String _webClientId =
-      "641571105178-d0529b3arcdoo6fd2istoinrdcbh3m9a.apps.googleusercontent.com";
+      "641571105178-n1cakg9mh25f2qmubq96o6che2gtfa2t.apps.googleusercontent.com";
 
   // Use the singleton instance
   google_lib.GoogleSignIn get _googleSignIn => google_lib.GoogleSignIn.instance;

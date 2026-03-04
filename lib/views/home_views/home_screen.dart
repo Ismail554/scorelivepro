@@ -207,7 +207,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           // Show only top 2 matches
                           final upcomingDisplay =
                               provider.upcomingMatches.take(2).toList();
-
                           return ListView.builder(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),

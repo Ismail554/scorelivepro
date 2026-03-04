@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "641571105178-d0529b3arcdoo6fd2istoinrdcbh3m9a.apps.googleusercontent.com",
+          "client_id": "641571105178-brdjpvqttg4jj0j1nfg1qleh8ka766oi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.scorelivepro.app",
+            "certificate_hash": "b6a57d1f50e209bde458107221234e7f688dfe35"
+          }
+        },
+        {
+          "client_id": "641571105178-r41vi2rtd4furjp43b12b1b22a9571sl.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -29,6 +37,13 @@
             {
               "client_id": "641571105178-d0529b3arcdoo6fd2istoinrdcbh3m9a.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "641571105178-a3hlsjvjtcgkn1bshg8d8v10vtggc6m6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.scorelivepro.app.dev"
+              }
             }
           ]
         }
