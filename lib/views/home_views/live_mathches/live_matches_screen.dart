@@ -11,7 +11,7 @@ import 'package:scorelivepro/widget/home/match_card.dart';
 import 'package:scorelivepro/widget/home/sponsored_ad_card.dart';
 import 'package:scorelivepro/widget/mini_widget/mw_notification_bell.dart';
 import 'package:scorelivepro/widget/navigation/custom_bottom_nav_bar.dart';
-import 'package:scorelivepro/services/socket_service.dart';
+
 import 'package:scorelivepro/models/live_ws_model.dart';
 import 'package:scorelivepro/utils/match_status_helper.dart';
 import 'package:scorelivepro/provider/match_provider.dart';
@@ -310,72 +310,49 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
 
   /// 🔹 Real Live Matches List from Socket
   Widget _buildRealLiveMatchesList(MatchProvider provider) {
-    return ValueListenableBuilder<LiveScoreModel?>(
-      valueListenable: SocketService.instance.liveScoreNotifier,
-      builder: (context, liveScore, child) {
-        var matches = liveScore?.data ?? [];
+    final matches = provider.liveMatches;
 
-        // Filter by selected league
-        if (provider.selectedLeagueLive != 'All') {
-          matches = matches
-              .where((m) => m.league?.name == provider.selectedLeagueLive)
-              .toList();
-        }
-
-        // Filter by search query
-        if (provider.searchQueryLive.isNotEmpty) {
-          final query = provider.searchQueryLive.toLowerCase();
-          matches = matches.where((m) {
-            final home = m.homeTeam?.name?.toLowerCase() ?? '';
-            final away = m.awayTeam?.name?.toLowerCase() ?? '';
-            return home.contains(query) || away.contains(query);
-          }).toList();
-        }
-
-        if (matches.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.sports_soccer,
-                    size: 64, color: AppColors.textSecondary.withOpacity(0.5)),
-                SizedBox(height: 16.h),
-                Text(
-                  "No live matches currently",
-                  style: FontManager.bodyMedium(color: AppColors.textSecondary),
-                ),
-              ],
+    if (matches.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.sports_soccer,
+                size: 64, color: AppColors.textSecondary.withOpacity(0.5)),
+            SizedBox(height: 16.h),
+            Text(
+              "No live matches currently",
+              style: FontManager.bodyMedium(color: AppColors.textSecondary),
             ),
-          );
+          ],
+        ),
+      );
+    }
+
+    return ListView.builder(
+      padding: EdgeInsets.only(top: 12.h, bottom: 16.h),
+      itemCount: matches.length + 1, // +1 for sponsored card
+      itemBuilder: (context, index) {
+        // Last item → sponsored card
+        if (index == matches.length) {
+          return const SponsoredAdCard(onTryFreeTap: null);
         }
 
-        return ListView.builder(
-          padding: EdgeInsets.only(top: 12.h, bottom: 16.h),
-          itemCount: matches.length + 1, // +1 for sponsored card
-          itemBuilder: (context, index) {
-            // Last item → sponsored card
-            if (index == matches.length) {
-              return const SponsoredAdCard(onTryFreeTap: null);
-            }
-
-            final match = matches[index];
-            return MatchCard(
-              leagueName: match.league?.name ?? "Unknown League",
-              homeTeam: match.homeTeam?.name ?? "Home",
-              awayTeam: match.awayTeam?.name ?? "Away",
-              homeScore: match.goals?.home,
-              awayScore: match.goals?.away,
-              timeInfo: "${match.elapsed ?? 0}'",
-              status: MatchStatusHelper.getMatchStatus(match.statusShort),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        LiveMatchDetailsScreen(matchData: match),
-                  ),
-                );
-              },
+        final match = matches[index];
+        return MatchCard(
+          leagueName: match.league?.name ?? "Unknown League",
+          homeTeam: match.homeTeam?.name ?? "Home",
+          awayTeam: match.awayTeam?.name ?? "Away",
+          homeScore: match.goals?.home,
+          awayScore: match.goals?.away,
+          timeInfo: "${match.elapsed ?? 0}'",
+          status: MatchStatusHelper.getMatchStatus(match.statusShort),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => LiveMatchDetailsScreen(matchData: match),
+              ),
             );
           },
         );

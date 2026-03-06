@@ -82,11 +82,8 @@ class MatchProvider extends ChangeNotifier {
     final Set<String> leagues = {'All'};
     if (tabIndex == 0) {
       // Live
-      final liveMatches = SocketService.instance.liveScoreNotifier.value?.data;
-      if (liveMatches != null) {
-        for (var match in liveMatches) {
-          if (match.league?.name != null) leagues.add(match.league!.name!);
-        }
+      for (var match in _activeMatches.values) {
+        if (match.league?.name != null) leagues.add(match.league!.name!);
       }
     } else if (tabIndex == 1) {
       // Upcoming
@@ -134,6 +131,22 @@ class MatchProvider extends ChangeNotifier {
 
   /// Get the latest match data from socket cache or return null
   Data? getMatch(int matchId) => _activeMatches[matchId];
+
+  List<Data> get liveMatches {
+    List<Data> list = _activeMatches.values.toList();
+    if (_selectedLeagueLive != 'All') {
+      list = list.where((m) => m.league?.name == _selectedLeagueLive).toList();
+    }
+    if (_searchQueryLive.isNotEmpty) {
+      final q = _searchQueryLive.toLowerCase();
+      list = list.where((m) {
+        final home = m.homeTeam?.name?.toLowerCase() ?? '';
+        final away = m.awayTeam?.name?.toLowerCase() ?? '';
+        return home.contains(q) || away.contains(q);
+      }).toList();
+    }
+    return list;
+  }
 
   List<Data> get upcomingMatches {
     List<Data> list = _upcomingMatches;
