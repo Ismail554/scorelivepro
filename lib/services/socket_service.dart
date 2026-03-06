@@ -59,18 +59,32 @@ class SocketService {
     try {
       if (message is String) {
         final data = jsonDecode(message);
-        print("📌 WebSocket Message: $data");
+        // Only log first 200 chars to avoid console spam, but let us know it arrived.
+        print(
+            "📌 WebSocket Message (Preview): ${message.length > 200 ? message.substring(0, 200) + '...' : message}");
 
         // Parse specific event types
         if (data is Map<String, dynamic>) {
           // Check for "live_score_update" or generic structure
           if (data['type'] == 'live_score_update' || data['data'] != null) {
-            liveScoreNotifier.value = LiveScoreModel.fromJson(data);
+            // Sometimes WS sends a single object in "data" instead of a list. Let's wrap it in a list to safely use LiveScoreModel.
+            if (data['data'] != null && data['data'] is Map<String, dynamic>) {
+              print(
+                  "🔧 Wrapping single data object in a list for LiveScoreModel");
+              data['data'] = [data['data']];
+            }
+
+            final model = LiveScoreModel.fromJson(data);
+            liveScoreNotifier.value = model;
+
+            print(
+                "✅ Successfully parsed LiveScoreModel with ${model.data?.length ?? 0} matches.");
           }
         }
       }
-    } catch (e) {
+    } catch (e, stack) {
       print("⚠️ Error parsing WebSocket message: $e");
+      print("⚠️ Stack trace: $stack");
     }
   }
 

@@ -24,18 +24,27 @@ class MatchProvider extends ChangeNotifier {
 
   void _onSocketUpdate() {
     final update = SocketService.instance.liveScoreNotifier.value;
+    print("🔄 MatchProvider received socket update: ${update?.type}");
     if (update != null && update.data != null) {
       bool hasChanges = false;
       for (var matchData in update.data!) {
         if (matchData.id != null) {
           _activeMatches[matchData.id!] = matchData;
           hasChanges = true;
+          print("🔄 MatchProvider updated active match ID: ${matchData.id}");
+        } else {
+          print("⚠️ MatchProvider received matchData with NULL ID");
         }
       }
 
       if (hasChanges) {
+        print("🔄 MatchProvider triggering notifyListeners()");
         notifyListeners();
+      } else {
+        print("⚠️ MatchProvider hasChanges is false - no UI update triggered");
       }
+    } else {
+      print("⚠️ MatchProvider ignored update because data is null");
     }
   }
 

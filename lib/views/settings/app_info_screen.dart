@@ -21,7 +21,10 @@ class AppInfoScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: bgColor,
         elevation: 0,
-        leading: const Icon(Icons.arrow_back, color: Colors.black),
+        leading: InkWell(
+          onTap: () => Navigator.pop(context),
+          child: const Icon(Icons.arrow_back, color: Colors.black),
+        ),
         title: Text(
           AppLocalizations.of(context).appInformation,
           style: TextStyle(
