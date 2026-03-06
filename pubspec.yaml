@@ -45,6 +45,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   google_mobile_ads: ^7.0.0
+  flutter_dotenv: ^6.0.0
 
 
 flutter_launcher_icons:
@@ -74,6 +75,8 @@ flutter:
     - assets/icons/
     - assets/svg/
     - assets/translations/
+    - .env
+
  
 
   # To add custom fonts to your application, add a fonts section here:

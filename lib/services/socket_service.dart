@@ -5,6 +5,7 @@ import 'package:scorelivepro/config/storage/secure_storage_helper.dart';
 import 'package:scorelivepro/models/live_ws_model.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class SocketService {
   WebSocketChannel? _channel;
@@ -23,7 +24,9 @@ class SocketService {
     disconnect();
 
     try {
-      final uri = Uri.parse("wss://api.scorelivepro.it/ws/live/");
+      final String wsUrl =
+          dotenv.env['SOCKET_URL'] ?? "wss://api.scorelivepro.it/ws/live/";
+      final uri = Uri.parse(wsUrl);
 
       Map<String, dynamic> headers = {};
       // Add UUID header

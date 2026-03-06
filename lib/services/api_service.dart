@@ -1,6 +1,10 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 class ApiEndPoint {
-  static String get _baseUrl => "https://api.scorelivepro.it";
-  static String get baseUrl => "https://api.scorelivepro.it";
+  static String get _baseUrl =>
+      dotenv.env['BASE_URL'] ?? "https://api.scorelivepro.it";
+  static String get baseUrl =>
+      dotenv.env['BASE_URL'] ?? "https://api.scorelivepro.it";
 
   static String lineups(int id) => "$_baseUrl/sports/fixtures/$id/lineups/";
   static String statistics(int id) =>
@@ -80,7 +84,6 @@ class ApiEndPoint {
   static String deleteNotification(int id) =>
       "$_baseUrl/notifications/remove/$id/"; // use method DELETE
 
-
-
-  static String deleteAccount() => "$_baseUrl/auth/profile/delete/"; // use method DELETE
+  static String deleteAccount() =>
+      "$_baseUrl/auth/profile/delete/"; // use method DELETE
 }
