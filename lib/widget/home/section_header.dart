@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/font_manager.dart';
 import 'package:scorelivepro/views/home_views/live_mathches/live_matches_screen.dart';
+import 'package:scorelivepro/l10n/app_localizations.dart';
 
 /// Reusable section header with title and "See all" link
 class SectionHeader extends StatelessWidget {
@@ -52,7 +53,7 @@ class SectionHeader extends StatelessWidget {
                 spacing: 4.w,
                 children: [
                   Text(
-                    'See all',
+                    AppLocalizations.of(context).seeAll,
                     style: FontManager.bodySmall(
                       color: AppColors.primaryColor,
                       fontSize: 14,

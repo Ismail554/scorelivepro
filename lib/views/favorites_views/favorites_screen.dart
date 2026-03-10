@@ -406,7 +406,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                                             FavoritesTeamsScreen()));
                               },
                               child: Text(
-                                "+ Add Team",
+                                AppLocalizations.of(context).addTeam,
                                 style: FontManager.bodySmall(
                                   color: AppColors.primaryColor,
                                   fontSize: 14,

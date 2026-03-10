@@ -915,6 +915,258 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count} unread notifications'**
   String unreadNotifications(int count);
+
+  /// No description provided for @seeAll.
+  ///
+  /// In en, this message translates to:
+  /// **'See all'**
+  String get seeAll;
+
+  /// No description provided for @addTeam.
+  ///
+  /// In en, this message translates to:
+  /// **'+ Add Team'**
+  String get addTeam;
+
+  /// No description provided for @searchLeagues.
+  ///
+  /// In en, this message translates to:
+  /// **'Search leagues...'**
+  String get searchLeagues;
+
+  /// No description provided for @searchTeamNames.
+  ///
+  /// In en, this message translates to:
+  /// **'Search team names...'**
+  String get searchTeamNames;
+
+  /// No description provided for @live.
+  ///
+  /// In en, this message translates to:
+  /// **'Live'**
+  String get live;
+
+  /// No description provided for @finished.
+  ///
+  /// In en, this message translates to:
+  /// **'Finished'**
+  String get finished;
+
+  /// No description provided for @loginToSyncMsg.
+  ///
+  /// In en, this message translates to:
+  /// **'Login to sync your favorites and preferences'**
+  String get loginToSyncMsg;
+
+  /// No description provided for @password.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get password;
+
+  /// No description provided for @enterYourEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email'**
+  String get enterYourEmail;
+
+  /// No description provided for @enterYourPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your password'**
+  String get enterYourPassword;
+
+  /// No description provided for @forgotPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot Password?'**
+  String get forgotPassword;
+
+  /// No description provided for @emailPasswordEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Email and password cannot be empty.'**
+  String get emailPasswordEmpty;
+
+  /// No description provided for @loginFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Login failed. Please check your credentials.'**
+  String get loginFailed;
+
+  /// No description provided for @login.
+  ///
+  /// In en, this message translates to:
+  /// **'Login'**
+  String get login;
+
+  /// No description provided for @or.
+  ///
+  /// In en, this message translates to:
+  /// **'OR'**
+  String get or;
+
+  /// No description provided for @continueAsGuest.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue as a Guest'**
+  String get continueAsGuest;
+
+  /// No description provided for @continueWithGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Google'**
+  String get continueWithGoogle;
+
+  /// No description provided for @dontHaveAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t have an account?'**
+  String get dontHaveAccount;
+
+  /// No description provided for @signUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Up'**
+  String get signUp;
+
+  /// No description provided for @createAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Account'**
+  String get createAccount;
+
+  /// No description provided for @signUpToGetStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign up to get started!'**
+  String get signUpToGetStarted;
+
+  /// No description provided for @agreeToTerms.
+  ///
+  /// In en, this message translates to:
+  /// **'Agree with Terms and Conditions'**
+  String get agreeToTerms;
+
+  /// No description provided for @registrationFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration failed. Please try again.'**
+  String get registrationFailed;
+
+  /// No description provided for @haveAnAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Have an account?'**
+  String get haveAnAccount;
+
+  /// No description provided for @otpVerification.
+  ///
+  /// In en, this message translates to:
+  /// **'OTP Verification'**
+  String get otpVerification;
+
+  /// No description provided for @checkYourEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Check Your Email'**
+  String get checkYourEmail;
+
+  /// No description provided for @enterOtpCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter OTP Code'**
+  String get enterOtpCode;
+
+  /// No description provided for @codeExpire.
+  ///
+  /// In en, this message translates to:
+  /// **'This code will expire in 2 minutes'**
+  String get codeExpire;
+
+  /// No description provided for @enterValidCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid 6-digit code'**
+  String get enterValidCode;
+
+  /// No description provided for @verifyOtp.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify OTP'**
+  String get verifyOtp;
+
+  /// No description provided for @verificationFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification failed. Invalid code.'**
+  String get verificationFailed;
+
+  /// No description provided for @didntReceiveCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Didn\'t receive the code?'**
+  String get didntReceiveCode;
+
+  /// No description provided for @resendCodeEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'You can now resend the code'**
+  String get resendCodeEnabled;
+
+  /// No description provided for @resendCodeCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend code in {seconds}s'**
+  String resendCodeCount(int seconds);
+
+  /// No description provided for @resendOtp.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend OTP'**
+  String get resendOtp;
+
+  /// No description provided for @otpResentSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'OTP resent successfully'**
+  String get otpResentSuccess;
+
+  /// No description provided for @otpResentFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to resend OTP. Please try again.'**
+  String get otpResentFailed;
+
+  /// No description provided for @verifyYourEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Your Email'**
+  String get verifyYourEmail;
+
+  /// No description provided for @enterEmailToChangePwd.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email address to change password'**
+  String get enterEmailToChangePwd;
+
+  /// No description provided for @sendOtp.
+  ///
+  /// In en, this message translates to:
+  /// **'Send OTP'**
+  String get sendOtp;
+
+  /// No description provided for @sendOtpFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to send OTP. Please try again.'**
+  String get sendOtpFailed;
+
+  /// No description provided for @weSentOtpTo.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ve sent a 6-digit OTP to {email}\nEnter the code below to continue.'**
+  String weSentOtpTo(String email);
 }
 
 class _AppLocalizationsDelegate

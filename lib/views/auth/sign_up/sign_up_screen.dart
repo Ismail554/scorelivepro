@@ -10,6 +10,7 @@ import 'package:scorelivepro/views/auth/sign_up/otp_verifiy_screen.dart';
 import 'package:scorelivepro/core/utils/snackbar_util.dart';
 // ✅ Import Main Navigation
 import 'package:scorelivepro/views/main_navigation/main_navigation_screen.dart';
+import 'package:scorelivepro/l10n/app_localizations.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -76,12 +77,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 SizedBox(height: 16.h),
                 Text(
-                  "Create Account",
+                  AppLocalizations.of(context).createAccount,
                   style: FontManager.heading2(fontSize: 22),
                 ),
                 SizedBox(height: 8.h),
                 Text(
-                  "Sign up to get started!",
+                  AppLocalizations.of(context).signUpToGetStarted,
                   textAlign: TextAlign.center,
                   style: FontManager.bodySmall(
                     color: AppColors.textSecondary,
@@ -133,12 +134,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 SizedBox(height: 16.h),
 
                 // Email
-                _buildLabel("Email Address"),
+                _buildLabel(AppLocalizations.of(context).emailAddress),
                 SizedBox(height: 8.h),
                 TextFormField(
                   controller: _emailController,
                   decoration: _inputDecoration(
-                    hintText: "Enter your email",
+                    hintText: AppLocalizations.of(context).enterYourEmail,
                     prefixIcon: Icons.email_outlined,
                   ),
                   style: FontManager.bodyMedium(),
@@ -146,13 +147,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 SizedBox(height: 16.h),
 
                 // Password
-                _buildLabel("Password"),
+                _buildLabel(AppLocalizations.of(context).password),
                 SizedBox(height: 8.h),
                 TextFormField(
                   controller: _passwordController,
                   obscureText: !_isPasswordVisible,
                   decoration: _inputDecoration(
-                    hintText: "Enter your password",
+                    hintText: AppLocalizations.of(context).enterYourPassword,
                     prefixIcon: Icons.lock_outline,
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -173,13 +174,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 SizedBox(height: 16.h),
 
                 // Confirm Password
-                _buildLabel("Confirm password"),
+                _buildLabel(AppLocalizations.of(context).confirmPassword),
                 SizedBox(height: 8.h),
                 TextFormField(
                   controller: _confirmPasswordController,
                   obscureText: !_isConfirmPasswordVisible,
                   decoration: _inputDecoration(
-                    hintText: "Enter your password",
+                    hintText: AppLocalizations.of(context).enterYourPassword,
                     prefixIcon: Icons.lock_outline,
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -221,7 +222,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     SizedBox(width: 8.w),
                     Text(
-                      "Agree with Terms and Conditions",
+                      AppLocalizations.of(context).agreeToTerms,
                       style: FontManager.bodySmall(
                         color: AppColors.textPrimary,
                         fontSize: 14,
@@ -280,8 +281,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   ),
                                 );
                               } else if (context.mounted) {
-                                SnackBarUtil.showError(context,
-                                    "Registration failed. Please try again.");
+                                SnackBarUtil.showError(
+                                    context,
+                                    AppLocalizations.of(context)
+                                        .registrationFailed);
                               }
                             },
                       style: ElevatedButton.styleFrom(
@@ -294,7 +297,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       child: auth.isLoading
                           ? const CircularProgressIndicator(color: Colors.white)
                           : Text(
-                              "Sign Up",
+                              AppLocalizations.of(context).signUp,
                               style: FontManager.labelLarge(
                                 color: Colors.white,
                                 fontSize: 16,
@@ -338,7 +341,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       Image.asset(IconAssets.google_icon, width: 24.w),
                       SizedBox(width: 10.w),
                       Text(
-                        "Continue with Google",
+                        AppLocalizations.of(context).continueWithGoogle,
                         style: FontManager.labelMedium(fontSize: 16),
                       ),
                     ],
@@ -351,7 +354,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Have an account?",
+                      AppLocalizations.of(context).haveAnAccount,
                       style: FontManager.bodyMedium(
                         color: AppColors.textSecondary,
                       ),
@@ -366,7 +369,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         );
                       },
                       child: Text(
-                        "login",
+                        AppLocalizations.of(context).login,
                         style: FontManager.labelMedium(
                           color: const Color(0xFFFF7A28),
                         ),

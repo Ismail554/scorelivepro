@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:scorelivepro/core/app_spacing.dart';
+import 'package:scorelivepro/l10n/app_localizations.dart';
 
 import 'package:scorelivepro/core/assets_manager.dart';
 import 'package:scorelivepro/core/app_colors.dart';
@@ -78,12 +79,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 // Welcome Text
                 Text(
-                  "Welcome Back!",
+                  AppLocalizations.of(context).welcome_back,
                   style: FontManager.heading2(fontSize: 22.sp),
                 ),
                 SizedBox(height: 8.h),
                 Text(
-                  "Login to sync your favorites and preferences",
+                  AppLocalizations.of(context).loginToSyncMsg,
                   textAlign: TextAlign.center,
                   style: FontManager.bodySmall(
                     color: AppColors.textSecondary,
@@ -93,12 +94,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(height: 40.h),
 
                 // Email Field
-                _buildLabel("Email Address"),
+                _buildLabel(AppLocalizations.of(context).emailAddress),
                 SizedBox(height: 8.h),
                 TextFormField(
                   controller: _emailController,
                   decoration: _inputDecoration(
-                    hintText: "Enter your email",
+                    hintText: AppLocalizations.of(context).enterYourEmail,
                     prefixIcon: Icons.email_outlined,
                   ),
                   style: FontManager.bodyMedium(),
@@ -106,13 +107,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(height: 20.h),
 
                 // Password Field
-                _buildLabel("Password"),
+                _buildLabel(AppLocalizations.of(context).password),
                 SizedBox(height: 8.h),
                 TextFormField(
                   controller: _passwordController,
                   obscureText: !_isPasswordVisible,
                   decoration: _inputDecoration(
-                    hintText: "Enter your password",
+                    hintText: AppLocalizations.of(context).enterYourPassword,
                     prefixIcon: Icons.lock_outline,
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -150,7 +151,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
                     child: Text(
-                      "Forgot Password?",
+                      AppLocalizations.of(context).forgotPassword,
                       style: FontManager.labelMedium(
                         fontSize: 14.sp,
                         color: const Color(0xFFFF7A28),
@@ -174,9 +175,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
                               if (email.isEmpty || password.isEmpty) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text(
-                                          "Email and password cannot be empty.")),
+                                  SnackBar(
+                                      content: Text(AppLocalizations.of(context)
+                                          .emailPasswordEmpty)),
                                 );
                                 return;
                               }
@@ -193,8 +194,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                     .registerDevice(true);
 
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text("Login Successful!")),
+                                  SnackBar(
+                                      content: Text(AppLocalizations.of(context)
+                                          .loginSuccessful)),
                                 );
                                 Navigator.pushReplacement(
                                   context,
@@ -227,7 +229,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: auth.isLoading
                           ? const CircularProgressIndicator(color: Colors.white)
                           : Text(
-                              "Login",
+                              AppLocalizations.of(context).login,
                               style: FontManager.labelLarge(
                                 color: Colors.white,
                                 fontSize: 16,
@@ -247,7 +249,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16.w),
                       child: Text(
-                        "OR",
+                        AppLocalizations.of(context).or,
                         style: FontManager.bodySmall(),
                       ),
                     ),
@@ -281,7 +283,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           color: AppColors.textPrimary, size: 24.w),
                       SizedBox(width: 8.w),
                       Text(
-                        "Continue as a Guest",
+                        AppLocalizations.of(context).continueAsGuest,
                         style: FontManager.labelMedium(
                           fontSize: 16.sp,
                           color: AppColors.textPrimary,
@@ -301,7 +303,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Image.asset(IconAssets.google_icon, width: 24.w),
                       SizedBox(width: 6.w),
                       Text(
-                        "Continue with Google",
+                        AppLocalizations.of(context).continueWithGoogle,
                         style: FontManager.labelMedium(fontSize: 16.sp),
                       ),
                     ],
@@ -314,7 +316,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Don't have an account?",
+                      AppLocalizations.of(context).dontHaveAccount,
                       style: FontManager.bodyMedium(
                         color: AppColors.textSecondary,
                       ),
@@ -329,7 +331,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         );
                       },
                       child: Text(
-                        "Sign Up",
+                        AppLocalizations.of(context).signUp,
                         style: FontManager.labelMedium(
                           color: const Color(0xFFFF7A28),
                         ),

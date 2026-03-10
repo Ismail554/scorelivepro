@@ -247,7 +247,7 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
                       color: AppColors.textPrimary,
                     ),
                     decoration: InputDecoration(
-                      hintText: "Search team names...",
+                      hintText: AppLocalizations.of(context).searchTeamNames,
                       hintStyle: FontManager.bodyMedium(
                         color: Colors.grey.shade400,
                       ),
@@ -298,10 +298,10 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
           dividerColor: Colors.transparent,
           labelStyle: FontManager.labelMedium(fontSize: 14),
           unselectedLabelStyle: FontManager.labelMedium(fontSize: 14),
-          tabs: const [
-            Tab(text: 'Live'),
-            Tab(text: 'Upcoming'),
-            Tab(text: 'Finished'),
+          tabs: [
+            Tab(text: AppLocalizations.of(context).live),
+            Tab(text: AppLocalizations.of(context).upcoming),
+            Tab(text: AppLocalizations.of(context).finished),
           ],
         ),
       ),

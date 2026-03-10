@@ -18,7 +18,7 @@ dependencies:
   # Dependencies
   cupertino_icons: ^1.0.8 
   flutter_screenutil: ^5.9.3
-  google_fonts: ^6.3.2
+  google_fonts: ^8.0.2
   flutter_svg: ^2.0.10 # Reverted to a more common major version for stability
   flutter_secure_storage: ^10.0.0
   pinput: ^6.0.0
@@ -31,7 +31,7 @@ dependencies:
   lottie: ^3.3.2
   shared_preferences: ^2.2.2
   easy_localization: ^3.0.8
-  timezone: ^0.10.1
+  timezone: ^0.11.0
   dio: ^5.9.0
   uuid: ^4.5.2
   web_socket_channel: ^3.0.3

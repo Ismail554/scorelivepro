@@ -299,7 +299,8 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
                               child: TextField(
                                 controller: _searchController,
                                 decoration: InputDecoration(
-                                  hintText: "Search leagues...",
+                                  hintText: AppLocalizations.of(context)
+                                      .searchLeagues,
                                   hintStyle: FontManager.bodyMedium(
                                     color: AppColors.textTertiary,
                                     fontSize: 14,

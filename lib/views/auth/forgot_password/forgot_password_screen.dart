@@ -73,12 +73,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
                 // Title
                 Text(
-                  "Verify Your Email",
+                  AppLocalizations.of(context).verifyYourEmail,
                   style: FontManager.heading2(fontSize: 22.sp),
                 ),
                 SizedBox(height: 8.h),
                 Text(
-                  "Enter your email address to change password",
+                  AppLocalizations.of(context).enterEmailToChangePwd,
                   textAlign: TextAlign.center,
                   style: FontManager.bodySmall(
                     color: AppColors.textSecondary,
@@ -88,12 +88,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 SizedBox(height: 40.h),
 
                 // Email Field
-                _buildLabel("Email Address"),
+                _buildLabel(AppLocalizations.of(context).emailAddress),
                 SizedBox(height: 8.h),
                 TextFormField(
                   controller: _emailController,
                   decoration: _inputDecoration(
-                    hintText: "Enter your email",
+                    hintText: AppLocalizations.of(context).enterYourEmail,
                     prefixIcon: Icons.email_outlined,
                   ),
                   style: FontManager.bodyMedium(),
@@ -130,16 +130,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                 NavigateToOtp();
                               } else if (context.mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text(
-                                          "Failed to send OTP. Please try again.")),
+                                  SnackBar(
+                                      content: Text(AppLocalizations.of(context)
+                                          .sendOtpFailed)),
                                 );
                               }
                             },
                       child: auth.isLoading
                           ? const CircularProgressIndicator(color: Colors.white)
                           : Text(
-                              "Send OTP",
+                              AppLocalizations.of(context).sendOtp,
                               style: FontManager.labelLarge(
                                 color: Colors.white,
                                 fontSize: 16,

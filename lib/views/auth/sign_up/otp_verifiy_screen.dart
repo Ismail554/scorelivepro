@@ -9,6 +9,7 @@ import 'package:scorelivepro/provider/auth_provider.dart';
 import 'package:scorelivepro/views/auth/sign_up/congratulation_screen.dart';
 import 'package:scorelivepro/views/auth/forgot_password/create_new_password_screen.dart';
 import 'dart:async';
+import 'package:scorelivepro/l10n/app_localizations.dart';
 
 class OtpVerifyScreen extends StatefulWidget {
   final String email;
@@ -138,12 +139,12 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
 
                   // Title
                   Text(
-                    "Check Your Email",
+                    AppLocalizations.of(context).checkYourEmail,
                     style: FontManager.heading2(fontSize: 22),
                   ),
                   SizedBox(height: 12.h),
                   Text(
-                    "We've sent a 6-digit OTP to ${widget.email}\nEnter the code below to continue.",
+                    AppLocalizations.of(context).weSentOtpTo(widget.email),
                     textAlign: TextAlign.center,
                     style: FontManager.bodySmall(
                       color: AppColors.textSecondary,
@@ -154,7 +155,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
 
                   // Enter OTP Label
                   Text(
-                    "Enter OTP Code",
+                    AppLocalizations.of(context).enterOtpCode,
                     style: FontManager.labelMedium(
                       color: AppColors.textSecondary,
                       fontSize: 14,
@@ -190,7 +191,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
 
                   // Expiry text
                   Text(
-                    "This code will expire in 2 minutes",
+                    AppLocalizations.of(context).codeExpire,
                     style: FontManager.bodySmall(
                       color: AppColors.textHint,
                       fontSize: 12,
@@ -209,9 +210,10 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                             : () async {
                                 if (_pinController.text.length != 6) {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
+                                    SnackBar(
                                         content: Text(
-                                            "Please enter a valid 6-digit code")),
+                                            AppLocalizations.of(context)
+                                                .enterValidCode)),
                                   );
                                   return;
                                 }
@@ -252,9 +254,10 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                                   }
                                 } else if (context.mounted) {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
+                                    SnackBar(
                                         content: Text(
-                                            "Verification failed. Invalid code.")),
+                                            AppLocalizations.of(context)
+                                                .verificationFailed)),
                                   );
                                 }
                               },
@@ -282,7 +285,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
 
                   // Resend Section
                   Text(
-                    "Didn't receive the code?",
+                    AppLocalizations.of(context).didntReceiveCode,
                     style: FontManager.bodyMedium(
                       color: AppColors.textSecondary,
                     ),
@@ -290,8 +293,8 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                   SizedBox(height: 8.h),
                   Text(
                     _isResendEnabled
-                        ? "You can now resend the code"
-                        : "Resend code in ${_start}s",
+                        ? AppLocalizations.of(context).resendCodeEnabled
+                        : AppLocalizations.of(context).resendCodeCount(_start),
                     style: FontManager.bodySmall(
                       color: AppColors.textHint,
                     ),
@@ -313,8 +316,10 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                       content: Text(success
-                                          ? "OTP resent successfully"
-                                          : "Failed to resend OTP. Please try again.")),
+                                          ? AppLocalizations.of(context)
+                                              .otpResentSuccess
+                                          : AppLocalizations.of(context)
+                                              .otpResentFailed)),
                                 );
                                 if (success) {
                                   setState(() {
@@ -325,7 +330,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                             }
                           : null,
                       child: Text(
-                        "Resend OTP",
+                        AppLocalizations.of(context).resendOtp,
                         style: FontManager.labelMedium(
                           color: _isResendEnabled
                               ? const Color(0xFFFF7A28)

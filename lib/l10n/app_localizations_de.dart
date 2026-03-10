@@ -433,4 +433,135 @@ class AppLocalizationsDe extends AppLocalizations {
   String unreadNotifications(int count) {
     return '$count ungelesene Benachrichtigungen';
   }
+
+  @override
+  String get seeAll => 'See all';
+
+  @override
+  String get addTeam => '+ Add Team';
+
+  @override
+  String get searchLeagues => 'Search leagues...';
+
+  @override
+  String get searchTeamNames => 'Search team names...';
+
+  @override
+  String get live => 'Live';
+
+  @override
+  String get finished => 'Finished';
+
+  @override
+  String get loginToSyncMsg => 'Login to sync your favorites and preferences';
+
+  @override
+  String get password => 'Password';
+
+  @override
+  String get enterYourEmail => 'Enter your email';
+
+  @override
+  String get enterYourPassword => 'Enter your password';
+
+  @override
+  String get forgotPassword => 'Forgot Password?';
+
+  @override
+  String get emailPasswordEmpty => 'Email and password cannot be empty.';
+
+  @override
+  String get loginFailed => 'Login failed. Please check your credentials.';
+
+  @override
+  String get login => 'Login';
+
+  @override
+  String get or => 'OR';
+
+  @override
+  String get continueAsGuest => 'Continue as a Guest';
+
+  @override
+  String get continueWithGoogle => 'Continue with Google';
+
+  @override
+  String get dontHaveAccount => 'Don\'t have an account?';
+
+  @override
+  String get signUp => 'Sign Up';
+
+  @override
+  String get createAccount => 'Create Account';
+
+  @override
+  String get signUpToGetStarted => 'Sign up to get started!';
+
+  @override
+  String get agreeToTerms => 'Agree with Terms and Conditions';
+
+  @override
+  String get registrationFailed => 'Registration failed. Please try again.';
+
+  @override
+  String get haveAnAccount => 'Have an account?';
+
+  @override
+  String get otpVerification => 'OTP Verification';
+
+  @override
+  String get checkYourEmail => 'Check Your Email';
+
+  @override
+  String get enterOtpCode => 'Enter OTP Code';
+
+  @override
+  String get codeExpire => 'This code will expire in 2 minutes';
+
+  @override
+  String get enterValidCode => 'Please enter a valid 6-digit code';
+
+  @override
+  String get verifyOtp => 'Verify OTP';
+
+  @override
+  String get verificationFailed => 'Verification failed. Invalid code.';
+
+  @override
+  String get didntReceiveCode => 'Didn\'t receive the code?';
+
+  @override
+  String get resendCodeEnabled => 'You can now resend the code';
+
+  @override
+  String resendCodeCount(int seconds) {
+    return 'Resend code in ${seconds}s';
+  }
+
+  @override
+  String get resendOtp => 'Resend OTP';
+
+  @override
+  String get otpResentSuccess => 'OTP resent successfully';
+
+  @override
+  String get otpResentFailed => 'Failed to resend OTP. Please try again.';
+
+  @override
+  String get verifyYourEmail => 'Verify Your Email';
+
+  @override
+  String get enterEmailToChangePwd =>
+      'Enter your email address to change password';
+
+  @override
+  String get sendOtp => 'Send OTP';
+
+  @override
+  String get sendOtpFailed => 'Failed to send OTP. Please try again.';
+
+  @override
+  String weSentOtpTo(String email) {
+    return 'We\'ve sent a 6-digit OTP to $email\nEnter the code below to continue.';
+  }
 }
