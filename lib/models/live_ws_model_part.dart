@@ -10,37 +10,37 @@ class Lineup {
       {this.team, this.formation, this.startXI, this.substitutes, this.coach});
 
   Lineup.fromJson(Map<String, dynamic> json) {
-    team = json['team'] != null ? new HomeTeam.fromJson(json['team']) : null;
+    team = json['team'] != null ? HomeTeam.fromJson(json['team']) : null;
     formation = json['formation'];
     if (json['startXI'] != null) {
       startXI = <StartXI>[];
       json['startXI'].forEach((v) {
-        startXI!.add(new StartXI.fromJson(v));
+        startXI!.add(StartXI.fromJson(v));
       });
     }
     if (json['substitutes'] != null) {
       substitutes = <Substitute>[];
       json['substitutes'].forEach((v) {
-        substitutes!.add(new Substitute.fromJson(v));
+        substitutes!.add(Substitute.fromJson(v));
       });
     }
-    coach = json['coach'] != null ? new Coach.fromJson(json['coach']) : null;
+    coach = json['coach'] != null ? Coach.fromJson(json['coach']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.team != null) {
-      data['team'] = this.team!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (team != null) {
+      data['team'] = team!.toJson();
     }
-    data['formation'] = this.formation;
-    if (this.startXI != null) {
-      data['startXI'] = this.startXI!.map((v) => v.toJson()).toList();
+    data['formation'] = formation;
+    if (startXI != null) {
+      data['startXI'] = startXI!.map((v) => v.toJson()).toList();
     }
-    if (this.substitutes != null) {
-      data['substitutes'] = this.substitutes!.map((v) => v.toJson()).toList();
+    if (substitutes != null) {
+      data['substitutes'] = substitutes!.map((v) => v.toJson()).toList();
     }
-    if (this.coach != null) {
-      data['coach'] = this.coach!.toJson();
+    if (coach != null) {
+      data['coach'] = coach!.toJson();
     }
     return data;
   }
@@ -53,13 +53,13 @@ class StartXI {
 
   StartXI.fromJson(Map<String, dynamic> json) {
     player =
-        json['player'] != null ? new Player.fromJson(json['player']) : null;
+        json['player'] != null ? Player.fromJson(json['player']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.player != null) {
-      data['player'] = this.player!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (player != null) {
+      data['player'] = player!.toJson();
     }
     return data;
   }
@@ -72,13 +72,13 @@ class Substitute {
 
   Substitute.fromJson(Map<String, dynamic> json) {
     player =
-        json['player'] != null ? new Player.fromJson(json['player']) : null;
+        json['player'] != null ? Player.fromJson(json['player']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.player != null) {
-      data['player'] = this.player!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (player != null) {
+      data['player'] = player!.toJson();
     }
     return data;
   }
@@ -98,10 +98,10 @@ class Coach {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['photo'] = this.photo;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['photo'] = photo;
     return data;
   }
 }
@@ -113,22 +113,22 @@ class Statistic {
   Statistic({this.team, this.statistics});
 
   Statistic.fromJson(Map<String, dynamic> json) {
-    team = json['team'] != null ? new HomeTeam.fromJson(json['team']) : null;
+    team = json['team'] != null ? HomeTeam.fromJson(json['team']) : null;
     if (json['statistics'] != null) {
       statistics = <StatisticItem>[];
       json['statistics'].forEach((v) {
-        statistics!.add(new StatisticItem.fromJson(v));
+        statistics!.add(StatisticItem.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.team != null) {
-      data['team'] = this.team!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (team != null) {
+      data['team'] = team!.toJson();
     }
-    if (this.statistics != null) {
-      data['statistics'] = this.statistics!.map((v) => v.toJson()).toList();
+    if (statistics != null) {
+      data['statistics'] = statistics!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -146,9 +146,9 @@ class StatisticItem {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['type'] = this.type;
-    data['value'] = this.value;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['type'] = type;
+    data['value'] = value;
     return data;
   }
 }

@@ -134,5 +134,68 @@
   "loginToSync": "Iniciar sesión para sincronizar",
   "manageFavorites": "Gestiona tus equipos y ligas favoritas",
   "markAllRead": "Marcar todo como leído",
-  "unreadNotifications": "{count} notificaciones sin leer"
+  "unreadNotifications": "{count} notificaciones sin leer",
+  "@unreadNotifications": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "seeAll": "See all",
+  "addTeam": "+ Add Team",
+  "searchLeagues": "Search leagues...",
+  "searchTeamNames": "Search team names...",
+  "live": "Live",
+  "finished": "Finished",
+  "loginToSyncMsg": "Login to sync your favorites and preferences",
+  "password": "Password",
+  "enterYourEmail": "Enter your email",
+  "enterYourPassword": "Enter your password",
+  "forgotPassword": "Forgot Password?",
+  "emailPasswordEmpty": "Email and password cannot be empty.",
+  "loginFailed": "Login failed. Please check your credentials.",
+  "login": "Login",
+  "or": "OR",
+  "continueAsGuest": "Continue as a Guest",
+  "continueWithGoogle": "Continue with Google",
+  "dontHaveAccount": "Don't have an account?",
+  "signUp": "Sign Up",
+  "createAccount": "Create Account",
+  "signUpToGetStarted": "Sign up to get started!",
+  "agreeToTerms": "Agree with Terms and Conditions",
+  "registrationFailed": "Registration failed. Please try again.",
+  "haveAnAccount": "Have an account?",
+  "otpVerification": "OTP Verification",
+  "checkYourEmail": "Check Your Email",
+  "enterOtpCode": "Enter OTP Code",
+  "codeExpire": "This code will expire in 2 minutes",
+  "enterValidCode": "Please enter a valid 6-digit code",
+  "verifyOtp": "Verify OTP",
+  "verificationFailed": "Verification failed. Invalid code.",
+  "didntReceiveCode": "Didn't receive the code?",
+  "resendCodeEnabled": "You can now resend the code",
+  "resendCodeCount": "Resend code in {seconds}s",
+  "@resendCodeCount": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "resendOtp": "Resend OTP",
+  "otpResentSuccess": "OTP resent successfully",
+  "otpResentFailed": "Failed to resend OTP. Please try again.",
+  "verifyYourEmail": "Verify Your Email",
+  "enterEmailToChangePwd": "Enter your email address to change password",
+  "sendOtp": "Send OTP",
+  "sendOtpFailed": "Failed to send OTP. Please try again.",
+  "weSentOtpTo": "We've sent a 6-digit OTP to {email}\nEnter the code below to continue.",
+  "@weSentOtpTo": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  }
 }

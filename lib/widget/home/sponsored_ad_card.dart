@@ -48,7 +48,7 @@ class SponsoredAdCard extends StatelessWidget {
               Text(
                 'SPONSORED',
                 style: FontManager.labelSmall(
-                  color: AppColors.white.withOpacity(0.8),
+                  color: AppColors.white.withValues(alpha: 0.8),
                   fontSize: 10,
                 ),
               ),
@@ -76,7 +76,7 @@ class SponsoredAdCard extends StatelessWidget {
               Text(
                 'Watch Live Matches in HD • Ad-Free Experience',
                 style: FontManager.bodySmall(
-                  color: AppColors.white.withOpacity(0.9),
+                  color: AppColors.white.withValues(alpha: 0.9),
                   fontSize: 14,
                 ),
               ),

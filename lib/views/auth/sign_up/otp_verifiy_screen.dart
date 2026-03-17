@@ -81,7 +81,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
         border: Border.all(color: borderColor),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -96,7 +96,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
         leading: Padding(
             padding: EdgeInsets.only(left: 16.w),
             child: CircleAvatar(
-              backgroundColor: Colors.white.withOpacity(0.2),
+              backgroundColor: Colors.white.withValues(alpha: 0.2),
               child: BackButton(color: Colors.white),
             )),
       ),
@@ -172,7 +172,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                       border: Border.all(color: focusedBorderColor),
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.primaryColor.withOpacity(0.2),
+                          color: AppColors.primaryColor.withValues(alpha: 0.2),
                           blurRadius: 8,
                           offset: const Offset(0, 4),
                         ),
@@ -185,7 +185,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                     ),
                     pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
                     showCursor: true,
-                    onCompleted: (pin) => print(pin),
+                    onCompleted: (pin) => debugPrint(pin),
                   ),
                   SizedBox(height: 12.h),
 

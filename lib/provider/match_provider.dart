@@ -24,28 +24,41 @@ class MatchProvider extends ChangeNotifier {
 
   void _onSocketUpdate() {
     final update = SocketService.instance.liveScoreNotifier.value;
-    print("🔄 MatchProvider received socket update: ${update?.type}");
+    debugPrint("🔄 MatchProvider received socket update: ${update?.type}");
     if (update != null && update.data != null) {
       bool hasChanges = false;
       for (var matchData in update.data!) {
         if (matchData.id != null) {
-          _activeMatches[matchData.id!] = matchData;
-          hasChanges = true;
-          print("🔄 MatchProvider updated active match ID: ${matchData.id}");
+          final existing = _activeMatches[matchData.id!];
+          if (existing == null || _hasMatchChanged(existing, matchData)) {
+            _activeMatches[matchData.id!] = matchData;
+            hasChanges = true;
+            debugPrint("🔄 MatchProvider updated active match ID: ${matchData.id}");
+          }
         } else {
-          print("⚠️ MatchProvider received matchData with NULL ID");
+          debugPrint("⚠️ MatchProvider received matchData with NULL ID");
         }
       }
 
       if (hasChanges) {
-        print("🔄 MatchProvider triggering notifyListeners()");
+        debugPrint("🔄 MatchProvider triggering notifyListeners()");
         notifyListeners();
       } else {
-        print("⚠️ MatchProvider hasChanges is false - no UI update triggered");
+        debugPrint("⚠️ MatchProvider hasChanges is false - no UI update triggered");
       }
     } else {
-      print("⚠️ MatchProvider ignored update because data is null");
+      debugPrint("⚠️ MatchProvider ignored update because data is null");
     }
+  }
+
+  bool _hasMatchChanged(Data oldMatch, Data newMatch) {
+    if (oldMatch.elapsed != newMatch.elapsed) return true;
+    if (oldMatch.statusShort != newMatch.statusShort) return true;
+    if (oldMatch.goals?.home != newMatch.goals?.home) return true;
+    if (oldMatch.goals?.away != newMatch.goals?.away) return true;
+    
+    // In rare cases, other fields might change dynamically but usually score/time/status are the key live ones
+    return false;
   }
 
   @override
@@ -57,8 +70,8 @@ class MatchProvider extends ChangeNotifier {
   }
 
   // Fixtures cache
-  List<Data> _upcomingMatches = [];
-  List<Data> _finishedMatches = [];
+  final List<Data> _upcomingMatches = [];
+  final List<Data> _finishedMatches = [];
   bool _isLoadingUpcoming = false;
   bool _isLoadingFinished = false;
 
@@ -221,10 +234,12 @@ class MatchProvider extends ChangeNotifier {
       final stats = results[1] as List<Statistic>?;
 
       debugPrint("Fetched details for matchId: $matchId");
-      if (lineups != null)
+      if (lineups != null) {
         debugPrint("   - Lineups data found: ${lineups.length} entries");
-      if (stats != null)
+      }
+      if (stats != null) {
         debugPrint("   - Statistics data found: ${stats.length} entries");
+      }
 
       if (lineups != null) {
         _lineups[matchId] = lineups;

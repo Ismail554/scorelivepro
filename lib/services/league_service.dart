@@ -5,6 +5,7 @@ import 'package:scorelivepro/models/team_model.dart';
 import 'package:scorelivepro/models/live_ws_model.dart' as ws;
 import 'package:scorelivepro/services/api_service.dart';
 import 'package:scorelivepro/services/dio_service.dart';
+import 'package:flutter/foundation.dart';
 
 class LeagueService {
   static Future<LeagueResponse?> fetchLeagues({
@@ -56,7 +57,7 @@ class LeagueService {
 
   static Future<String?> removeLeagueFromFavorites(int leagueId) async {
     try {
-      print(
+      debugPrint(
           "Calling API: ${ApiEndPoint.addToFavoriteLeaques()} (DELETE) - Removing League ID: $leagueId");
       final response = await DioManager.apiRequest(
         url: ApiEndPoint.addToFavoriteLeaques(),
@@ -66,23 +67,23 @@ class LeagueService {
 
       return response.fold(
         (error) {
-          print("Error Removing League from Favorites: $error");
+          debugPrint("Error Removing League from Favorites: $error");
           return error;
         },
         (data) {
-          print("Success Removing League from Favorites: $data");
+          debugPrint("Success Removing League from Favorites: $data");
           return null;
         },
       );
     } catch (e) {
-      print("Exception Removing League from Favorites: $e");
+      debugPrint("Exception Removing League from Favorites: $e");
       return e.toString();
     }
   }
 
   static Future<List<LeagueModel>?> fetchFavoriteLeagues() async {
     try {
-      print(
+      debugPrint(
           "Calling API: ${ApiEndPoint.myFavoritesLeagues()} (GET) - Fetching Favorite Leagues");
       final response = await DioManager.apiRequest(
         url: ApiEndPoint.myFavoritesLeagues(),
@@ -92,11 +93,11 @@ class LeagueService {
 
       return response.fold(
         (error) {
-          print("Error Fetching Favorite Leagues: $error");
+          debugPrint("Error Fetching Favorite Leagues: $error");
           return null;
         },
         (data) {
-          print("Success Fetching Favorite Leagues: $data");
+          debugPrint("Success Fetching Favorite Leagues: $data");
           if (data is List) {
             return data.map((e) => LeagueModel.fromJson(e)).toList();
           }
@@ -109,7 +110,7 @@ class LeagueService {
         },
       );
     } catch (e) {
-      print("Exception Fetching Favorite Leagues: $e");
+      debugPrint("Exception Fetching Favorite Leagues: $e");
       return null;
     }
   }
@@ -124,7 +125,7 @@ class LeagueService {
 
       return response.fold(
         (error) {
-          print("Error Fetching League Details: $error");
+          debugPrint("Error Fetching League Details: $error");
           return null;
         },
         (data) {
@@ -135,7 +136,7 @@ class LeagueService {
         },
       );
     } catch (e) {
-      print("Exception Fetching League Details: $e");
+      debugPrint("Exception Fetching League Details: $e");
       return null;
     }
   }
@@ -143,7 +144,7 @@ class LeagueService {
   static Future<List<StandingsModel>?> fetchLeagueStandings(
       int leagueId) async {
     try {
-      print(
+      debugPrint(
           "🚀 [LeagueService] Calling fetchLeagueStandings with GET param league=$leagueId...");
       final response = await DioManager.apiRequest(
         url: ApiEndPoint.leagueStandingDetails(leagueId),
@@ -153,30 +154,30 @@ class LeagueService {
 
       return response.fold(
         (error) {
-          print("❌ [LeagueService] Error Fetching League Standings: $error");
+          debugPrint("❌ [LeagueService] Error Fetching League Standings: $error");
           return null;
         },
         (data) {
-          print(
+          debugPrint(
               "✅ [LeagueService] Standings API Success! Raw Data Type: ${data.runtimeType}");
           // Print a snippet of the data to avoid console overflow
-          print(
+          debugPrint(
               "➡️ [LeagueService] Standings Data Snippet: ${data.toString().substring(0, data.toString().length > 200 ? 200 : data.toString().length)}...");
 
           if (data is Map<String, dynamic>) {
             final standingsResponse = StandingsResponse.fromJson(data);
-            print(
+            debugPrint(
                 "🏆 [LeagueService] Parsed Standings Rows Count: ${standingsResponse.results.length}");
             return standingsResponse.results;
           } else {
-            print(
+            debugPrint(
                 "⚠️ [LeagueService] Standings Data is NOT a Map<String, dynamic>!");
           }
           return null;
         },
       );
     } catch (e) {
-      print("🔥 [LeagueService] Exception Fetching League Standings: $e");
+      debugPrint("🔥 [LeagueService] Exception Fetching League Standings: $e");
       return null;
     }
   }
@@ -191,7 +192,7 @@ class LeagueService {
 
       return response.fold(
         (error) {
-          print("Error Fetching League Teams: $error");
+          debugPrint("Error Fetching League Teams: $error");
           return null;
         },
         (data) {
@@ -203,7 +204,7 @@ class LeagueService {
         },
       );
     } catch (e) {
-      print("Exception Fetching League Teams: $e");
+      debugPrint("Exception Fetching League Teams: $e");
       return null;
     }
   }
@@ -229,7 +230,7 @@ class LeagueService {
         },
       );
     } catch (e) {
-      print("Exception Fetching League Fixtures: $e");
+      debugPrint("Exception Fetching League Fixtures: $e");
       return null;
     }
   }
@@ -237,7 +238,7 @@ class LeagueService {
   /// Fetch Head-to-Head Statistics
   static Future<H2HModel?> fetchH2H(int fixtureId) async {
     try {
-      print("🚀 [LeagueService] Calling fetchH2H for fixture=$fixtureId...");
+      debugPrint("🚀 [LeagueService] Calling fetchH2H for fixture=$fixtureId...");
       final response = await DioManager.apiRequest(
         url: ApiEndPoint.fixturesHeadToHead(fixtureId),
         methods: Methods.get,
@@ -246,7 +247,7 @@ class LeagueService {
 
       return response.fold(
         (error) {
-          print("❌ [LeagueService] Error Fetching H2H: $error");
+          debugPrint("❌ [LeagueService] Error Fetching H2H: $error");
           return null;
         },
         (data) {
@@ -257,7 +258,7 @@ class LeagueService {
         },
       );
     } catch (e) {
-      print("❌ [LeagueService] Exception Fetching H2H: $e");
+      debugPrint("❌ [LeagueService] Exception Fetching H2H: $e");
       return null;
     }
   }
@@ -265,7 +266,7 @@ class LeagueService {
   /// Fetch Match Statistics
   static Future<List<ws.Statistic>?> fetchMatchStatistics(int fixtureId) async {
     try {
-      print(
+      debugPrint(
           "🚀 [LeagueService] Calling fetchMatchStatistics for fixture=$fixtureId...");
       final response = await DioManager.apiRequest(
         url: ApiEndPoint.statistics(fixtureId),
@@ -275,7 +276,7 @@ class LeagueService {
 
       return response.fold(
         (error) {
-          print("❌ [LeagueService] Error Fetching Match Statistics: $error");
+          debugPrint("❌ [LeagueService] Error Fetching Match Statistics: $error");
           return null;
         },
         (data) {
@@ -292,7 +293,7 @@ class LeagueService {
         },
       );
     } catch (e) {
-      print("❌ [LeagueService] Exception Fetching Match Statistics: $e");
+      debugPrint("❌ [LeagueService] Exception Fetching Match Statistics: $e");
       return null;
     }
   }
@@ -300,7 +301,7 @@ class LeagueService {
   /// Fetch Match Lineups
   static Future<List<ws.Lineup>?> fetchMatchLineups(int fixtureId) async {
     try {
-      print(
+      debugPrint(
           "🚀 [LeagueService] Calling fetchMatchLineups for fixture=$fixtureId...");
       final response = await DioManager.apiRequest(
         url: ApiEndPoint.lineups(fixtureId),
@@ -310,7 +311,7 @@ class LeagueService {
 
       return response.fold(
         (error) {
-          print("❌ [LeagueService] Error Fetching Match Lineups: $error");
+          debugPrint("❌ [LeagueService] Error Fetching Match Lineups: $error");
           return null;
         },
         (data) {
@@ -327,7 +328,7 @@ class LeagueService {
         },
       );
     } catch (e) {
-      print("❌ [LeagueService] Exception Fetching Match Lineups: $e");
+      debugPrint("❌ [LeagueService] Exception Fetching Match Lineups: $e");
       return null;
     }
   }

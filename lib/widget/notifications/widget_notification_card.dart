@@ -35,7 +35,7 @@ class NotificationCard extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: AppColors.cardShadow.withOpacity(0.05),
+              color: AppColors.cardShadow.withValues(alpha: 0.05),
               blurRadius: 4,
               offset: const Offset(0, 2),
             ),
@@ -139,17 +139,17 @@ class NotificationCard extends StatelessWidget {
   Color _getIconBackgroundColor() {
     switch (notification.type) {
       case NotificationType.transfer:
-        return AppColors.primaryColor.withOpacity(0.1);
+        return AppColors.primaryColor.withValues(alpha: 0.1);
       case NotificationType.news:
-        return AppColors.info.withOpacity(0.1);
+        return AppColors.info.withValues(alpha: 0.1);
       case NotificationType.injury:
-        return AppColors.error.withOpacity(0.1);
+        return AppColors.error.withValues(alpha: 0.1);
       case NotificationType.match:
-        return AppColors.success.withOpacity(0.1);
+        return AppColors.success.withValues(alpha: 0.1);
       case NotificationType.league:
-        return AppColors.warning.withOpacity(0.1);
+        return AppColors.warning.withValues(alpha: 0.1);
       case NotificationType.team:
-        return AppColors.primaryColor.withOpacity(0.1);
+        return AppColors.primaryColor.withValues(alpha: 0.1);
     }
   }
 }

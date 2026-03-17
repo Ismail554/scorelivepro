@@ -390,7 +390,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(12.r),
         border:
-            Border.all(color: Colors.grey.withOpacity(0.1)), // Subtle border
+            Border.all(color: Colors.grey.withValues(alpha: 0.1)), // Subtle border
       ),
       child: Column(children: children),
     );
@@ -444,7 +444,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       trailing: isSwitch
           ? Switch(
               value: switchValue,
-              activeColor: Colors.white,
+              activeThumbColor: Colors.white,
               activeTrackColor: const Color(0xFFFF6B00), // Orange Switch
               onChanged: onToggle,
             )

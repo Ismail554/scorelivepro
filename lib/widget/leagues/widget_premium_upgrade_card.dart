@@ -45,7 +45,7 @@ class PremiumUpgradeCard extends StatelessWidget {
               Text(
                 AppStrings.sponserd,
                 style: FontManager.labelSmall(
-                  color: AppColors.white.withOpacity(0.8),
+                  color: AppColors.white.withValues(alpha: 0.8),
                   fontSize: 10,
                 ),
               ),
@@ -63,7 +63,7 @@ class PremiumUpgradeCard extends StatelessWidget {
               Text(
                 'Ad-free experience, live notifications & more',
                 style: FontManager.bodySmall(
-                  color: AppColors.white.withOpacity(0.9),
+                  color: AppColors.white.withValues(alpha: 0.9),
                   fontSize: 14,
                 ),
               ),

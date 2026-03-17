@@ -51,7 +51,7 @@ class UnifiedSettingsItem extends StatelessWidget {
       trailingWidget = Switch(
         value: toggleValue!,
         onChanged: onToggleChanged,
-        activeColor: AppColors.primaryColor,
+        activeThumbColor: AppColors.primaryColor,
       );
     } else if (trailing != null) {
       // Custom trailing widget
@@ -74,7 +74,7 @@ class UnifiedSettingsItem extends StatelessWidget {
             width: 40.w,
             height: 40.w,
             decoration: BoxDecoration(
-              color: (iconColor ?? AppColors.primaryColor).withOpacity(0.1),
+              color: (iconColor ?? AppColors.primaryColor).withValues(alpha: 0.1),
               borderRadius: AppPadding.c8,
             ),
             child: Icon(

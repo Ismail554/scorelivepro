@@ -49,7 +49,7 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
           setState(() {
             _isAdLoaded = true;
           });
-          print('Ad loaded: ${ad.adUnitId}');
+          debugPrint('Ad loaded: ${ad.adUnitId}');
         },
         onAdFailedToLoad: (ad, error) {
           ad.dispose();

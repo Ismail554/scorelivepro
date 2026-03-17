@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scorelivepro/l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/assets_manager.dart';
 
@@ -196,7 +195,7 @@ class AppInfoScreen extends StatelessWidget {
                 color: AppColors.primaryColor,
                 borderRadius: BorderRadius.circular(24.r),
               ),
-              child: Container(
+              child: SizedBox(
                 height: 32.h,
                 width: 32.w,
                 child: Image.asset(
@@ -257,7 +256,7 @@ class AppInfoScreen extends StatelessWidget {
         border: Border.all(color: Colors.grey.shade200),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.05),
+            color: Colors.grey.withValues(alpha: 0.05),
             spreadRadius: 2,
             blurRadius: 10,
             offset: const Offset(0, 2),
@@ -278,7 +277,7 @@ class AppInfoScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: AppColors.primaryColor.withOpacity(0.1),
+              color: AppColors.primaryColor.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(icon, color: AppColors.primaryColor, size: 20),

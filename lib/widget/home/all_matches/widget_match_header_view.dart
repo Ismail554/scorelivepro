@@ -55,8 +55,8 @@ class WidgetMatchHeaderView extends StatelessWidget {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Colors.black.withOpacity(0.4),
-                    Colors.black.withOpacity(0.2),
+                    Colors.black.withValues(alpha: 0.4),
+                    Colors.black.withValues(alpha: 0.2),
                   ],
                 ),
               ),
@@ -207,7 +207,7 @@ class WidgetMatchHeaderView extends StatelessWidget {
             width: 60.w,
             height: 60.w,
             decoration: BoxDecoration(
-              color: AppColors.white.withOpacity(0.2),
+              color: AppColors.white.withValues(alpha: 0.2),
               shape: BoxShape.circle,
             ),
             child: Container(
@@ -215,7 +215,7 @@ class WidgetMatchHeaderView extends StatelessWidget {
               height: 48.w,
               padding: EdgeInsets.all(12.w),
               decoration: BoxDecoration(
-                color: AppColors.greyE8.withOpacity(0.5),
+                color: AppColors.greyE8.withValues(alpha: 0.5),
                 shape: BoxShape.circle,
               ),
               child: Image.asset(

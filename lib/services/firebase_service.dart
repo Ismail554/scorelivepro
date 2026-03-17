@@ -1,11 +1,12 @@
 import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 
 Future<void> handleBackgroundMessage(RemoteMessage message) async {
-  print('--- Push Notification Received (Background) ---');
-  print('Title: ${message.notification?.title}');
-  print('Body: ${message.notification?.body}');
-  print('Payload: ${message.data}');
+  debugPrint('--- Push Notification Received (Background) ---');
+  debugPrint('Title: ${message.notification?.title}');
+  debugPrint('Body: ${message.notification?.body}');
+  debugPrint('Payload: ${message.data}');
 }
 
 class FirebaseService {
@@ -30,7 +31,7 @@ class FirebaseService {
 
       // If still null, skip FCM token fetch to prevent crash
       if (apnsToken == null) {
-        print(
+        debugPrint(
             "APNS Token not available after retries. Skipping FCM token fetch.");
         return;
       }
@@ -39,7 +40,7 @@ class FirebaseService {
     // fetch the FCM token for this device
     final FCMToken = await _firebaseMessaging.getToken();
     // print the token
-    print("FCM Token: " + FCMToken.toString());
+    debugPrint("FCM Token: $FCMToken");
 
     initPushNotifications();
   }
@@ -47,8 +48,8 @@ class FirebaseService {
   // fuction to handle recieved notifications
   void handleMessage(RemoteMessage? message) {
     if (message == null) return;
-    print('--- Navigating to Notification from Push ---');
-    print('Payload: ${message.data}');
+    debugPrint('--- Navigating to Notification from Push ---');
+    debugPrint('Payload: ${message.data}');
     // Navigation or handling logic can be added here
   }
 
@@ -65,10 +66,10 @@ class FirebaseService {
 
     // foreground notifications
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('--- Push Notification Received (Foreground) ---');
-      print('Title: ${message.notification?.title}');
-      print('Body: ${message.notification?.body}');
-      print('Payload: ${message.data}');
+      debugPrint('--- Push Notification Received (Foreground) ---');
+      debugPrint('Title: ${message.notification?.title}');
+      debugPrint('Body: ${message.notification?.body}');
+      debugPrint('Payload: ${message.data}');
     });
   }
 }

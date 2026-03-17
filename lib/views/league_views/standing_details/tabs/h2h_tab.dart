@@ -6,7 +6,6 @@ import 'package:scorelivepro/core/app_spacing.dart';
 import 'package:scorelivepro/core/font_manager.dart';
 import 'package:scorelivepro/services/league_service.dart';
 import 'package:scorelivepro/models/h2h_model.dart';
-import 'package:scorelivepro/models/live_ws_model.dart' as ws;
 import 'package:intl/intl.dart';
 
 /// H2H (Head to Head) Tab Widget

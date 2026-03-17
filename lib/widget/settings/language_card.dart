@@ -36,13 +36,13 @@ class LanguageCard extends StatelessWidget {
           border: Border.all(
             color: isSelected
                 ? AppColors.primaryColor
-                : AppColors.textPrimary.withOpacity(0.2),
+                : AppColors.textPrimary.withValues(alpha: 0.2),
             width: isSelected ? 1.5 : 1,
           ),
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: AppColors.primaryColor.withOpacity(0.1),
+                    color: AppColors.primaryColor.withValues(alpha: 0.1),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -58,7 +58,7 @@ class LanguageCard extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: AppPadding.c8,
                 border: Border.all(
-                  color: AppColors.grey.withOpacity(0.2),
+                  color: AppColors.grey.withValues(alpha: 0.2),
                   width: 1,
                 ),
               ),

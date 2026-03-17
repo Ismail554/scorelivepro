@@ -64,7 +64,7 @@ class MatchHeaderInfo extends StatelessWidget {
             dateTime,
             style: FontManager.bodySmall(
               fontSize: 12,
-              color: AppColors.white.withOpacity(0.9),
+              color: AppColors.white.withValues(alpha: 0.9),
             ),
             textAlign: TextAlign.center,
           ),
@@ -76,7 +76,7 @@ class MatchHeaderInfo extends StatelessWidget {
             venue,
             style: FontManager.bodySmall(
               fontSize: 12,
-              color: AppColors.white.withOpacity(0.9),
+              color: AppColors.white.withValues(alpha: 0.9),
             ),
             textAlign: TextAlign.center,
             overflow: TextOverflow.ellipsis,
@@ -123,7 +123,7 @@ class MatchHeaderInfo extends StatelessWidget {
           width: 60.w,
           height: 60.w,
           decoration: BoxDecoration(
-            color: AppColors.white.withOpacity(0.2),
+            color: AppColors.white.withValues(alpha: 0.2),
             shape: BoxShape.circle,
           ),
           child: Container(
@@ -131,7 +131,7 @@ class MatchHeaderInfo extends StatelessWidget {
             height: 48.w,
             padding: EdgeInsets.all(12.w),
             decoration: BoxDecoration(
-              color: AppColors.greyE8.withOpacity(0.5),
+              color: AppColors.greyE8.withValues(alpha: 0.5),
               shape: BoxShape.circle,
             ),
             child: Image.asset(

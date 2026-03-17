@@ -61,7 +61,7 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: CircleAvatar(
-                    backgroundColor: Colors.white.withOpacity(0.2),
+                    backgroundColor: Colors.white.withValues(alpha: 0.2),
                     child: const BackButton(color: Colors.white),
                   ),
                 ),
@@ -259,11 +259,11 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
       contentPadding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 20.w),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16.r),
-        borderSide: BorderSide(color: Colors.grey.withOpacity(0.2)),
+        borderSide: BorderSide(color: Colors.grey.withValues(alpha: 0.2)),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16.r),
-        borderSide: BorderSide(color: Colors.grey.withOpacity(0.2)),
+        borderSide: BorderSide(color: Colors.grey.withValues(alpha: 0.2)),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16.r),

@@ -17,7 +17,7 @@ class CongratulationScreen extends StatelessWidget {
         leading: Padding(
             padding: EdgeInsets.only(left: 16.w),
             child: CircleAvatar(
-              backgroundColor: Colors.white.withOpacity(0.2),
+              backgroundColor: Colors.white.withValues(alpha: 0.2),
               child: BackButton(color: Colors.white),
             )),
       ),

@@ -47,7 +47,7 @@ class PremiumNotificationCard extends StatelessWidget {
               Text(
                 'PREMIUM FEATURE',
                 style: FontManager.labelSmall(
-                  color: AppColors.white.withOpacity(0.8),
+                  color: AppColors.white.withValues(alpha: 0.8),
                   fontSize: 10,
                 ),
               ),
@@ -69,7 +69,7 @@ class PremiumNotificationCard extends StatelessWidget {
               Text(
                 'Get personalized alerts for your favorite teams with premium notifications',
                 style: FontManager.bodyMedium(
-                  color: AppColors.white.withOpacity(0.9),
+                  color: AppColors.white.withValues(alpha: 0.9),
                   fontSize: 14,
                 ),
               ),

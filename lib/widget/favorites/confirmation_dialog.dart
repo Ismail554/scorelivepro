@@ -36,17 +36,17 @@ class ConfirmationDialog extends StatelessWidget {
           child: Container(
             padding: EdgeInsets.all(24.w),
             decoration: BoxDecoration(
-              color: AppColors.white.withOpacity(0.9),
+              color: AppColors.white.withValues(alpha: 0.9),
               borderRadius: BorderRadius.circular(20.r),
               border: Border.all(
                 color: isDestructive
-                    ? Colors.red.withOpacity(0.3)
-                    : AppColors.primaryColor.withOpacity(0.3),
+                    ? Colors.red.withValues(alpha: 0.3)
+                    : AppColors.primaryColor.withValues(alpha: 0.3),
                 width: 1.w,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 20,
                   offset: const Offset(0, 10),
                 ),
@@ -60,8 +60,8 @@ class ConfirmationDialog extends StatelessWidget {
                   padding: EdgeInsets.all(16.w),
                   decoration: BoxDecoration(
                     color: isDestructive
-                        ? Colors.red.withOpacity(0.1)
-                        : AppColors.primaryColor.withOpacity(0.1),
+                        ? Colors.red.withValues(alpha: 0.1)
+                        : AppColors.primaryColor.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(

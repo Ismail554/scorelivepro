@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:scorelivepro/core/app_spacing.dart';
 import 'package:scorelivepro/l10n/app_localizations.dart';
@@ -11,7 +10,6 @@ import 'package:scorelivepro/core/font_manager.dart';
 import 'package:scorelivepro/provider/auth_provider.dart';
 import 'package:scorelivepro/views/auth/forgot_password/forgot_password_screen.dart';
 import 'package:scorelivepro/views/auth/sign_up/sign_up_screen.dart';
-import 'package:scorelivepro/views/home_views/home_screen.dart';
 import 'package:scorelivepro/views/auth/sign_up/otp_verifiy_screen.dart';
 import 'package:scorelivepro/views/main_navigation/main_navigation_screen.dart';
 import 'package:scorelivepro/provider/notification_provider.dart';
@@ -244,7 +242,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Row(
                   children: [
                     Expanded(
-                      child: Divider(color: Colors.grey.withOpacity(0.2)),
+                      child: Divider(color: Colors.grey.withValues(alpha: 0.2)),
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -254,7 +252,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     Expanded(
-                      child: Divider(color: Colors.grey.withOpacity(0.2)),
+                      child: Divider(color: Colors.grey.withValues(alpha: 0.2)),
                     ),
                   ],
                 ),
@@ -376,11 +374,11 @@ class _LoginScreenState extends State<LoginScreen> {
       contentPadding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 20.w),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16.r),
-        borderSide: BorderSide(color: Colors.grey.withOpacity(0.2)),
+        borderSide: BorderSide(color: Colors.grey.withValues(alpha: 0.2)),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16.r),
-        borderSide: BorderSide(color: Colors.grey.withOpacity(0.2)),
+        borderSide: BorderSide(color: Colors.grey.withValues(alpha: 0.2)),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16.r),

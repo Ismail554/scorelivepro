@@ -59,8 +59,8 @@ class LeagueHeaderCard extends StatelessWidget {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Colors.black.withOpacity(0.4),
-                    Colors.black.withOpacity(0.2),
+                    Colors.black.withValues(alpha: 0.4),
+                    Colors.black.withValues(alpha: 0.2),
                   ],
                 ),
               ),
@@ -112,7 +112,7 @@ class LeagueHeaderCard extends StatelessWidget {
                     width: 80.w,
                     height: 80.w,
                     decoration: BoxDecoration(
-                      color: AppColors.white.withOpacity(0.2),
+                      color: AppColors.white.withValues(alpha: 0.2),
                       shape: BoxShape.circle,
                     ),
                     clipBehavior: Clip.antiAlias,
@@ -165,7 +165,7 @@ class LeagueHeaderCard extends StatelessWidget {
                     "$country • $season",
                     style: FontManager.bodyMedium(
                       fontSize: 14,
-                      color: AppColors.white.withOpacity(0.9),
+                      color: AppColors.white.withValues(alpha: 0.9),
                     ),
                     textAlign: TextAlign.center,
                   ),

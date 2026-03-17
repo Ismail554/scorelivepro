@@ -27,7 +27,7 @@ class TransparentTabBar extends StatelessWidget implements PreferredSizeWidget {
         controller: tabController,
         tabs: tabs.map((tab) => Tab(text: tab)).toList(),
         labelColor: AppColors.white,
-        unselectedLabelColor: AppColors.white.withOpacity(0.6),
+        unselectedLabelColor: AppColors.white.withValues(alpha: 0.6),
         indicatorColor: AppColors.white,
         indicatorWeight: 2,
         labelStyle: FontManager.labelMedium(
@@ -36,7 +36,7 @@ class TransparentTabBar extends StatelessWidget implements PreferredSizeWidget {
         ),
         unselectedLabelStyle: FontManager.labelMedium(
           fontSize: 12,
-          color: AppColors.white.withOpacity(0.6),
+          color: AppColors.white.withValues(alpha: 0.6),
         ),
       ),
     );

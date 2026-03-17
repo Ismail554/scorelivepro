@@ -179,10 +179,9 @@ class _DetailedStandingsScreenState extends State<DetailedStandingsScreen>
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Colors.black.withOpacity(0.6),
-                  Colors.black.withOpacity(0.4),
-                  Colors.black.withOpacity(
-                      0.7), // Darker at bottom for TabBar readability
+                  Colors.black.withValues(alpha: 0.6),
+                  Colors.black.withValues(alpha: 0.4),
+                  Colors.black.withValues(alpha: 0.7), // Darker at bottom for TabBar readability
                 ],
               ),
             ),
@@ -227,7 +226,7 @@ class _DetailedStandingsScreenState extends State<DetailedStandingsScreen>
             Container(
               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
               decoration: BoxDecoration(
-                color: AppColors.primaryColor.withOpacity(0.8),
+                color: AppColors.primaryColor.withValues(alpha: 0.8),
                 borderRadius: BorderRadius.circular(20.r),
               ),
               child: Text(

@@ -33,7 +33,7 @@ class NewsCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(12.r),
           boxShadow: [
             BoxShadow(
-              color: AppColors.cardShadow.withOpacity(0.05),
+              color: AppColors.cardShadow.withValues(alpha: 0.05),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),

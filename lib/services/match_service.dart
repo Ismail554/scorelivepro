@@ -17,8 +17,9 @@ class MatchService {
         try {
           // 🛡️ Safety Check: If data is a List (e.g. empty list [] when no data), return null
           if (data is List) {
-            if (data.isEmpty)
+            if (data.isEmpty) {
               return []; // Return empty list instead of null if preferred
+            }
             return null;
           }
 
@@ -65,7 +66,7 @@ class MatchService {
           }
           return null;
         } catch (e) {
-          print("Error parsing lineups: $e");
+          debugPrint("Error parsing lineups: $e");
           return null;
         }
       },
@@ -119,7 +120,7 @@ class MatchService {
 
           return null;
         } catch (e) {
-          print("Error parsing statistics: $e");
+          debugPrint("Error parsing statistics: $e");
           return null;
         }
       },

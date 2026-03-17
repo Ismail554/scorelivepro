@@ -30,7 +30,7 @@ class FavoriteTeamCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12.r),
         boxShadow: [
           BoxShadow(
-            color: AppColors.cardShadow.withOpacity(0.05),
+            color: AppColors.cardShadow.withValues(alpha: 0.05),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -44,7 +44,7 @@ class FavoriteTeamCard extends StatelessWidget {
             height: 48.w,
             padding: EdgeInsets.all(8.w),
             decoration: BoxDecoration(
-              color: AppColors.greyE8.withOpacity(0.5),
+              color: AppColors.greyE8.withValues(alpha: 0.5),
               shape: BoxShape.circle,
             ),
             child: logoUrl != null

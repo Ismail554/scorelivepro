@@ -93,30 +93,37 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
           _buildCategoryChips(),
           const SizedBox(height: 12),
           Expanded(
-            child: Consumer<MatchProvider>(
-              builder: (context, provider, child) {
-                return TabBarView(
-                  controller: _tabController,
-                  children: [
-                    _buildRealLiveMatchesList(
-                        provider), // Pass provider to filter Live matches
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                Consumer<MatchProvider>(
+                  builder: (context, provider, child) {
+                    return _buildRealLiveMatchesList(provider);
+                  },
+                ),
 
-                    // Upcoming Matches
-                    provider.isLoadingUpcoming &&
+                // Upcoming Matches
+                Consumer<MatchProvider>(
+                  builder: (context, provider, child) {
+                    return provider.isLoadingUpcoming &&
                             provider.upcomingMatches.isEmpty
                         ? _buildShimmerList()
                         : _buildRealMatchesList(provider.upcomingMatches,
-                            isUpcoming: true),
+                            isUpcoming: true);
+                  },
+                ),
 
-                    // Finished Matches
-                    provider.isLoadingFinished &&
+                // Finished Matches
+                Consumer<MatchProvider>(
+                  builder: (context, provider, child) {
+                    return provider.isLoadingFinished &&
                             provider.finishedMatches.isEmpty
                         ? _buildShimmerList()
                         : _buildRealMatchesList(provider.finishedMatches,
-                            isUpcoming: false),
-                  ],
-                );
-              },
+                            isUpcoming: false);
+                  },
+                ),
+              ],
             ),
           ),
         ],
@@ -318,7 +325,7 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.sports_soccer,
-                size: 64, color: AppColors.textSecondary.withOpacity(0.5)),
+                size: 64, color: AppColors.textSecondary.withValues(alpha: 0.5)),
             SizedBox(height: 16.h),
             Text(
               "No live matches currently",

@@ -87,7 +87,7 @@ class _NotificationAllScreenState extends State<NotificationAllScreen> {
         color: AppColors.white,
         boxShadow: [
           BoxShadow(
-            color: AppColors.cardShadow.withOpacity(0.05),
+            color: AppColors.cardShadow.withValues(alpha: 0.05),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),

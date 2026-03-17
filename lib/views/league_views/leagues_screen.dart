@@ -128,7 +128,7 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
       _favoritedLeagueIds.remove(leagueId);
     });
 
-    print(
+    debugPrint(
         "CALLING API: ${ApiEndPoint.addToFavoriteLeaques()} with ID: $leagueId (DELETE)");
     error = await LeagueService.removeLeagueFromFavorites(leagueId);
 

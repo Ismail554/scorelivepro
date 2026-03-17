@@ -131,10 +131,10 @@ class DioManager {
                   jsonEncode({'fields': fieldsData, 'files': filesData});
 
               log('📦 Sending FormData: $formDataStr', name: "BODY");
-              print('📤 Request Body (FormData): $formDataStr');
+              debugPrint('📤 Request Body (FormData): $formDataStr');
             } else {
               log('📤 Request Body: ${jsonEncode(options.data)}', name: "BODY");
-              print('📤 Request Body: ${jsonEncode(options.data)}');
+              debugPrint('📤 Request Body: ${jsonEncode(options.data)}');
             }
           } else if (options.queryParameters.isNotEmpty) {
             log(
@@ -156,11 +156,11 @@ class DioManager {
           log('📥 Response Body: $respStr', name: "RESPONSE BODY");
 
           // Also print to console for easy viewing
-          print('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-          print('✅ API SUCCESS [${response.statusCode}]');
-          print('URL: ${response.requestOptions.uri}');
-          print('Response: $respStr');
-          print('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+          debugPrint('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+          debugPrint('✅ API SUCCESS [${response.statusCode}]');
+          debugPrint('URL: ${response.requestOptions.uri}');
+          debugPrint('Response: $respStr');
+          debugPrint('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
           handler.next(response);
         },
@@ -170,19 +170,19 @@ class DioManager {
           log(e.message ?? 'Unknown error', name: "ERROR MESSAGE");
 
           // Print detailed error to console
-          print('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-          print('❌ API ERROR [${status ?? "NO STATUS"}]');
-          print('URL: ${e.requestOptions.uri}');
-          print('Method: ${e.requestOptions.method}');
+          debugPrint('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+          debugPrint('❌ API ERROR [${status ?? "NO STATUS"}]');
+          debugPrint('URL: ${e.requestOptions.uri}');
+          debugPrint('Method: ${e.requestOptions.method}');
           if (e.requestOptions.data != null) {
-            print('Request Body: ${jsonEncode(e.requestOptions.data)}');
+            debugPrint('Request Body: ${jsonEncode(e.requestOptions.data)}');
           }
           if (e.response != null) {
-            print('Response: ${jsonEncode(e.response?.data)}');
+            debugPrint('Response: ${jsonEncode(e.response?.data)}');
           }
-          print('Error: ${e.message}');
-          print('Type: ${e.type}');
-          print('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+          debugPrint('Error: ${e.message}');
+          debugPrint('Type: ${e.type}');
+          debugPrint('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
           if (status == 401 && e.requestOptions.extra['retry'] != true) {
             final newToken = await _refreshAccessToken();
@@ -402,7 +402,7 @@ class DioManager {
     } on DioException catch (e) {
       // Optionally print Dio errors
       if (e.response?.statusCode == 400) {
-        print("api resonse dio error${e.response}");
+        debugPrint("api resonse dio error${e.response}");
         log(
           "❌ Dio 400 Error for ${e.requestOptions.uri}: ${_friendlyDioError(e)}",
           name: "API ERROR",

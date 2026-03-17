@@ -123,7 +123,7 @@ class OnboardingBaseWidget extends StatelessWidget {
         // Dark Overlay with alpha (matching Figma - dark overlay on images)
         Container(
           color:
-              AppColors.black.withOpacity(0.4), // Dark overlay to match Figma
+              AppColors.black.withValues(alpha: 0.4), // Dark overlay to match Figma
         ),
       ],
     );
@@ -159,7 +159,7 @@ class OnboardingBaseWidget extends StatelessWidget {
       height: 120.w,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: Colors.orange.withOpacity(0.3),
+        color: Colors.orange.withValues(alpha: 0.3),
         border: Border.all(
           color: Colors.orange,
           width: 2,
@@ -182,7 +182,7 @@ class OnboardingBaseWidget extends StatelessWidget {
       ).copyWith(
         shadows: [
           Shadow(
-            color: AppColors.black.withOpacity(0.9),
+            color: AppColors.black.withValues(alpha: 0.9),
             offset: Offset(6.0, 8.0),
             blurRadius: 8.0,
           ),
@@ -200,7 +200,7 @@ class OnboardingBaseWidget extends StatelessWidget {
         textAlign: TextAlign.center,
         style: FontManager.bodyMedium(
           fontSize: 14.sp,
-          color: AppColors.white.withOpacity(0.9),
+          color: AppColors.white.withValues(alpha: 0.9),
         ),
       ),
     );
@@ -266,7 +266,7 @@ class OnboardingBaseWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: isActive
             ? AppColors.primaryColor
-            : AppColors.white.withOpacity(0.4),
+            : AppColors.white.withValues(alpha: 0.4),
         borderRadius: BorderRadius.circular(4.r),
       ),
     );

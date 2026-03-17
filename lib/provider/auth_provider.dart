@@ -66,7 +66,7 @@ class AuthProvider extends ChangeNotifier {
             await _handleAuthSuccess(data);
             return null; // Return null on success
           } catch (e) {
-            print("Parsing error: $e");
+            debugPrint("Parsing error: $e");
             _isLoading = false;
             notifyListeners();
             return "Cannot parse response";
@@ -133,20 +133,20 @@ class AuthProvider extends ChangeNotifier {
 
       return result.fold(
         (error) {
-          print("Forgot Password Error: $error");
+          debugPrint("Forgot Password Error: $error");
           _isLoading = false;
           notifyListeners();
           return false;
         },
         (data) {
-          print("Forgot Password Success: $data");
+          debugPrint("Forgot Password Success: $data");
           _isLoading = false;
           notifyListeners();
           return true;
         },
       );
     } catch (e) {
-      print("Forgot Password Exception: $e");
+      debugPrint("Forgot Password Exception: $e");
       _isLoading = false;
       notifyListeners();
       return false;
@@ -260,16 +260,16 @@ class AuthProvider extends ChangeNotifier {
 
       return result.fold(
         (l) {
-          print("Resend OTP Error: $l");
+          debugPrint("Resend OTP Error: $l");
           return false;
         },
         (r) {
-          print("Resend OTP Success: $r");
+          debugPrint("Resend OTP Success: $r");
           return true;
         },
       );
     } catch (e) {
-      print("Resend OTP Exception: $e");
+      debugPrint("Resend OTP Exception: $e");
       return false;
     }
   }
@@ -296,7 +296,7 @@ class AuthProvider extends ChangeNotifier {
     } catch (e) {
       _isLoading = false;
       notifyListeners();
-      print("Google Login Error: $e");
+      debugPrint("Google Login Error: $e");
       return false;
     }
   }
@@ -332,7 +332,7 @@ class AuthProvider extends ChangeNotifier {
 
       result.fold(
         (error) {
-          print("Error fetching profile: $error");
+          debugPrint("Error fetching profile: $error");
         },
         (data) async {
           _user = User.fromJson(data);
@@ -341,7 +341,7 @@ class AuthProvider extends ChangeNotifier {
         },
       );
     } catch (e) {
-      print("Exception fetching profile: $e");
+      debugPrint("Exception fetching profile: $e");
     }
   }
 

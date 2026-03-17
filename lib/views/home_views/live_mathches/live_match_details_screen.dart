@@ -142,8 +142,8 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        Colors.black.withOpacity(0.4),
-                        Colors.black.withOpacity(0.2),
+                        Colors.black.withValues(alpha: 0.4),
+                        Colors.black.withValues(alpha: 0.2),
                       ],
                     ),
                   ),
@@ -381,7 +381,7 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
           width: 60.w,
           height: 60.w,
           decoration: BoxDecoration(
-            color: AppColors.white.withOpacity(0.2),
+            color: AppColors.white.withValues(alpha: 0.2),
             shape: BoxShape.circle,
           ),
           child: Padding(
@@ -463,7 +463,7 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
                   AppSpacing.h16,
                 ],
               );
-            }).toList(),
+            }),
 
             // Match Information
             WidgetMatchInformation(
@@ -665,8 +665,12 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
 
         // Combine all types to show
         final Set<String> types = {};
-        for (var s in homeStats) if (s.type != null) types.add(s.type!);
-        for (var s in awayStats) if (s.type != null) types.add(s.type!);
+        for (var s in homeStats) {
+          if (s.type != null) types.add(s.type!);
+        }
+        for (var s in awayStats) {
+          if (s.type != null) types.add(s.type!);
+        }
 
         // Helper to extract int value
         int parseValue(dynamic value) {
@@ -712,7 +716,7 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
                         AppSpacing.h16,
                       ],
                     );
-                  }).toList(),
+                  }),
 
                   AppSpacing.h8,
 
@@ -754,7 +758,6 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
     }
 
     // Fallback or specific mapping can be improved
-    ;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -836,7 +839,7 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
         borderRadius: BorderRadius.circular(12.r),
         boxShadow: [
           BoxShadow(
-            color: AppColors.cardShadow.withOpacity(0.05),
+            color: AppColors.cardShadow.withValues(alpha: 0.05),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),

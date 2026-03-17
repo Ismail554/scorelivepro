@@ -74,7 +74,7 @@ class AddToFavoritesDialog extends StatelessWidget {
                         onTap: () => Navigator.of(context).pop(),
                         child: Icon(
                           Icons.close,
-                          color: AppColors.white.withOpacity(0.7),
+                          color: AppColors.white.withValues(alpha: 0.7),
                           size: 24.sp,
                         ),
                       ),
@@ -87,10 +87,10 @@ class AddToFavoritesDialog extends StatelessWidget {
                     padding: EdgeInsets.all(16.w),
                     decoration: BoxDecoration(
                       color: AppColors.warningLight
-                          .withOpacity(0.1), // Semi-transparent card
+                          .withValues(alpha: 0.1), // Semi-transparent card
                       borderRadius: BorderRadius.circular(12.r),
                       border: Border.all(
-                          color: AppColors.primaryColor.withOpacity(0.1)),
+                          color: AppColors.primaryColor.withValues(alpha: 0.1)),
                     ),
                     child: Row(
                       children: [
@@ -99,7 +99,7 @@ class AddToFavoritesDialog extends StatelessWidget {
                             height: 48.w,
                             padding: EdgeInsets.all(8.w),
                             decoration: BoxDecoration(
-                              color: AppColors.white.withOpacity(0.2),
+                              color: AppColors.white.withValues(alpha: 0.2),
                               shape: BoxShape.circle,
                             ),
                             child: logo),
@@ -119,7 +119,7 @@ class AddToFavoritesDialog extends StatelessWidget {
                               Text(
                                 subtitle,
                                 style: FontManager.leagueName(
-                                  color: AppColors.white.withOpacity(0.7),
+                                  color: AppColors.white.withValues(alpha: 0.7),
                                   fontSize: 12,
                                 ),
                               ),
@@ -164,7 +164,7 @@ class AddToFavoritesDialog extends StatelessWidget {
                           onPressed: () async {
                             if (isLeague) {
                               // LEAGUE LOGIC
-                              print(
+                              debugPrint(
                                   "CALLING API: ${ApiEndPoint.addToFavoriteLeaques()} with ID: $id (POST)");
                               final error =
                                   await LeagueService.addLeagueToFavorites(id);
@@ -225,7 +225,7 @@ class AddToFavoritesDialog extends StatelessWidget {
                               }
                             } else {
                               // TEAM LOGIC
-                              print(
+                              debugPrint(
                                   "CALLING API: ${ApiEndPoint.addToFavoriteTeams()} with ID: $id (POST)");
                               // Note: We are printing the endpoint here for visibility,
                               // but the actual call happens inside TeamProvider which might use a different method.
@@ -240,10 +240,10 @@ class AddToFavoritesDialog extends StatelessWidget {
 
                             if (onSave != null) onSave!();
                           },
-                          child: Text(AppStrings.saveToFavorites,
-                              style: FontManager.buttonText()),
                           style: ElevatedButton.styleFrom(
-                              fixedSize: Size.fromWidth(double.maxFinite))),
+                              fixedSize: Size.fromWidth(double.maxFinite)),
+                          child: Text(AppStrings.saveToFavorites,
+                              style: FontManager.buttonText())),
                       ElevatedButton(
                           onPressed: () {
                             Navigator.of(context).pop();
@@ -251,12 +251,12 @@ class AddToFavoritesDialog extends StatelessWidget {
                               onMaybeLater!();
                             }
                           },
-                          child: Text(AppStrings.maybeLater,
-                              style: FontManager.buttonText(
-                                  color: AppColors.black)),
                           style: ElevatedButton.styleFrom(
                               fixedSize: Size.fromWidth(double.maxFinite),
-                              backgroundColor: AppColors.white)),
+                              backgroundColor: AppColors.white),
+                          child: Text(AppStrings.maybeLater,
+                              style: FontManager.buttonText(
+                                  color: AppColors.black))),
                     ],
                   )
                 ],
@@ -278,7 +278,7 @@ class AddToFavoritesDialog extends StatelessWidget {
     // Feature row gulo keo dark theme er sathe adjust korlam
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.white.withOpacity(0.1),
+        color: AppColors.white.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(10.r),
       ),
       child: Padding(
@@ -289,7 +289,7 @@ class AddToFavoritesDialog extends StatelessWidget {
               width: 40.w,
               height: 40.w,
               decoration: BoxDecoration(
-                color: iconColor.withOpacity(0.1),
+                color: iconColor.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -314,7 +314,7 @@ class AddToFavoritesDialog extends StatelessWidget {
                   Text(
                     description,
                     style: FontManager.bodySmall(
-                      color: AppColors.white.withOpacity(0.6),
+                      color: AppColors.white.withValues(alpha: 0.6),
                       fontSize: 12,
                     ),
                   ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/views/notification_views/notification_all_screen.dart';
 
 import 'package:provider/provider.dart';

@@ -59,7 +59,7 @@ class TeamService {
 
   static Future<List<TeamModel>?> fetchFavoriteTeams() async {
     try {
-      print(
+      debugPrint(
           "Calling API: ${ApiEndPoint.myFavoritesTeam()} (GET) - Fetching Favorite Teams");
       final response = await DioManager.apiRequest(
         url: ApiEndPoint.myFavoritesTeam(),
@@ -69,11 +69,11 @@ class TeamService {
 
       return response.fold(
         (error) {
-          print("Error Fetching Favorite Teams: $error");
+          debugPrint("Error Fetching Favorite Teams: $error");
           return null;
         },
         (data) {
-          print("Success Fetching Favorite Teams: $data");
+          debugPrint("Success Fetching Favorite Teams: $data");
           if (data is List) {
             return data.map((e) => TeamModel.fromJson(e)).toList();
           }
@@ -86,14 +86,14 @@ class TeamService {
         },
       );
     } catch (e) {
-      print("Exception Fetching Favorite Teams: $e");
+      debugPrint("Exception Fetching Favorite Teams: $e");
       return null;
     }
   }
 
   static Future<String?> removeTeamFromFavorites(int teamId) async {
     try {
-      print(
+      debugPrint(
           "Calling API: ${ApiEndPoint.myFavoritesTeam()} (DELETE) - Removing Team ID: $teamId");
       final response = await DioManager.apiRequest(
         url: ApiEndPoint.myFavoritesTeam(),
@@ -103,16 +103,16 @@ class TeamService {
 
       return response.fold(
         (error) {
-          print("Error Removing Team from Favorites: $error");
+          debugPrint("Error Removing Team from Favorites: $error");
           return error;
         },
         (data) {
-          print("Success Removing Team from Favorites: $data");
+          debugPrint("Success Removing Team from Favorites: $data");
           return null;
         },
       );
     } catch (e) {
-      print("Exception Removing Team from Favorites: $e");
+      debugPrint("Exception Removing Team from Favorites: $e");
       return e.toString();
     }
   }

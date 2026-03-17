@@ -18,7 +18,7 @@ class SocketService {
 
   /// 🔹 Connect to WebSocket
   Future<void> connectSocket(String token) async {
-    print("🔹 Connecting to WebSocket...");
+    debugPrint("🔹 Connecting to WebSocket...");
 
     // Disconnect previous connection if exists
     disconnect();
@@ -39,7 +39,7 @@ class SocketService {
       }
 
       _channel = IOWebSocketChannel.connect(uri, headers: headers);
-      print("🟢 WebSocket Connection Initiated");
+      debugPrint("🟢 WebSocket Connection Initiated");
 
       // Listen to the stream
       _channel!.stream.listen(
@@ -47,14 +47,14 @@ class SocketService {
           _handleMessage(message);
         },
         onError: (error) {
-          print("⚠️ WebSocket Error: $error");
+          debugPrint("⚠️ WebSocket Error: $error");
         },
         onDone: () {
-          print("🔴 WebSocket Disconnected");
+          debugPrint("🔴 WebSocket Disconnected");
         },
       );
     } catch (e) {
-      print("⚠️ WebSocket Connection Failed: $e");
+      debugPrint("⚠️ WebSocket Connection Failed: $e");
     }
   }
 
@@ -63,8 +63,8 @@ class SocketService {
       if (message is String) {
         final data = jsonDecode(message);
         // Only log first 200 chars to avoid console spam, but let us know it arrived.
-        print(
-            "📌 WebSocket Message (Preview): ${message.length > 200 ? message.substring(0, 200) + '...' : message}");
+        debugPrint(
+            "📌 WebSocket Message (Preview): ${message.length > 200 ? '${message.substring(0, 200)}...' : message}");
 
         // Parse specific event types
         if (data is Map<String, dynamic>) {
@@ -72,7 +72,7 @@ class SocketService {
           if (data['type'] == 'live_score_update' || data['data'] != null) {
             // Sometimes WS sends a single object in "data" instead of a list. Let's wrap it in a list to safely use LiveScoreModel.
             if (data['data'] != null && data['data'] is Map<String, dynamic>) {
-              print(
+              debugPrint(
                   "🔧 Wrapping single data object in a list for LiveScoreModel");
               data['data'] = [data['data']];
             }
@@ -80,14 +80,14 @@ class SocketService {
             final model = LiveScoreModel.fromJson(data);
             liveScoreNotifier.value = model;
 
-            print(
+            debugPrint(
                 "✅ Successfully parsed LiveScoreModel with ${model.data?.length ?? 0} matches.");
           }
         }
       }
     } catch (e, stack) {
-      print("⚠️ Error parsing WebSocket message: $e");
-      print("⚠️ Stack trace: $stack");
+      debugPrint("⚠️ Error parsing WebSocket message: $e");
+      debugPrint("⚠️ Stack trace: $stack");
     }
   }
 
@@ -96,7 +96,7 @@ class SocketService {
     if (_channel != null) {
       _channel!.sink.close();
       _channel = null;
-      print("🛑 WebSocket manually closed");
+      debugPrint("🛑 WebSocket manually closed");
     }
   }
 }
