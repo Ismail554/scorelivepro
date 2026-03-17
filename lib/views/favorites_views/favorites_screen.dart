@@ -403,7 +403,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            FavoritesTeamsScreen()));
+                                            const FavoritesTeamsScreen(showBackButton: true)));
                               },
                               child: Text(
                                 AppLocalizations.of(context).addTeam,
@@ -436,7 +436,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => LeaguesScreen()));
+                                        builder: (context) => const LeaguesScreen(showBackButton: true)));
                               },
                               child: Text(
                                 "+ Add League",

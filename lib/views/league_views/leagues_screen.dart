@@ -17,7 +17,8 @@ import 'package:scorelivepro/core/assets_manager.dart';
 import 'package:scorelivepro/ads/floating_banner_ad.dart';
 
 class LeaguesScreen extends StatefulWidget {
-  const LeaguesScreen({super.key});
+  final bool showBackButton;
+  const LeaguesScreen({super.key, this.showBackButton = false});
 
   @override
   State<LeaguesScreen> createState() => _LeaguesScreenState();
@@ -264,11 +265,26 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            AppLocalizations.of(context).leagues,
-                            style: FontManager.heading2(
-                              color: AppColors.textPrimary,
-                            ),
+                          Row(
+                            children: [
+                              if (widget.showBackButton) ...[
+                                GestureDetector(
+                                  onTap: () => Navigator.pop(context),
+                                  child: Icon(
+                                    Icons.arrow_back_ios_new,
+                                    color: AppColors.textPrimary,
+                                    size: 20.sp,
+                                  ),
+                                ),
+                                SizedBox(width: 12.w),
+                              ],
+                              Text(
+                                AppLocalizations.of(context).leagues,
+                                style: FontManager.heading2(
+                                  color: AppColors.textPrimary,
+                                ),
+                              ),
+                            ],
                           ),
                           NotificationBell(
                             hasNotification: true,

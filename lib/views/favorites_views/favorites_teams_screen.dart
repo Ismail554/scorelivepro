@@ -16,7 +16,8 @@ import 'package:scorelivepro/provider/team_provider.dart';
 // Removed BrowseTeam class as we use HomeTeam from model
 
 class FavoritesTeamsScreen extends StatefulWidget {
-  const FavoritesTeamsScreen({super.key});
+  final bool showBackButton;
+  const FavoritesTeamsScreen({super.key, this.showBackButton = false});
 
   @override
   State<FavoritesTeamsScreen> createState() => _FavoritesTeamsScreenState();
@@ -85,11 +86,26 @@ class _FavoritesTeamsScreenState extends State<FavoritesTeamsScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        AppLocalizations.of(context).browseTeams,
-                        style: FontManager.heading2(
-                          color: AppColors.textPrimary,
-                        ),
+                      Row(
+                        children: [
+                          if (widget.showBackButton) ...[
+                            GestureDetector(
+                              onTap: () => Navigator.pop(context),
+                              child: Icon(
+                                Icons.arrow_back_ios_new,
+                                color: AppColors.textPrimary,
+                                size: 20.sp,
+                              ),
+                            ),
+                            SizedBox(width: 12.w),
+                          ],
+                          Text(
+                            AppLocalizations.of(context).browseTeams,
+                            style: FontManager.heading2(
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                        ],
                       ),
                       NotificationBell(
                         hasNotification: true,
