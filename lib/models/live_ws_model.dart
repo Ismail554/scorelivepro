@@ -9,7 +9,18 @@ class LiveScoreModel {
     if (json['data'] != null) {
       data = <Data>[];
       json['data'].forEach((v) {
-        data!.add(Data.fromJson(v));
+        final matchData = Data.fromJson(v);
+        
+        final shortStatus = matchData.statusShort?.toUpperCase();
+        
+        // Ignore "INT" matches explicitly
+        if (shortStatus == 'INT') return;
+
+        // Ensure we show only live matches
+        const liveStatuses = ['1H', '2H', 'HT', 'ET', 'BT', 'P', 'LIVE'];
+        if (liveStatuses.contains(shortStatus)) {
+          data!.add(matchData);
+        }
       });
     }
   }

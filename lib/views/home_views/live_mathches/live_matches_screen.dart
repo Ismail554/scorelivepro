@@ -325,7 +325,8 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.sports_soccer,
-                size: 64, color: AppColors.textSecondary.withValues(alpha: 0.5)),
+                size: 64,
+                color: AppColors.textSecondary.withValues(alpha: 0.5)),
             SizedBox(height: 16.h),
             Text(
               "No live matches currently",
@@ -382,10 +383,10 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
       padding: EdgeInsets.only(top: 12.h, bottom: 16.h),
       itemCount: matches.length + 1, // +1 for sponsored card
       itemBuilder: (context, index) {
-        // Last item → sponsored card
-        if (index == matches.length) {
-          return const SponsoredAdCard(onTryFreeTap: null);
-        }
+        // // Last item → sponsored card
+        // if (index == matches.length) {
+        //   return const SponsoredAdCard(onTryFreeTap: null);
+        // }
 
         final match = matches[index];
         return MatchCard(
