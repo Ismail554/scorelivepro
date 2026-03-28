@@ -26,8 +26,6 @@ class ApiEndPoint {
       "$_baseUrl/auth/verify-email/"; // body: {"email": "user@example.com", "otp": "string"}
   static String get resendOTP =>
       "$_baseUrl/auth/resend-activation-code/"; // body: {"email": "user@example.com"}, response: {"message": ""}
-  static String get googleLogin =>
-      "$_baseUrl/auth/google/"; // bodyt:{ "access_token": "string", "code": "string", "id_token": "string" }
 
   // ============= Leagues =============
   static String getFixtures(int id) => "$_baseUrl/sports/fixtures/$id/";
@@ -86,4 +84,9 @@ class ApiEndPoint {
 
   static String deleteAccount() =>
       "$_baseUrl/auth/profile/delete/"; // use method DELETE
+
+  static String googleLogin() =>
+      "$_baseUrl/auth/google/"; //body: {"id_token": "eyJhbGciOiJSUzI1NiIsImtp... (long Google token string)"}
+  static String appleLogin() =>
+      "$_baseUrl/auth/apple/"; // body: {   "id_token": "eyJhbGci... (long Apple JWT)",   "user": {     "name": {       "firstName": "John",       "lastName": "Doe"     }   } }
 }

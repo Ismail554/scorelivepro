@@ -1,9 +1,9 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:scorelivepro/models/live_ws_model.dart';
 import 'package:scorelivepro/services/match_service.dart';
 import 'package:scorelivepro/services/socket_service.dart';
 
-class MatchProvider extends ChangeNotifier {
+class MatchProvider extends ChangeNotifier with WidgetsBindingObserver {
   // Cache data by match ID
   final Map<int, List<Lineup>> _lineups = {};
   final Map<int, List<Statistic>> _statistics = {};
@@ -14,12 +14,21 @@ class MatchProvider extends ChangeNotifier {
 
   MatchProvider() {
     _initSocket();
+    WidgetsBinding.instance.addObserver(this);
   }
 
   void _initSocket() {
-    // Connect to socket (token not used currently per service implementation)
+    // Connect to socket
     SocketService.instance.connectSocket("");
     SocketService.instance.liveScoreNotifier.addListener(_onSocketUpdate);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      debugPrint("📱 App Resumed: Reconnecting WebSocket...");
+      SocketService.instance.connectSocket("");
+    }
   }
 
   void _onSocketUpdate() {
@@ -63,9 +72,9 @@ class MatchProvider extends ChangeNotifier {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     SocketService.instance.liveScoreNotifier.removeListener(_onSocketUpdate);
     // Optional: SocketService.instance.disconnect();
-    // We might not want to disconnect if other parts use it, but for now MatchProvider is the main user.
     super.dispose();
   }
 

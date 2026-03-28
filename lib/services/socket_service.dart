@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/foundation.dart';
@@ -10,6 +11,13 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 class SocketService {
   WebSocketChannel? _channel;
   ValueNotifier<LiveScoreModel?> liveScoreNotifier = ValueNotifier(null);
+  ValueNotifier<bool> isConnected = ValueNotifier(false);
+
+  // Reconnection logic
+  int _retryCount = 0;
+  Timer? _reconnectTimer;
+  String? _lastToken;
+  bool _isManuallyClosed = false;
 
   // Singleton
   static final SocketService instance = SocketService._internal();
@@ -18,10 +26,18 @@ class SocketService {
 
   /// 🔹 Connect to WebSocket
   Future<void> connectSocket(String token) async {
-    debugPrint("🔹 Connecting to WebSocket...");
+    _lastToken = token;
+    _isManuallyClosed = false;
+    
+    if (isConnected.value) {
+      debugPrint("🔹 WebSocket already connected. Skipping...");
+      return;
+    }
+
+    debugPrint("🔹 Connecting to WebSocket... (Attempt: ${_retryCount + 1})");
 
     // Disconnect previous connection if exists
-    disconnect();
+    _closeInternal();
 
     try {
       final String wsUrl =
@@ -44,18 +60,43 @@ class SocketService {
       // Listen to the stream
       _channel!.stream.listen(
         (message) {
+          _retryCount = 0; // Reset retry count on successful message
+          isConnected.value = true;
           _handleMessage(message);
         },
         onError: (error) {
           debugPrint("⚠️ WebSocket Error: $error");
+          isConnected.value = false;
+          _handleReconnect();
         },
         onDone: () {
           debugPrint("🔴 WebSocket Disconnected");
+          isConnected.value = false;
+          if (!_isManuallyClosed) {
+            _handleReconnect();
+          }
         },
       );
     } catch (e) {
       debugPrint("⚠️ WebSocket Connection Failed: $e");
+      isConnected.value = false;
+      _handleReconnect();
     }
+  }
+
+  void _handleReconnect() {
+    if (_isManuallyClosed) return;
+
+    _reconnectTimer?.cancel();
+    
+    _retryCount++;
+    // Exponential backoff: 2s, 4s, 8s, 16s, max 30s
+    int delaySeconds = (pow(2, _retryCount).toInt()).clamp(2, 30);
+    
+    debugPrint("🔄 Scheduling WebSocket reconnection in $delaySeconds seconds...");
+    _reconnectTimer = Timer(Duration(seconds: delaySeconds), () {
+      connectSocket(_lastToken ?? "");
+    });
   }
 
   void _handleMessage(dynamic message) {
@@ -91,12 +132,29 @@ class SocketService {
     }
   }
 
-  /// 🔌 Disconnect socket
-  void disconnect() {
+  /// 🔌 Internal close
+  void _closeInternal() {
     if (_channel != null) {
       _channel!.sink.close();
       _channel = null;
-      debugPrint("🛑 WebSocket manually closed");
     }
+    _reconnectTimer?.cancel();
   }
+
+  /// 🔌 Disconnect socket
+  void disconnect() {
+    _isManuallyClosed = true;
+    _closeInternal();
+    isConnected.value = false;
+    debugPrint("🛑 WebSocket manually closed");
+  }
+}
+
+// Add power function for backoff
+num pow(num x, num y) {
+  num result = 1;
+  for (int i = 0; i < y; i++) {
+    result *= x;
+  }
+  return result;
 }

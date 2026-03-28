@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:scorelivepro/config/storage/secure_storage_helper.dart';
+import 'package:scorelivepro/services/api_service.dart';
 
 enum Methods { post, get, put, patch, delete }
 
@@ -290,63 +291,61 @@ class DioManager {
 
     final refreshToken = await SecureStorageHelper.getRefreshToken();
 
-    // ✅ Refresh token নেই → logout required message
     if (refreshToken == null || refreshToken.isEmpty) {
       _cachedAccessToken = null;
       _tokenGeneratedAt = null;
       _refreshLock = null;
-      completer.completeError(
-        "Session expired. Please login again.",
-        StackTrace.current,
-      );
+      completer.complete(null);
       return null;
     }
 
-    _refreshLock = null;
-    completer.completeError(
-      "Session expired. Please login again.",
-      StackTrace.current,
-    );
-    return null;
+    try {
+      log('🔄 Generating new access token...', name: 'TOKEN');
 
-//Generating new access token
-    //   try {
-    //     log('🔄 Generating new access token...', name: 'TOKEN');
+      // Use a new Dio instance or avoid interceptors to prevent infinite loop
+      final refreshDio = Dio(BaseOptions(baseUrl: ApiEndPoint.baseUrl));
+      final response = await refreshDio.post(
+        "/auth/token/refresh/",
+        data: {'refresh': refreshToken},
+      );
 
-    //     final response = await _dio.post(
-    //       ApiEndPoint.refreshToken,
-    //       data: {'refresh': refreshToken},
-    //       options: Options(extra: {'skipAuth': true}),
-    //     );
+      if (response.statusCode == 200) {
+        final data = response.data;
+        final newAccess = data['access'];
+        final newRefresh = data['refresh']; // Some backends also rotate the refresh token
 
-    //     final parsed = await compute(_processJsonInIsolate, response.data);
-    //     final newAccess = parsed['access'];
+        if (newAccess is String && newAccess.isNotEmpty) {
+          _cachedAccessToken = newAccess;
+          _tokenGeneratedAt = DateTime.now();
+          await SecureStorageHelper.saveAccessToken(newAccess);
+          
+          if (newRefresh is String && newRefresh.isNotEmpty) {
+            await SecureStorageHelper.saveRefreshToken(newRefresh);
+          }
 
-    //     if (newAccess is String && newAccess.isNotEmpty) {
-    //       _cachedAccessToken = newAccess;
-    //       _tokenGeneratedAt = DateTime.now();
-    //       log('✅ Token refreshed successfully', name: 'TOKEN');
-    //       completer.complete(newAccess);
-    //       _refreshLock = null;
-    //       return newAccess;
-    //     }
+          log('✅ Token refreshed successfully', name: 'TOKEN');
+          
+          _refreshLock = null;
+          completer.complete(newAccess);
+          return newAccess;
+        }
+      }
 
-    //     log('❌ Invalid refresh response', name: 'TOKEN');
-    //     _refreshLock = null;
-    //     completer.completeError(
-    //       "Session expired. Please login again.",
-    //       StackTrace.current,
-    //     );
-    //     return null;
-    //   } catch (e) {
-    //     log('❌ Token refresh failed: $e', name: 'TOKEN');
-    //     _refreshLock = null;
-    //     completer.completeError(
-    //       "Session expired. Please login again.",
-    //       StackTrace.current,
-    //     );
-    //     return null;
-    //   }
+      log('❌ Invalid refresh response: ${response.statusCode}', name: 'TOKEN');
+      await logout(); // Session totally expired
+      _refreshLock = null;
+      completer.complete(null);
+      return null;
+    } catch (e) {
+      log('❌ Token refresh failed: $e', name: 'TOKEN');
+      // If it's a 401 or 403 on refresh, the refresh token is also invalid
+      if (e is DioException && (e.response?.statusCode == 401 || e.response?.statusCode == 400)) {
+        await logout();
+      }
+      _refreshLock = null;
+      completer.complete(null);
+      return null;
+    }
   }
 
   static E apiRequest({

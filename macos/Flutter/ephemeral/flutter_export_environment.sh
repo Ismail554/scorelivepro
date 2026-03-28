@@ -1,7 +1,7 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
-export "FLUTTER_ROOT=/home/ismail/development_tools/flutter"
-export "FLUTTER_APPLICATION_PATH=/home/ismail/Ismail_Flutter/scorelivepro"
+export "FLUTTER_ROOT=/Users/phantoms/Documents/flutter-sdk/flutter"
+export "FLUTTER_APPLICATION_PATH=/Users/phantoms/ismail_flutter/scorelivepro"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
 export "FLUTTER_BUILD_DIR=build"
 export "FLUTTER_BUILD_NAME=1.0.0"
