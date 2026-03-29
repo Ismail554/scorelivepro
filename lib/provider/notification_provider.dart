@@ -5,6 +5,7 @@ import 'package:scorelivepro/services/notification_service.dart';
 import 'package:scorelivepro/views/notification_views/models/notification_model.dart';
 import 'package:scorelivepro/services/api_service.dart';
 import 'package:scorelivepro/services/dio_service.dart';
+import 'package:scorelivepro/services/firebase_service.dart';
 
 class NotificationProvider extends ChangeNotifier {
   int _unreadCount = 0;
@@ -17,6 +18,11 @@ class NotificationProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   List<NotificationModel> get notifications => _notifications;
   bool get isLoadingNotifications => _isLoadingNotifications;
+
+  /// Whether FCM token fetch failed (SERVICE_NOT_AVAILABLE, battery optimization etc.)
+  bool get fcmServiceError => FirebaseService.fcmTokenFailed;
+  String? get fcmErrorMessage => FirebaseService.lastFcmError;
+
 
   /// Fetch unread notifications count
   Future<void> fetchUnreadCount() async {
@@ -148,6 +154,22 @@ class NotificationProvider extends ChangeNotifier {
       );
     } catch (e) {
       debugPrint("Exception registering device: $e");
+      return false;
+    }
+  }
+
+  /// Trigger a test push notification to this device
+  Future<bool> testPushNotification() async {
+    try {
+      String? fcmToken = await FirebaseMessaging.instance.getToken();
+      if (fcmToken == null || fcmToken.isEmpty) {
+        debugPrint("Failed to get FCM token for test push");
+        return false;
+      }
+
+      return await NotificationService.testPushNotification(fcmToken);
+    } catch (e) {
+      debugPrint("Exception during test push: $e");
       return false;
     }
   }

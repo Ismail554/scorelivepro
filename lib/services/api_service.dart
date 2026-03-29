@@ -89,4 +89,6 @@ class ApiEndPoint {
       "$_baseUrl/auth/google/"; //body: {"id_token": "eyJhbGciOiJSUzI1NiIsImtp... (long Google token string)"}
   static String appleLogin() =>
       "$_baseUrl/auth/apple/"; // body: {   "id_token": "eyJhbGci... (long Apple JWT)",   "user": {     "name": {       "firstName": "John",       "lastName": "Doe"     }   } }
+
+      static String testToken(String token) => "$_baseUrl/notifications/test-push/?token=$token" ; // body: { "token": "fcm_token"}
 }

@@ -1,3 +1,4 @@
+import 'package:disable_battery_optimization/disable_battery_optimization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/assets_manager.dart';
@@ -10,6 +11,7 @@ import 'package:scorelivepro/provider/auth_provider.dart';
 import 'package:scorelivepro/provider/notification_provider.dart';
 import 'package:scorelivepro/views/settings/profile_screen.dart';
 import 'package:scorelivepro/config/storage/secure_storage_helper.dart';
+import 'dart:io';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -199,6 +201,52 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => LanguageSelectionScreen()));
+                  },
+                ),
+                _buildDivider(),
+                // Troubleshoot Notifications (shown when FCM error detected)
+                Consumer<NotificationProvider>(
+                  builder: (context, notifProvider, _) {
+                    if (notifProvider.fcmServiceError && Platform.isAndroid) {
+                      return Column(
+                        children: [
+                          _buildSettingsTile(
+                            icon: Icons.warning_amber_rounded,
+                            iconColor: Colors.orange,
+                            iconBgColor: const Color(0xFFFFF3E0),
+                            title: "Troubleshoot Notifications",
+                            subtitle: "Notifications may not work. Tap to fix.",
+                            showChevron: true,
+                            onTap: () => _showTroubleshootBottomSheet(context),
+                          ),
+                          _buildDivider(),
+                        ],
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
+                _buildSettingsTile(
+                  icon: Icons.bug_report_outlined,
+                  title: "Test Notification",
+                  subtitle: "Send a test push to this device",
+                  showChevron: true,
+                  onTap: () async {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("Sending test notification...")),
+                    );
+                    final success = await context
+                        .read<NotificationProvider>()
+                        .testPushNotification();
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(success
+                              ? "Test notification sent successfully!"
+                              : "Failed to send test notification."),
+                        ),
+                      );
+                    }
                   },
                 ),
                 Consumer<AuthProvider>(
@@ -452,6 +500,295 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ? Icon(Icons.arrow_forward_ios_rounded,
                   size: 16.sp, color: Colors.grey[400])
               : null),
+    );
+  }
+
+  /// Shows a troubleshooting bottom sheet with OEM-specific instructions
+  /// for fixing notification issues on OnePlus, Redmi/Xiaomi, etc.
+  void _showTroubleshootBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+      ),
+      builder: (context) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.7,
+          minChildSize: 0.4,
+          maxChildSize: 0.9,
+          expand: false,
+          builder: (context, scrollController) {
+            return SingleChildScrollView(
+              controller: scrollController,
+              padding: EdgeInsets.all(24.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Handle bar
+                  Center(
+                    child: Container(
+                      width: 40.w,
+                      height: 4.h,
+                      margin: EdgeInsets.only(bottom: 20.h),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(2.r),
+                      ),
+                    ),
+                  ),
+
+                  // Title
+                  Row(
+                    children: [
+                      Icon(Icons.build_circle_outlined,
+                          color: const Color(0xFFFF6B00), size: 28.sp),
+                      SizedBox(width: 8.w),
+                      Text(
+                        "Fix Notifications",
+                        style: TextStyle(
+                          fontSize: 22.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 8.h),
+                  Text(
+                    "Some devices (OnePlus, Redmi, Xiaomi, Oppo, Huawei) aggressively restrict background services. Follow these steps to ensure notifications work properly.",
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      color: Colors.grey[600],
+                      height: 1.5,
+                    ),
+                  ),
+                  SizedBox(height: 20.h),
+
+                  // === Quick Fix Button ===
+                  SizedBox(
+                    width: double.infinity,
+                    height: 52.h,
+                    child: ElevatedButton.icon(
+                      onPressed: () async {
+                        try {
+                          await DisableBatteryOptimization
+                              .showDisableBatteryOptimizationSettings();
+                        } catch (e) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text(
+                                      "Could not open battery settings. Please do it manually.")),
+                            );
+                          }
+                        }
+                      },
+                      icon: const Icon(Icons.battery_saver, color: Colors.white),
+                      label: Text(
+                        "Disable Battery Optimization",
+                        style: TextStyle(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFFF6B00),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14.r),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+
+                  // Auto-start button for Xiaomi/MIUI
+                  SizedBox(
+                    width: double.infinity,
+                    height: 52.h,
+                    child: OutlinedButton.icon(
+                      onPressed: () async {
+                        try {
+                          await DisableBatteryOptimization
+                              .showEnableAutoStartSettings(
+                            "Enable Auto-Start",
+                            "For notifications to arrive reliably, please enable Auto-Start for this app.",
+                          );
+                        } catch (e) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text(
+                                      "Auto-start settings not available on this device.")),
+                            );
+                          }
+                        }
+                      },
+                      icon: Icon(Icons.rocket_launch_outlined,
+                          color: const Color(0xFFFF6B00), size: 20.sp),
+                      label: Text(
+                        "Enable Auto-Start (Xiaomi/Redmi)",
+                        style: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                            color: const Color(0xFFFF6B00)),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: Color(0xFFFF6B00)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14.r),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  SizedBox(height: 24.h),
+                  Divider(color: Colors.grey[200]),
+                  SizedBox(height: 16.h),
+
+                  // === Manual Steps ===
+                  Text(
+                    "Manual Steps",
+                    style: TextStyle(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 12.h),
+
+                  _buildTroubleshootStep(
+                    "1",
+                    "Disable Battery Optimization",
+                    "Settings → Apps → Score Live Pro → Battery → \"No Restrictions\" or \"Don't Optimize\"",
+                    Icons.battery_full,
+                  ),
+                  _buildTroubleshootStep(
+                    "2",
+                    "Enable Auto-Start (Xiaomi/Redmi)",
+                    "Settings → Apps → Permissions → Autostart → Toggle ON for Score Live Pro",
+                    Icons.play_circle_outline,
+                  ),
+                  _buildTroubleshootStep(
+                    "3",
+                    "Lock App in Recents (OnePlus)",
+                    "Open Recent Apps → Long press Score Live Pro → Tap the Lock icon",
+                    Icons.lock_outline,
+                  ),
+                  _buildTroubleshootStep(
+                    "4",
+                    "Check Google Play Services",
+                    "Ensure Google Play Services is updated from the Play Store",
+                    Icons.update,
+                  ),
+                  _buildTroubleshootStep(
+                    "5",
+                    "Check Date & Time",
+                    "Settings → Date & Time → Enable \"Automatic date & time\"",
+                    Icons.access_time,
+                  ),
+
+                  SizedBox(height: 20.h),
+
+                  // Error details (for debugging)
+                  Consumer<NotificationProvider>(
+                    builder: (context, notifProvider, _) {
+                      final error = notifProvider.fcmErrorMessage;
+                      if (error != null) {
+                        return Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.all(12.w),
+                          decoration: BoxDecoration(
+                            color: Colors.red[50],
+                            borderRadius: BorderRadius.circular(10.r),
+                            border: Border.all(color: Colors.red[200]!),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Error Details",
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.red[700],
+                                ),
+                              ),
+                              SizedBox(height: 4.h),
+                              Text(
+                                error,
+                                style: TextStyle(
+                                    fontSize: 11.sp, color: Colors.red[600]),
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                      return const SizedBox.shrink();
+                    },
+                  ),
+                  SizedBox(height: 24.h),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildTroubleshootStep(
+      String number, String title, String description, IconData icon) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 16.h),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 32.w,
+            height: 32.w,
+            decoration: BoxDecoration(
+              color: const Color(0xFFFFF1EB),
+              shape: BoxShape.circle,
+            ),
+            child: Center(
+              child: Text(
+                number,
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFFFF6B00),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(width: 12.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 15.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                SizedBox(height: 4.h),
+                Text(
+                  description,
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    color: Colors.grey[600],
+                    height: 1.4,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -391,6 +391,9 @@ class _LoginScreenState extends State<LoginScreen> {
     final success =
         await Provider.of<AuthProvider>(context, listen: false).googleLogin();
     if (success && mounted) {
+      // Register device after successful Google login
+      context.read<NotificationProvider>().registerDevice(true);
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const MainNavigationScreen()),

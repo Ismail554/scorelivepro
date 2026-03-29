@@ -57,4 +57,22 @@ class NotificationService {
       },
     );
   }
+
+  static Future<bool> testPushNotification(String token) async {
+    final result = await DioManager.apiRequest(
+      url: ApiEndPoint.testToken(token),
+      methods: Methods.get,
+    );
+
+    return result.fold(
+      (error) {
+        debugPrint("Error testing push notification: $error");
+        return false;
+      },
+      (data) {
+        debugPrint("Test push notification triggered successfully");
+        return true;
+      },
+    );
+  }
 }

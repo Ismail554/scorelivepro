@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:scorelivepro/provider/notification_provider.dart';
 import 'package:scorelivepro/views/favorites_views/favorites_screen.dart';
 import 'package:scorelivepro/views/home_views/home_screen.dart';
 import 'package:scorelivepro/views/league_views/leagues_screen.dart';
@@ -30,6 +32,14 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
     // Initialize socket connection (public access)
     SocketService.instance.connectSocket("");
+
+    // Trigger FCM device registration on app start/navigation
+    // We use WidgetsBinding to ensure the provider is ready
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        context.read<NotificationProvider>().registerDevice(true);
+      }
+    });
   }
 
   // List of screens
