@@ -13,6 +13,7 @@ import 'package:scorelivepro/views/news_views/news_screen.dart';
 import 'package:scorelivepro/widget/home/match_card.dart';
 import 'package:scorelivepro/widget/home/quick_action_card.dart';
 import 'package:scorelivepro/widget/home/section_header.dart';
+import 'package:scorelivepro/views/home_views/live_mathches/live_matches_screen.dart';
 
 import 'package:scorelivepro/utils/match_status_helper.dart';
 import 'package:scorelivepro/widget/mini_widget/mw_notification_bell.dart';
@@ -117,7 +118,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       // Live Matches Section
                       SectionHeader(
                         title: AppLocalizations.of(context).liveMatches,
-                        onSeeAllTap: () {},
+                        actionText: AppLocalizations.of(context).live,
+                        onSeeAllTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const LiveMatchesScreen()),
+                          );
+                        },
                       ),
                       Consumer<MatchProvider>(
                         builder: (context, provider, child) {
@@ -178,7 +187,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       SectionHeader(
                         title: AppLocalizations.of(context).upcomingMatches,
                         onSeeAllTap: () {
-                          // TODO: Navigate to upcoming matches screen
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const LiveMatchesScreen(
+                                      initialIndex: 1,
+                                    )),
+                          );
                         },
                       ),
                       Consumer<MatchProvider>(

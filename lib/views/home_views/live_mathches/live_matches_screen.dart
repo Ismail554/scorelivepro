@@ -18,7 +18,8 @@ import 'package:scorelivepro/provider/match_provider.dart';
 import 'package:scorelivepro/widget/shimmer/match_card_shimmer.dart';
 
 class LiveMatchesScreen extends StatefulWidget {
-  const LiveMatchesScreen({super.key});
+  final int initialIndex;
+  const LiveMatchesScreen({super.key, this.initialIndex = 0});
 
   @override
   State<LiveMatchesScreen> createState() => _LiveMatchesScreenState();
@@ -35,7 +36,11 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(
+      length: 3,
+      vsync: this,
+      initialIndex: widget.initialIndex,
+    );
     _tabController.addListener(() {
       setState(() {});
     });

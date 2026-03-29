@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/font_manager.dart';
-import 'package:scorelivepro/views/home_views/live_mathches/live_matches_screen.dart';
 import 'package:scorelivepro/l10n/app_localizations.dart';
 
 /// Reusable section header with title and "See all" link
 class SectionHeader extends StatelessWidget {
   final String title;
+  final String? actionText;
   final VoidCallback? onSeeAllTap;
 
   const SectionHeader({
     super.key,
     required this.title,
+    this.actionText,
     this.onSeeAllTap,
   });
 
@@ -42,18 +43,12 @@ class SectionHeader extends StatelessWidget {
           ),
           if (onSeeAllTap != null)
             GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const LiveMatchesScreen()),
-                );
-              },
+              onTap: onSeeAllTap,
               child: Row(
                 spacing: 4.w,
                 children: [
                   Text(
-                    AppLocalizations.of(context).seeAll,
+                    actionText ?? AppLocalizations.of(context).seeAll,
                     style: FontManager.bodySmall(
                       color: AppColors.primaryColor,
                       fontSize: 14,

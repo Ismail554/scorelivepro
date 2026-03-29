@@ -16,7 +16,11 @@ class FirebaseService {
   // function to initialize notifications
   Future<void> initNotifications() async {
     // request permission from user
-    await _firebaseMessaging.requestPermission();
+    await _firebaseMessaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
 
     if (Platform.isIOS) {
       String? apnsToken = await _firebaseMessaging.getAPNSToken();
