@@ -29,7 +29,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.641571105178-brdjpvqttg4jj0j1nfg1qleh8ka766oi</string>
+				<string>com.googleusercontent.apps.641571105178-aeugeakmoj0kjjibrptgv47dikgrklhv</string>
 			</array>
 		</dict>
 	</array>
@@ -38,7 +38,7 @@
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-6967886775553979~4866649291</string>
 	<key>GIDClientID</key>
-	<string>641571105178-brdjpvqttg4jj0j1nfg1qleh8ka766oi.apps.googleusercontent.com</string>
+	<string>641571105178-aeugeakmoj0kjjibrptgv47dikgrklhv.apps.googleusercontent.com</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>

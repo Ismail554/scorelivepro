@@ -11,7 +11,7 @@ class GoogleAuthService {
   Future<void> _ensureInitialized() async {
     // Initialize the singleton with configuration
     await _googleSignIn.initialize(
-      serverClientId: "641571105178-n1cakg9mh25f2qmubq96o6che2gtfa2t.apps.googleusercontent.com",
+      serverClientId: "641571105178-r41vi2rtd4furjp43b12b1b22a9571sl.apps.googleusercontent.com",
     );
   }
 
