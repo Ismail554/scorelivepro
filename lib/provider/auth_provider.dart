@@ -7,6 +7,7 @@ import 'package:scorelivepro/services/api_service.dart';
 import 'package:scorelivepro/services/dio_service.dart';
 // ✅ Import the new service
 import 'package:scorelivepro/services/google_auth_service.dart';
+import 'package:scorelivepro/services/apple_auth_service.dart';
 
 class AuthProvider extends ChangeNotifier {
   bool _isLoading = false;
@@ -17,6 +18,7 @@ class AuthProvider extends ChangeNotifier {
 
   // Initialize the new Google Service
   final GoogleAuthService _googleAuthService = GoogleAuthService();
+  final AppleAuthService _appleAuthService = AppleAuthService();
 
   bool get isLoggedIn => _user != null;
 
@@ -297,6 +299,31 @@ class AuthProvider extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
       debugPrint("Google Login Error: $e");
+      return false;
+    }
+  }
+
+  // 👇 Apple Login Implementation
+  Future<bool> appleLogin() async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final backendData = await _appleAuthService.signInAndSync();
+
+      if (backendData == null) {
+        _isLoading = false;
+        notifyListeners();
+        return false; // Failed or Cancelled
+      }
+
+      await _handleAuthSuccess(backendData);
+
+      return true;
+    } catch (e) {
+      _isLoading = false;
+      notifyListeners();
+      debugPrint("Apple Login Error: $e");
       return false;
     }
   }

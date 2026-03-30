@@ -57,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 40.h),
+                SizedBox(height: 14.h),
                 // Header Icon/Image
                 Container(
                   width: 100.w,
@@ -102,7 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   style: FontManager.bodyMedium(),
                 ),
-                SizedBox(height: 20.h),
+                SizedBox(height: 8.h),
 
                 // Password Field
                 _buildLabel(AppLocalizations.of(context).password),
@@ -258,6 +258,56 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 SizedBox(height: 18.h),
                 // Guest Login
+
+                // Social Login
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 64.w,
+                      height: 64.w,
+                      child: OutlinedButton(
+                        onPressed: signIn,
+                        style: OutlinedButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          side: BorderSide(
+                              color: Colors.grey.withValues(alpha: 0.2)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(100.r),
+                          ),
+                          backgroundColor: Colors.white,
+                        ),
+                        child: Center(
+                          child:
+                              Image.asset(IconAssets.google_icon, width: 28.w),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 24.w),
+                    // Apple Login
+                    SizedBox(
+                      width: 64.w,
+                      height: 64.w,
+                      child: OutlinedButton(
+                        onPressed: appleSignIn,
+                        style: OutlinedButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          side: BorderSide(
+                              color: Colors.grey.withValues(alpha: 0.2)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(100.r),
+                          ),
+                          backgroundColor: Colors.white,
+                        ),
+                        child: Center(
+                          child: Icon(Icons.apple,
+                              size: 32.w, color: Colors.black),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 18.h),
                 OutlinedButton(
                   onPressed: () {
                     Navigator.push(
@@ -268,7 +318,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     );
                   },
                   style: OutlinedButton.styleFrom(
-                    side: BorderSide(color: Colors.grey.shade300),
+                    side: BorderSide(color: Colors.grey.withValues(alpha: 0.2)),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16.r),
                     ),
@@ -291,23 +341,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 AppSpacing.h10,
-
-                // Google Login
-                OutlinedButton(
-                  onPressed: signIn,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(IconAssets.google_icon, width: 24.w),
-                      SizedBox(width: 6.w),
-                      Text(
-                        AppLocalizations.of(context).continueWithGoogle,
-                        style: FontManager.labelMedium(fontSize: 16.sp),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 18.h),
 
                 // Sign Up Link
                 Row(
@@ -392,6 +425,20 @@ class _LoginScreenState extends State<LoginScreen> {
         await Provider.of<AuthProvider>(context, listen: false).googleLogin();
     if (success && mounted) {
       // Register device after successful Google login
+      context.read<NotificationProvider>().registerDevice(true);
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const MainNavigationScreen()),
+      );
+    }
+  }
+
+  Future appleSignIn() async {
+    final success =
+        await Provider.of<AuthProvider>(context, listen: false).appleLogin();
+    if (success && mounted) {
+      // Register device after successful Apple login
       context.read<NotificationProvider>().registerDevice(true);
 
       Navigator.pushReplacement(
