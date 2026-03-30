@@ -147,7 +147,7 @@ class _DetailedLeaguesScreenState extends State<DetailedLeaguesScreen>
                   LeagueHeaderCard(
                     leagueName: _isLoading
                         ? "Loading..."
-                        : (_leagueDetails?.name ?? "Unknown League"),
+                        : (_leagueDetails?.name ?? AppLocalizations.of(context).unknownLeague),
                     country: _isLoading
                         ? "Loading..."
                         : (_leagueDetails?.country?.name ?? "Unknown Country"),
@@ -313,7 +313,7 @@ class _DetailedLeaguesScreenState extends State<DetailedLeaguesScreen>
     if (_standings == null || _standings!.isEmpty) {
       return Center(
         child: Text(
-          "No standings available",
+          AppLocalizations.of(context).noStandingsAvailable,
           style: FontManager.bodyLarge(color: AppColors.textSecondary),
         ),
       );
@@ -404,7 +404,7 @@ class _DetailedLeaguesScreenState extends State<DetailedLeaguesScreen>
     if (_fixtures == null || _fixtures!.isEmpty) {
       return Center(
         child: Text(
-          "No fixtures available",
+          AppLocalizations.of(context).noFixturesAvailable,
           style: FontManager.bodyLarge(color: AppColors.textSecondary),
         ),
       );

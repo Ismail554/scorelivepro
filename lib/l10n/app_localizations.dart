@@ -1167,6 +1167,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'We\'ve sent a 6-digit OTP to {email}\nEnter the code below to continue.'**
   String weSentOtpTo(String email);
+
+  /// No description provided for @noLiveMatchesCurrently.
+  ///
+  /// In en, this message translates to:
+  /// **'No live matches currently'**
+  String get noLiveMatchesCurrently;
+
+  /// No description provided for @noMatchesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No matches found'**
+  String get noMatchesFound;
+
+  /// No description provided for @timelineAvailableSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Timeline will be available soon'**
+  String get timelineAvailableSoon;
+
+  /// No description provided for @unknownPlayer.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown Player'**
+  String get unknownPlayer;
+
+  /// No description provided for @event.
+  ///
+  /// In en, this message translates to:
+  /// **'Event'**
+  String get event;
+
+  /// No description provided for @lineupsNotAvailableYet.
+  ///
+  /// In en, this message translates to:
+  /// **'Lineups not available yet'**
+  String get lineupsNotAvailableYet;
+
+  /// No description provided for @statisticsNotAvailableYet.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics not available yet'**
+  String get statisticsNotAvailableYet;
+
+  /// No description provided for @unknownReferee.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown Referee'**
+  String get unknownReferee;
+
+  /// No description provided for @unknownStadium.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown Stadium'**
+  String get unknownStadium;
+
+  /// No description provided for @overviewTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get overviewTab;
+
+  /// No description provided for @statisticsTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics'**
+  String get statisticsTab;
+
+  /// No description provided for @lineupsTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Lineups'**
+  String get lineupsTab;
+
+  /// No description provided for @noStandingsAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No standings available'**
+  String get noStandingsAvailable;
+
+  /// No description provided for @noFixturesAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No fixtures available'**
+  String get noFixturesAvailable;
+
+  /// No description provided for @disableBatteryOptimization.
+  ///
+  /// In en, this message translates to:
+  /// **'Disable Battery Optimization'**
+  String get disableBatteryOptimization;
+
+  /// No description provided for @couldNotOpenBatterySettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open battery settings. Please do it manually.'**
+  String get couldNotOpenBatterySettings;
+
+  /// No description provided for @enableAutoStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Auto-Start'**
+  String get enableAutoStart;
+
+  /// No description provided for @manualSteps.
+  ///
+  /// In en, this message translates to:
+  /// **'Manual Steps'**
+  String get manualSteps;
 }
 
 class _AppLocalizationsDelegate

@@ -197,5 +197,23 @@
         "type": "String"
       }
     }
-  }
+  },
+  "noLiveMatchesCurrently": "No live matches currently",
+  "noMatchesFound": "No matches found",
+  "timelineAvailableSoon": "Timeline will be available soon",
+  "unknownPlayer": "Unknown Player",
+  "event": "Event",
+  "lineupsNotAvailableYet": "Lineups not available yet",
+  "statisticsNotAvailableYet": "Statistics not available yet",
+  "unknownReferee": "Unknown Referee",
+  "unknownStadium": "Unknown Stadium",
+  "overviewTab": "Overview",
+  "statisticsTab": "Statistics",
+  "lineupsTab": "Lineups",
+  "noStandingsAvailable": "No standings available",
+  "noFixturesAvailable": "No fixtures available",
+  "disableBatteryOptimization": "Disable Battery Optimization",
+  "couldNotOpenBatterySettings": "Could not open battery settings. Please do it manually.",
+  "enableAutoStart": "Enable Auto-Start",
+  "manualSteps": "Manual Steps"
 }

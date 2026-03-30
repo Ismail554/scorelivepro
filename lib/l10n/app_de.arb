@@ -197,5 +197,23 @@
         "type": "String"
       }
     }
-  }
+  },
+  "noLiveMatchesCurrently": "Derzeit keine Live-Spiele",
+  "noMatchesFound": "Keine Spiele gefunden",
+  "timelineAvailableSoon": "Zeitleiste wird bald verfügbar sein",
+  "unknownPlayer": "Unbekannter Spieler",
+  "event": "Ereignis",
+  "lineupsNotAvailableYet": "Noch keine Aufstellungen verfügbar",
+  "statisticsNotAvailableYet": "Noch keine Statistiken verfügbar",
+  "unknownReferee": "Unbekannter Schiedsrichter",
+  "unknownStadium": "Unbekanntes Stadion",
+  "overviewTab": "Übersicht",
+  "statisticsTab": "Statistiken",
+  "lineupsTab": "Aufstellungen",
+  "noStandingsAvailable": "Keine Tabellen verfügbar",
+  "noFixturesAvailable": "Keine Spiele verfügbar",
+  "disableBatteryOptimization": "Akku-Optimierung deaktivieren",
+  "couldNotOpenBatterySettings": "Akkueinstellungen konnten nicht geöffnet werden. Bitte manuell durchführen.",
+  "enableAutoStart": "Autostart aktivieren",
+  "manualSteps": "Manuelle Schritte"
 }

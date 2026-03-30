@@ -205,50 +205,50 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
                 _buildDivider(),
                 // Troubleshoot Notifications (shown when FCM error detected)
-                Consumer<NotificationProvider>(
-                  builder: (context, notifProvider, _) {
-                    if (notifProvider.fcmServiceError && Platform.isAndroid) {
-                      return Column(
-                        children: [
-                          _buildSettingsTile(
-                            icon: Icons.warning_amber_rounded,
-                            iconColor: Colors.orange,
-                            iconBgColor: const Color(0xFFFFF3E0),
-                            title: "Troubleshoot Notifications",
-                            subtitle: "Notifications may not work. Tap to fix.",
-                            showChevron: true,
-                            onTap: () => _showTroubleshootBottomSheet(context),
-                          ),
-                          _buildDivider(),
-                        ],
-                      );
-                    }
-                    return const SizedBox.shrink();
-                  },
-                ),
-                _buildSettingsTile(
-                  icon: Icons.bug_report_outlined,
-                  title: "Test Notification",
-                  subtitle: "Send a test push to this device",
-                  showChevron: true,
-                  onTap: () async {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Sending test notification...")),
-                    );
-                    final success = await context
-                        .read<NotificationProvider>()
-                        .testPushNotification();
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(success
-                              ? "Test notification sent successfully!"
-                              : "Failed to send test notification."),
-                        ),
-                      );
-                    }
-                  },
-                ),
+                // Consumer<NotificationProvider>(
+                //   builder: (context, notifProvider, _) {
+                //     if (notifProvider.fcmServiceError && Platform.isAndroid) {
+                //       return Column(
+                //         children: [
+                //           _buildSettingsTile(
+                //             icon: Icons.warning_amber_rounded,
+                //             iconColor: Colors.orange,
+                //             iconBgColor: const Color(0xFFFFF3E0),
+                //             title: "Troubleshoot Notifications",
+                //             subtitle: "Notifications may not work. Tap to fix.",
+                //             showChevron: true,
+                //             onTap: () => _showTroubleshootBottomSheet(context),
+                //           ),
+                //           _buildDivider(),
+                //         ],
+                //       );
+                //     }
+                //     return const SizedBox.shrink();
+                //   },
+                // ),
+                // _buildSettingsTile(
+                //   icon: Icons.bug_report_outlined,
+                //   title: "Test Notification",
+                //   subtitle: "Send a test push to this device",
+                //   showChevron: true,
+                //   onTap: () async {
+                //     ScaffoldMessenger.of(context).showSnackBar(
+                //       const SnackBar(content: Text("Sending test notification...")),
+                //     );
+                //     final success = await context
+                //         .read<NotificationProvider>()
+                //         .testPushNotification();
+                //     if (context.mounted) {
+                //       ScaffoldMessenger.of(context).showSnackBar(
+                //         SnackBar(
+                //           content: Text(success
+                //               ? "Test notification sent successfully!"
+                //               : "Failed to send test notification."),
+                //         ),
+                //       );
+                //     }
+                //   },
+                // ),
                 Consumer<AuthProvider>(
                   builder: (context, authProvider, child) {
                     if (authProvider.isLoggedIn) {
@@ -437,8 +437,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12.r),
-        border:
-            Border.all(color: Colors.grey.withValues(alpha: 0.1)), // Subtle border
+        border: Border.all(
+            color: Colors.grey.withValues(alpha: 0.1)), // Subtle border
       ),
       child: Column(children: children),
     );
@@ -577,16 +577,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         } catch (e) {
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text(
-                                      "Could not open battery settings. Please do it manually.")),
+                              SnackBar(
+                                  content: Text(AppLocalizations.of(context)
+                                      .couldNotOpenBatterySettings)),
                             );
                           }
                         }
                       },
-                      icon: const Icon(Icons.battery_saver, color: Colors.white),
+                      icon:
+                          const Icon(Icons.battery_saver, color: Colors.white),
                       label: Text(
-                        "Disable Battery Optimization",
+                        AppLocalizations.of(context).disableBatteryOptimization,
                         style: TextStyle(
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w600,
@@ -627,7 +628,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       icon: Icon(Icons.rocket_launch_outlined,
                           color: const Color(0xFFFF6B00), size: 20.sp),
                       label: Text(
-                        "Enable Auto-Start (Xiaomi/Redmi)",
+                        AppLocalizations.of(context).enableAutoStart,
                         style: TextStyle(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w500,
@@ -648,7 +649,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                   // === Manual Steps ===
                   Text(
-                    "Manual Steps",
+                    AppLocalizations.of(context).manualSteps,
                     style: TextStyle(
                       fontSize: 18.sp,
                       fontWeight: FontWeight.bold,

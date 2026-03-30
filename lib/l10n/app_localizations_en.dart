@@ -560,4 +560,59 @@ class AppLocalizationsEn extends AppLocalizations {
   String weSentOtpTo(String email) {
     return 'We\'ve sent a 6-digit OTP to $email\nEnter the code below to continue.';
   }
+
+  @override
+  String get noLiveMatchesCurrently => 'No live matches currently';
+
+  @override
+  String get noMatchesFound => 'No matches found';
+
+  @override
+  String get timelineAvailableSoon => 'Timeline will be available soon';
+
+  @override
+  String get unknownPlayer => 'Unknown Player';
+
+  @override
+  String get event => 'Event';
+
+  @override
+  String get lineupsNotAvailableYet => 'Lineups not available yet';
+
+  @override
+  String get statisticsNotAvailableYet => 'Statistics not available yet';
+
+  @override
+  String get unknownReferee => 'Unknown Referee';
+
+  @override
+  String get unknownStadium => 'Unknown Stadium';
+
+  @override
+  String get overviewTab => 'Overview';
+
+  @override
+  String get statisticsTab => 'Statistics';
+
+  @override
+  String get lineupsTab => 'Lineups';
+
+  @override
+  String get noStandingsAvailable => 'No standings available';
+
+  @override
+  String get noFixturesAvailable => 'No fixtures available';
+
+  @override
+  String get disableBatteryOptimization => 'Disable Battery Optimization';
+
+  @override
+  String get couldNotOpenBatterySettings =>
+      'Could not open battery settings. Please do it manually.';
+
+  @override
+  String get enableAutoStart => 'Enable Auto-Start';
+
+  @override
+  String get manualSteps => 'Manual Steps';
 }

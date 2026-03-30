@@ -190,7 +190,7 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
                   child: Builder(
                     builder: (context) {
                       final leagueName =
-                          matchData.league?.name ?? "Unknown League";
+                          matchData.league?.name ?? AppLocalizations.of(context).unknownLeague;
                       final textStyle = FontManager.heading3(
                         fontSize: 18,
                         color: AppColors.white,
@@ -436,7 +436,7 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
     if (events.isEmpty) {
       return Center(
         child: Text(
-          "Timeline will be available soon",
+          AppLocalizations.of(context).timelineAvailableSoon,
           style: FontManager.bodyMedium(color: AppColors.textSecondary),
         ),
       );
@@ -456,8 +456,8 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
                 children: [
                   _buildTimelineEvent(
                     "${event.time?.elapsed ?? 0}",
-                    event.player?.name ?? "Unknown Player",
-                    event.type ?? "Event",
+                    event.player?.name ?? AppLocalizations.of(context).unknownPlayer,
+                    event.type ?? AppLocalizations.of(context).event,
                     event.detail ?? "",
                   ),
                   AppSpacing.h16,
@@ -508,7 +508,7 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
                 SizedBox(height: 100.h),
                 Center(
                   child: Text(
-                    "Lineups not available yet",
+                    AppLocalizations.of(context).lineupsNotAvailableYet,
                     style:
                         FontManager.bodyMedium(color: AppColors.textSecondary),
                   ),
@@ -633,7 +633,7 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
                 SizedBox(height: 100.h),
                 Center(
                   child: Text(
-                    "Statistics not available yet",
+                    AppLocalizations.of(context).statisticsNotAvailableYet,
                     style:
                         FontManager.bodyMedium(color: AppColors.textSecondary),
                   ),
@@ -700,7 +700,7 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
                   AppSpacing.h12,
 
                   if (types.isEmpty)
-                    Text("No statistics data found",
+                    Text(AppLocalizations.of(context).noStatisticsData,
                         style: FontManager.bodyMedium()),
 
                   ...types.map((type) {

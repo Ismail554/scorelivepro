@@ -334,7 +334,7 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
                 color: AppColors.textSecondary.withValues(alpha: 0.5)),
             SizedBox(height: 16.h),
             Text(
-              "No live matches currently",
+              AppLocalizations.of(context).noLiveMatchesCurrently,
               style: FontManager.bodyMedium(color: AppColors.textSecondary),
             ),
           ],
@@ -378,7 +378,7 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
     if (matches.isEmpty) {
       return Center(
         child: Text(
-          "No matches found",
+          AppLocalizations.of(context).noMatchesFound,
           style: FontManager.bodyMedium(color: AppColors.textSecondary),
         ),
       );

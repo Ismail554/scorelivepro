@@ -197,5 +197,23 @@
         "type": "String"
       }
     }
-  }
+  },
+  "noLiveMatchesCurrently": "No hay partidos en vivo actualmente",
+  "noMatchesFound": "No se encontraron partidos",
+  "timelineAvailableSoon": "La línea de tiempo estará disponible pronto",
+  "unknownPlayer": "Jugador desconocido",
+  "event": "Evento",
+  "lineupsNotAvailableYet": "Alineaciones no disponibles aún",
+  "statisticsNotAvailableYet": "Estadísticas no disponibles aún",
+  "unknownReferee": "Árbitro desconocido",
+  "unknownStadium": "Estadio desconocido",
+  "overviewTab": "Resumen",
+  "statisticsTab": "Estadísticas",
+  "lineupsTab": "Alineaciones",
+  "noStandingsAvailable": "No hay clasificaciones disponibles",
+  "noFixturesAvailable": "No hay partidos disponibles",
+  "disableBatteryOptimization": "Desactivar optimización de batería",
+  "couldNotOpenBatterySettings": "No se pudo abrir la configuración de batería. Por favor, hágalo manualmente.",
+  "enableAutoStart": "Activar inicio automático",
+  "manualSteps": "Pasos manuales"
 }

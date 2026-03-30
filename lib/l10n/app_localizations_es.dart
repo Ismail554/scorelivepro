@@ -560,4 +560,60 @@ class AppLocalizationsEs extends AppLocalizations {
   String weSentOtpTo(String email) {
     return 'We\'ve sent a 6-digit OTP to $email\nEnter the code below to continue.';
   }
+
+  @override
+  String get noLiveMatchesCurrently => 'No hay partidos en vivo actualmente';
+
+  @override
+  String get noMatchesFound => 'No se encontraron partidos';
+
+  @override
+  String get timelineAvailableSoon =>
+      'La línea de tiempo estará disponible pronto';
+
+  @override
+  String get unknownPlayer => 'Jugador desconocido';
+
+  @override
+  String get event => 'Evento';
+
+  @override
+  String get lineupsNotAvailableYet => 'Alineaciones no disponibles aún';
+
+  @override
+  String get statisticsNotAvailableYet => 'Estadísticas no disponibles aún';
+
+  @override
+  String get unknownReferee => 'Árbitro desconocido';
+
+  @override
+  String get unknownStadium => 'Estadio desconocido';
+
+  @override
+  String get overviewTab => 'Resumen';
+
+  @override
+  String get statisticsTab => 'Estadísticas';
+
+  @override
+  String get lineupsTab => 'Alineaciones';
+
+  @override
+  String get noStandingsAvailable => 'No hay clasificaciones disponibles';
+
+  @override
+  String get noFixturesAvailable => 'No hay partidos disponibles';
+
+  @override
+  String get disableBatteryOptimization => 'Desactivar optimización de batería';
+
+  @override
+  String get couldNotOpenBatterySettings =>
+      'No se pudo abrir la configuración de batería. Por favor, hágalo manualmente.';
+
+  @override
+  String get enableAutoStart => 'Activar inicio automático';
+
+  @override
+  String get manualSteps => 'Pasos manuales';
 }

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:scorelivepro/models/live_ws_model.dart';
 import 'package:scorelivepro/services/match_service.dart';
@@ -11,6 +12,10 @@ class MatchProvider extends ChangeNotifier with WidgetsBindingObserver {
 
   // Live Socket Data Cache
   final Map<int, Data> _activeMatches = {};
+
+  // Smart background timer
+  Timer? _backgroundTimer;
+  static const int _backgroundGracePeriodMinutes = 3;
 
   MatchProvider() {
     _initSocket();
@@ -26,8 +31,25 @@ class MatchProvider extends ChangeNotifier with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      debugPrint("📱 App Resumed: Reconnecting WebSocket...");
-      SocketService.instance.connectSocket("");
+      debugPrint("📱 App Resumed: Canceling background timer and reconnecting WebSocket...");
+      _backgroundTimer?.cancel();
+      _backgroundTimer = null;
+      
+      // If we completely disconnected due to time out, reconnect
+      if (!SocketService.instance.isConnected.value) {
+        SocketService.instance.connectSocket("");
+      }
+    } else if (state == AppLifecycleState.paused) {
+      debugPrint("📱 App Paused: Starting $_backgroundGracePeriodMinutes-min background timer...");
+      _backgroundTimer?.cancel();
+      _backgroundTimer = Timer(const Duration(minutes: _backgroundGracePeriodMinutes), () {
+        debugPrint("🔋 Background timer expired. Disconnecting WebSocket to save battery.");
+        SocketService.instance.disconnect();
+      });
+    } else if (state == AppLifecycleState.detached) {
+      debugPrint("📱 App Detached: Disconnecting WebSocket immediately.");
+      _backgroundTimer?.cancel();
+      SocketService.instance.disconnect();
     }
   }
 

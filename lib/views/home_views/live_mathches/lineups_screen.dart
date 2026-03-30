@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:scorelivepro/core/app_colors.dart';
+import 'package:scorelivepro/l10n/app_localizations.dart';
 import 'package:scorelivepro/core/app_padding.dart';
 import 'package:scorelivepro/core/app_spacing.dart';
 import 'package:scorelivepro/core/assets_manager.dart';
@@ -39,7 +40,7 @@ class _LineupsScreenState extends State<HomeLineupsScreen> {
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
-        title: Text("Upcoming Match Lineups",
+        title: Text(AppLocalizations.of(context).upcomingMatchLineups,
             style: FontManager.newsTitle(color: AppColors.white)),
         centerTitle: true,
         backgroundColor: Colors.transparent,
@@ -79,7 +80,7 @@ class _LineupsScreenState extends State<HomeLineupsScreen> {
               homePlayers = homeLineup.startXI!
                   .map((p) => ul.Player(
                         number: p.player?.number?.toString() ?? "-",
-                        name: p.player?.name ?? "Unknown",
+                        name: p.player?.name ?? AppLocalizations.of(context).unknownPlayer,
                         position: p.player?.pos ?? "",
                       ))
                   .toList();
@@ -89,7 +90,7 @@ class _LineupsScreenState extends State<HomeLineupsScreen> {
               awayPlayers = awayLineup.startXI!
                   .map((p) => ul.Player(
                         number: p.player?.number?.toString() ?? "-",
-                        name: p.player?.name ?? "Unknown",
+                        name: p.player?.name ?? AppLocalizations.of(context).unknownPlayer,
                         position: p.player?.pos ?? "",
                       ))
                   .toList();
@@ -104,10 +105,10 @@ class _LineupsScreenState extends State<HomeLineupsScreen> {
                 //Top Match Header Part
                 WidgetMatchHeaderView(
                   backgroundImage: ImageAssets.home_bg,
-                  leagueName: widget.matchData.league?.name ?? "Match Lineups",
+                  leagueName: widget.matchData.league?.name ?? AppLocalizations.of(context).lineups,
                   matchStatus: widget.matchData.statusShort ?? 'LIVE',
-                  homeTeamName: widget.matchData.homeTeam?.name ?? 'Home',
-                  awayTeamName: widget.matchData.awayTeam?.name ?? 'Away',
+                  homeTeamName: widget.matchData.homeTeam?.name ?? AppLocalizations.of(context).home,
+                  awayTeamName: widget.matchData.awayTeam?.name ?? AppLocalizations.of(context).away,
                   score:
                       "${widget.matchData.goals?.home ?? 0} - ${widget.matchData.goals?.away ?? 0}",
                   onNotificationPressed: () {},
@@ -129,7 +130,7 @@ class _LineupsScreenState extends State<HomeLineupsScreen> {
 
                                 if (lineups == null || lineups.isEmpty)
                                   Center(
-                                      child: Text("No lineup data available",
+                                      child: Text(AppLocalizations.of(context).noLineupData,
                                           style: FontManager.bodyMedium())),
 
                                 if (lineups != null && lineups.isNotEmpty) ...[
@@ -157,9 +158,9 @@ class _LineupsScreenState extends State<HomeLineupsScreen> {
                                 // Match Information
                                 WidgetMatchInformation(
                                   stadium: widget.matchData.venue?.name ??
-                                      "Unknown Stadium",
+                                      AppLocalizations.of(context).unknownStadium,
                                   referee: widget.matchData.referee ??
-                                      "Unknown Referee",
+                                      AppLocalizations.of(context).unknownReferee,
                                 ),
 
                                 AppSpacing.h16,

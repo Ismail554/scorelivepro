@@ -37,7 +37,7 @@ class AppInfoScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // 1. Header Section (Logo + Title)
-            _buildHeader(),
+            _buildHeader(context),
             const SizedBox(height: 25),
 
             // 2. Key Features Section
@@ -133,7 +133,7 @@ class AppInfoScreen extends StatelessWidget {
                       isLink: true),
                   _buildDivider(),
                   _buildContactRow(AppLocalizations.of(context).website,
-                      "www.scorelivepro.com",
+                      "www.scorelivepro.it",
                       isLink: true),
                   _buildDivider(),
                   Padding(
@@ -184,7 +184,7 @@ class AppInfoScreen extends StatelessWidget {
   // --- Helper Methods (Code Organizer) ---
 
   // 1. Header (Logo & Name)
-  Widget _buildHeader() {
+  Widget _buildHeader(BuildContext context) {
     return Center(
       child: Column(
         children: [
@@ -204,14 +204,14 @@ class AppInfoScreen extends StatelessWidget {
                 ),
               )),
           const SizedBox(height: 15),
-          const Text(
-            "ScoreLivePRO",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          Text(
+            AppLocalizations.of(context).appName,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 5),
-          const Text(
-            "Real-Time Football Scores & News",
-            style: TextStyle(fontSize: 12, color: Colors.grey),
+          Text(
+            AppLocalizations.of(context).realScoreNews,
+            style: const TextStyle(fontSize: 12, color: Colors.grey),
           ),
           const SizedBox(height: 10),
           Container(
@@ -220,9 +220,9 @@ class AppInfoScreen extends StatelessWidget {
               color: Colors.grey[200],
               borderRadius: BorderRadius.circular(20),
             ),
-            child: const Text(
-              "Version 1.0.0",
-              style: TextStyle(
+            child: Text(
+              AppLocalizations.of(context).versionNumber,
+              style: const TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.bold,
                   color: Colors.black54),
