@@ -92,7 +92,7 @@ class AppInfoScreen extends StatelessWidget {
                       AppLocalizations.of(context).buildNumber, "100"),
                   _buildDivider(),
                   _buildInfoRow(AppLocalizations.of(context).lastUpdated,
-                      "December 2, 2024"),
+                      "March 30, 2026"),
                   _buildDivider(),
                   _buildInfoRow(
                       AppLocalizations.of(context).platform, "iOS & Android"),
