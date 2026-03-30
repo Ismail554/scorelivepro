@@ -89,7 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     fontSize: 14,
                   ),
                 ),
-                SizedBox(height: 40.h),
+                SizedBox(height: 32.h),
 
                 // Email Field
                 _buildLabel(AppLocalizations.of(context).emailAddress),
@@ -256,8 +256,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 18.h),
-                // Guest Login
+                SizedBox(height: 8.h),
 
                 // Social Login
                 Row(

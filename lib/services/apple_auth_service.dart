@@ -8,7 +8,7 @@ class AppleAuthService {
     const String reset = '\x1B[0m';
     const String red = '\x1B[31m';
     const String green = '\x1B[32m';
-    const String yellow = '\x1B[33m';
+
     const String blue = '\x1B[34m';
 
     try {
@@ -45,7 +45,7 @@ class AppleAuthService {
     const String reset = '\x1B[0m';
     const String red = '\x1B[31m';
     const String green = '\x1B[32m';
-    const String yellow = '\x1B[33m';
+
     const String blue = '\x1B[34m';
 
     debugPrint("${blue}AppleAuthService: POST to ${ApiEndPoint.appleLogin()} via DioManager$reset");
