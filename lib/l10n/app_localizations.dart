@@ -928,6 +928,18 @@ abstract class AppLocalizations {
   /// **'+ Add Team'**
   String get addTeam;
 
+  /// No description provided for @addLeague.
+  ///
+  /// In en, this message translates to:
+  /// **'+ Add League'**
+  String get addLeague;
+
+  /// No description provided for @loginFailedEmailPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Login failed. Please check your email or password.'**
+  String get loginFailedEmailPassword;
+
   /// No description provided for @searchLeagues.
   ///
   /// In en, this message translates to:

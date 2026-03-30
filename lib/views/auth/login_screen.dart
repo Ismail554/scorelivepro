@@ -216,11 +216,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                   ),
                                 );
-                              } else if (context.mounted) {
+                              } else if (mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                       content: Text(authResult ??
-                                          "Login failed. Please check your credentials.")),
+                                          AppLocalizations.of(context).loginFailedEmailPassword)),
                                 );
                               }
                             },

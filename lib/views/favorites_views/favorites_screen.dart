@@ -439,7 +439,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                                         builder: (context) => const LeaguesScreen(showBackButton: true)));
                               },
                               child: Text(
-                                "+ Add League",
+                                AppLocalizations.of(context).addLeague,
                                 style: FontManager.bodySmall(
                                   color: AppColors.primaryColor,
                                   fontSize: 14,

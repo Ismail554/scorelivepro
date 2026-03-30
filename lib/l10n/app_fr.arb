@@ -144,6 +144,8 @@
   },
   "seeAll": "See all",
   "addTeam": "+ Add Team",
+  "addLeague": "+ Add League",
+  "loginFailedEmailPassword": "Login failed. Please check your email or password.",
   "searchLeagues": "Search leagues...",
   "searchTeamNames": "Search team names...",
   "live": "Live",

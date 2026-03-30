@@ -441,6 +441,13 @@ class AppLocalizationsDe extends AppLocalizations {
   String get addTeam => '+ Add Team';
 
   @override
+  String get addLeague => '+ Add League';
+
+  @override
+  String get loginFailedEmailPassword =>
+      'Login failed. Please check your email or password.';
+
+  @override
   String get searchLeagues => 'Search leagues...';
 
   @override

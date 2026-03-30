@@ -98,12 +98,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _buildLabel("First name"),
+                          _buildLabel(AppLocalizations.of(context).firstName),
                           SizedBox(height: 8.h),
                           TextFormField(
                             controller: _firstNameController,
                             decoration: _inputDecoration(
-                              hintText: "First name",
+                              hintText: AppLocalizations.of(context).firstName,
                               prefixIcon: Icons.person_outline,
                             ),
                             style: FontManager.bodyMedium(),
@@ -116,12 +116,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _buildLabel("Last name"),
+                          _buildLabel(AppLocalizations.of(context).lastName),
                           SizedBox(height: 8.h),
                           TextFormField(
                             controller: _lastNameController,
                             decoration: _inputDecoration(
-                              hintText: "Last name",
+                              hintText: AppLocalizations.of(context).lastName,
                               prefixIcon: Icons.person_outline,
                             ),
                             style: FontManager.bodyMedium(),
