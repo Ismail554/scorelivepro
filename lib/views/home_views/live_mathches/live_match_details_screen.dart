@@ -16,6 +16,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:provider/provider.dart';
 import 'package:scorelivepro/provider/match_provider.dart';
 import 'package:marquee/marquee.dart';
+import 'package:scorelivepro/widget/mini_widget/mw_blinking_dot.dart';
 
 import 'package:scorelivepro/models/live_ws_model.dart' hide Player;
 
@@ -295,13 +296,9 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
         mainAxisSize: MainAxisSize.min,
         children: [
           // Pulsing dot
-          Container(
-            width: 8.w,
-            height: 8.w,
-            decoration: BoxDecoration(
-              color: AppColors.white,
-              shape: BoxShape.circle,
-            ),
+          BlinkingDot(
+            color: AppColors.white,
+            size: 8,
           ),
           AppSpacing.w8,
           Text(

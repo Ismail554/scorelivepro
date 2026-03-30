@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/app_spacing.dart';
 import 'package:scorelivepro/core/font_manager.dart';
+import 'package:scorelivepro/widget/mini_widget/mw_blinking_dot.dart';
 
 /// Match status enum
 enum MatchStatus {
@@ -86,13 +87,9 @@ class MatchCard extends StatelessWidget {
             if (isLive) ...[
               Row(
                 children: [
-                  Container(
-                    width: 8.w,
-                    height: 8.w,
-                    decoration: const BoxDecoration(
-                      color: AppColors.warning,
-                      shape: BoxShape.circle,
-                    ),
+                  BlinkingDot(
+                    color: AppColors.warning,
+                    size: 8,
                   ),
                   SizedBox(width: 6.w),
                   Text(

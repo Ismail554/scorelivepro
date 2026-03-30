@@ -217,5 +217,14 @@
   "disableBatteryOptimization": "Disable Battery Optimization",
   "couldNotOpenBatterySettings": "Could not open battery settings. Please do it manually.",
   "enableAutoStart": "Enable Auto-Start",
-  "manualSteps": "Manual Steps"
+  "manualSteps": "Manual Steps",
+  "addedToFavoritesMsg": "{name} is added to favorites",
+  "@addedToFavoritesMsg": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "loginRequiredForFavorites": "You must login to add leagues to Favorites."
 }

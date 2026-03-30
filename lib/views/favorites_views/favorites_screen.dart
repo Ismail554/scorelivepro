@@ -77,7 +77,6 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   @override
   void initState() {
     super.initState();
-    _fetchFavorites();
   }
 
   Future<void> _fetchFavorites() async {
@@ -382,12 +381,13 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                           );
                         },
                       ),
-                      AppSpacing.h8,
+                      AppSpacing.h12,
 
                       // Favorite Teams Section
                       Padding(
                         padding: EdgeInsets.symmetric(
-                            horizontal: 16.w, vertical: 16.h),
+                          horizontal: 16.w,
+                        ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -400,10 +400,12 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                             GestureDetector(
                               onTap: () {
                                 Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const FavoritesTeamsScreen(showBackButton: true)));
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const FavoritesTeamsScreen(
+                                                    showBackButton: true)))
+                                    .then((_) => _fetchFavorites());
                               },
                               child: Text(
                                 AppLocalizations.of(context).addTeam,
@@ -434,9 +436,12 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                             GestureDetector(
                               onTap: () {
                                 Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => const LeaguesScreen(showBackButton: true)));
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const LeaguesScreen(
+                                                    showBackButton: true)))
+                                    .then((_) => _fetchFavorites());
                               },
                               child: Text(
                                 AppLocalizations.of(context).addLeague,
@@ -482,7 +487,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
 
     if (_favoriteTeams.isEmpty) {
       return Padding(
-        padding: EdgeInsets.all(16.w),
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
         child: Text(AppLocalizations.of(context).noFavoriteTeams,
             style: FontManager.bodyMedium(color: AppColors.textSecondary)),
       );

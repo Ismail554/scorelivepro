@@ -119,6 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       SectionHeader(
                         title: AppLocalizations.of(context).liveMatches,
                         actionText: AppLocalizations.of(context).live,
+                        shouldBlink: true,
                         onSeeAllTap: () {
                           Navigator.push(
                             context,
@@ -186,6 +187,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       // Upcoming Matches Section
                       SectionHeader(
                         title: AppLocalizations.of(context).upcomingMatches,
+                        shouldBlink: true,
                         onSeeAllTap: () {
                           Navigator.push(
                             context,

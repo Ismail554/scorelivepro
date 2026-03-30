@@ -217,5 +217,14 @@
   "disableBatteryOptimization": "Disattiva ottimizzazione batteria",
   "couldNotOpenBatterySettings": "Impossibile aprire le impostazioni della batteria. Procedere manualmente.",
   "enableAutoStart": "Abilita avvio automatico",
-  "manualSteps": "Passaggi manuali"
+  "manualSteps": "Passaggi manuali",
+  "addedToFavoritesMsg": "{name} è stato aggiunto ai preferiti",
+  "@addedToFavoritesMsg": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "loginRequiredForFavorites": "Devi accedere per aggiungere leghe ai Preferiti."
 }

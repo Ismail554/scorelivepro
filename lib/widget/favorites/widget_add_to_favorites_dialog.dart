@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/app_strings.dart';
 import 'package:scorelivepro/core/font_manager.dart';
+import 'package:scorelivepro/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:scorelivepro/provider/team_provider.dart';
 import 'package:scorelivepro/services/api_service.dart';
@@ -181,7 +182,7 @@ class AddToFavoritesDialog extends StatelessWidget {
                                           SizedBox(width: 8),
                                           Expanded(
                                             child: Text(
-                                              "$name is added to favorites",
+                                              AppLocalizations.of(context).addedToFavoritesMsg(name),
                                               style: const TextStyle(
                                                   color: Colors.white),
                                             ),
@@ -204,9 +205,9 @@ class AddToFavoritesDialog extends StatelessWidget {
                                           const Icon(Icons.error_outline,
                                               color: Colors.white),
                                           SizedBox(width: 8),
-                                          const Expanded(
+                                          Expanded(
                                             child: Text(
-                                              "You must need to login for add leagues to Favorite.",
+                                              AppLocalizations.of(context).loginRequiredForFavorites,
                                               style: TextStyle(
                                                   color: Colors.white),
                                             ),

@@ -626,4 +626,13 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get manualSteps => 'Manuelle Schritte';
+
+  @override
+  String addedToFavoritesMsg(String name) {
+    return '$name wurde zu den Favoriten hinzugefügt';
+  }
+
+  @override
+  String get loginRequiredForFavorites =>
+      'Sie müssen sich anmelden, um Ligen zu den Favoriten hinzuzufügen.';
 }

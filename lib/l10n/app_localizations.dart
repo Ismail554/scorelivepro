@@ -1287,6 +1287,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Manual Steps'**
   String get manualSteps;
+
+  /// No description provided for @addedToFavoritesMsg.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is added to favorites'**
+  String addedToFavoritesMsg(String name);
+
+  /// No description provided for @loginRequiredForFavorites.
+  ///
+  /// In en, this message translates to:
+  /// **'You must login to add leagues to Favorites.'**
+  String get loginRequiredForFavorites;
 }
 
 class _AppLocalizationsDelegate

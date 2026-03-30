@@ -217,5 +217,14 @@
   "disableBatteryOptimization": "Akku-Optimierung deaktivieren",
   "couldNotOpenBatterySettings": "Akkueinstellungen konnten nicht geöffnet werden. Bitte manuell durchführen.",
   "enableAutoStart": "Autostart aktivieren",
-  "manualSteps": "Manuelle Schritte"
+  "manualSteps": "Manuelle Schritte",
+  "addedToFavoritesMsg": "{name} wurde zu den Favoriten hinzugefügt",
+  "@addedToFavoritesMsg": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "loginRequiredForFavorites": "Sie müssen sich anmelden, um Ligen zu den Favoriten hinzuzufügen."
 }
