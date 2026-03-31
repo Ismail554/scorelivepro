@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:scorelivepro/l10n/app_localizations.dart';
 import 'package:scorelivepro/provider/language_provider.dart';
 
+
 class ScoreLivePro extends StatelessWidget {
   const ScoreLivePro({super.key});
 
@@ -24,6 +25,7 @@ class ScoreLivePro extends StatelessWidget {
           builder: (context, languageProvider, _) {
             return MaterialApp(
               debugShowCheckedModeBanner: false,
+
               title: "Score Live Pro",
               localizationsDelegates: const [
                 AppLocalizations.delegate,
