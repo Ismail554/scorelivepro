@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-// Tomar project er AppColors import koro
-// import 'package:scorelivepro/core/app_colors.dart';
+import 'package:scorelivepro/widget/common/auto_marquee_text.dart';
 
 class WidgetMatchInformation extends StatelessWidget {
-  // 1. Eigulo holo "Input Slot" ba Variables
   final String title;
   final String stadium;
   final String referee;
 
   const WidgetMatchInformation({
     super.key,
-    this.title = "Match Information", // Default title set kore dilam
+    this.title = "Match Information",
     required this.stadium,
     required this.referee,
   });
@@ -25,11 +23,10 @@ class WidgetMatchInformation extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(
-          color: Colors.grey.shade300, // Light grey border
+          color: Colors.grey.shade300,
           width: 1,
         ),
         boxShadow: [
-          // Ektu shadow dilam jate sundor bhashe
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
@@ -40,7 +37,6 @@ class WidgetMatchInformation extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // --- Title Part ---
           Text(
             title,
             style: TextStyle(
@@ -50,7 +46,6 @@ class WidgetMatchInformation extends StatelessWidget {
             ),
           ),
           SizedBox(height: 16.h),
-          // --- Data Rows (Input theke asha data boshiye dilam) ---
           _buildInfoRow("Stadium:", stadium),
           SizedBox(height: 12.h),
           _buildInfoRow("Referee:", referee),
@@ -59,7 +54,6 @@ class WidgetMatchInformation extends StatelessWidget {
     );
   }
 
-  // --- Helper Widget (Internal Use Only) ---
   Widget _buildInfoRow(String label, String value) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -68,19 +62,21 @@ class WidgetMatchInformation extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 14.sp,
-            color: Colors.grey.shade500, // Label color light
+            color: Colors.grey.shade500,
             fontWeight: FontWeight.w500,
           ),
         ),
-        Flexible(
-          child: Text(
-            value,
+        SizedBox(width: 16.w),
+        Expanded(
+          child: AutoMarqueeText(
+            text: value,
             textAlign: TextAlign.end,
             style: TextStyle(
               fontSize: 14.sp,
-              color: Colors.black87, // Value color dark
+              color: Colors.black87,
               fontWeight: FontWeight.w500,
             ),
+            height: 20.h,
           ),
         ),
       ],

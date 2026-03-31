@@ -4,6 +4,7 @@ import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/app_spacing.dart';
 import 'package:scorelivepro/core/font_manager.dart';
 import 'package:scorelivepro/widget/mini_widget/mw_blinking_dot.dart';
+import 'package:scorelivepro/widget/common/auto_marquee_text.dart';
 
 /// Match status enum
 enum MatchStatus {
@@ -58,8 +59,6 @@ class MatchCard extends StatelessWidget {
     }
 
     return GestureDetector(
-      // FIX IS HERE: Check if onTap is provided, otherwise use default navigation
-      // FIX IS HERE: Check if onTap is provided, otherwise use default navigation
       onTap: onTap,
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
@@ -100,11 +99,14 @@ class MatchCard extends StatelessWidget {
                     ),
                   ),
                   SizedBox(width: 8.w),
-                  Text(
-                    leagueName,
-                    style: FontManager.leagueName(
-                      color: AppColors.textSecondary,
-                      fontSize: 12.sp,
+                  Expanded(
+                    child: AutoMarqueeText(
+                      text: leagueName,
+                      style: FontManager.leagueName(
+                        color: AppColors.textSecondary,
+                        fontSize: 12.sp,
+                      ),
+                      height: 18.h,
                     ),
                   ),
                 ],
@@ -117,12 +119,13 @@ class MatchCard extends StatelessWidget {
               SizedBox(height: 16.h),
             ] else ...[
               // Just league name for upcoming matches
-              Text(
-                leagueName,
+              AutoMarqueeText(
+                text: leagueName,
                 style: FontManager.leagueName(
                   color: AppColors.textSecondary,
                   fontSize: 12.sp,
                 ),
+                height: 18.h,
               ),
               SizedBox(height: 16.h),
             ],
@@ -153,11 +156,14 @@ class MatchCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 // Left side: Minute for live, date for upcoming/finished
-                Text(
-                  isLive ? timeInfo : dateText,
-                  style: FontManager.bodySmall(
-                    color: AppColors.textSecondary,
-                    fontSize: 12.sp,
+                Expanded(
+                  child: Text(
+                    isLive ? timeInfo : dateText,
+                    style: FontManager.bodySmall(
+                      color: AppColors.textSecondary,
+                      fontSize: 12.sp,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 // Right side: Status badge
@@ -176,14 +182,13 @@ class MatchCard extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
-          child: Text(
-            teamName,
+          child: AutoMarqueeText(
+            text: teamName,
             style: FontManager.heading4(
               color: AppColors.textPrimary,
               fontSize: 16.sp,
             ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+            height: 24.h,
           ),
         ),
         Text(

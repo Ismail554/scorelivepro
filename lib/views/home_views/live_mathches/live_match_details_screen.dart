@@ -15,7 +15,7 @@ import 'package:scorelivepro/widget/navigation/transparent_tab_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:provider/provider.dart';
 import 'package:scorelivepro/provider/match_provider.dart';
-import 'package:marquee/marquee.dart';
+import 'package:scorelivepro/widget/common/auto_marquee_text.dart';
 import 'package:scorelivepro/widget/mini_widget/mw_blinking_dot.dart';
 
 import 'package:scorelivepro/models/live_ws_model.dart' hide Player;
@@ -85,7 +85,6 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
                         AppLocalizations.of(context).timeline,
                         AppLocalizations.of(context).lineups,
                         AppLocalizations.of(context).stats,
-                        // AppStrings.commentary,
                       ],
                     ),
                   ),
@@ -120,14 +119,14 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
             : widget.matchData;
 
         return SizedBox(
-          height: 270.h, // Increased to accommodate tab bar
+          height: 270.h,
           width: double.maxFinite,
           child: Stack(
             children: [
               // Stadium Background Image
               Positioned.fill(
                 child: Image.asset(
-                  ImageAssets.home_bg, // Use stadium/match background image
+                  ImageAssets.home_bg,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
                     return Container(color: AppColors.darkGrey);
@@ -152,7 +151,12 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
               ),
 
               // Header (Back Button, League Name, Notification Bell)
-              _buildHeader(currentMatch),
+              Positioned(
+                top: -16,
+                left: 0,
+                right: 0,
+                child: _buildHeader(currentMatch),
+              ),
 
               // Match Overview (Live Indicator, Teams, Score)
               _buildMatchOverview(currentMatch),
@@ -165,95 +169,45 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
 
   /// Header with Back Button, League Name, and Notification Bell
   Widget _buildHeader(Data matchData) {
-    return Positioned(
-      top: 0,
-      left: 0,
-      right: 0,
-      child: SafeArea(
-        child: Padding(
-          padding: AppPadding.h16,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Back Button
-              IconButton(
-                icon: const Icon(
-                  Icons.arrow_back,
-                  color: AppColors.white,
-                ),
-                onPressed: () => Navigator.pop(context),
+    return SafeArea(
+      child: Padding(
+        padding: AppPadding.h10,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // Back Button
+            IconButton(
+              icon: const Icon(
+                Icons.arrow_back,
+                color: AppColors.white,
               ),
+              onPressed: () => Navigator.pop(context),
+            ),
 
-              // League Name
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8.w),
-                  child: Builder(
-                    builder: (context) {
-                      final leagueName =
-                          matchData.league?.name ?? AppLocalizations.of(context).unknownLeague;
-                      final textStyle = FontManager.heading3(
-                        fontSize: 18,
-                        color: AppColors.white,
-                      );
-
-                      // Calculate text width
-                      final textPainter = TextPainter(
-                        text: TextSpan(text: leagueName, style: textStyle),
-                        maxLines: 1,
-                        textDirection: TextDirection.ltr,
-                      )..layout(minWidth: 0, maxWidth: double.infinity);
-
-                      // Use a simplified check or LayoutBuilder if precise width needed.
-                      // Here we can use a LayoutBuilder for the container width.
-                      return LayoutBuilder(
-                        builder: (context, constraints) {
-                          final isOverflowing =
-                              textPainter.width > constraints.maxWidth;
-
-                          if (isOverflowing) {
-                            return SizedBox(
-                              height: 30.h,
-                              child: Marquee(
-                                text: leagueName,
-                                style: textStyle,
-                                scrollAxis: Axis.horizontal,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                blankSpace: 20.0,
-                                velocity: 30.0,
-                                pauseAfterRound: const Duration(seconds: 1),
-                                startPadding: 10.0,
-                                accelerationDuration:
-                                    const Duration(seconds: 1),
-                                accelerationCurve: Curves.linear,
-                                decelerationDuration:
-                                    const Duration(milliseconds: 500),
-                                decelerationCurve: Curves.easeOut,
-                              ),
-                            );
-                          } else {
-                            return Text(
-                              leagueName,
-                              style: textStyle,
-                              textAlign: TextAlign.center,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            );
-                          }
-                        },
-                      );
-                    },
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8.w),
+                child: Center(
+                  child: AutoMarqueeText(
+                    text: matchData.league?.name ??
+                        AppLocalizations.of(context).unknownLeague,
+                    style: FontManager.heading3(
+                      fontSize: 18,
+                      color: AppColors.white,
+                    ),
+                    height: 30.h,
+                    textAlign: TextAlign.center,
                   ),
                 ),
               ),
+            ),
 
-              // Notification Bell
-              NotificationBell(
-                hasNotification: true,
-                onTap: () {},
-              ),
-            ],
-          ),
+            // Notification Bell
+            NotificationBell(
+              hasNotification: true,
+              onTap: () {},
+            ),
+          ],
         ),
       ),
     );
@@ -262,24 +216,19 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
   /// Match Overview - Live Indicator, Teams, Score
   Widget _buildMatchOverview(Data matchData) {
     return Positioned(
-      bottom: 0,
+      bottom: 12.h,
       top: 48,
       left: 0,
       right: 0,
-      child: Padding(
-        padding: EdgeInsets.only(bottom: 12.h),
-        child: Column(
-          children: [
-            // Live Indicator
-            AppSpacing.h24,
-            _buildLiveIndicator(matchData),
-
-            AppSpacing.h2,
-
-            // Teams and Score
-            _buildScoreboard(matchData),
-          ],
-        ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Live Indicator
+          _buildLiveIndicator(matchData),
+          SizedBox(height: 12.h),
+          // Scoreboard
+          _buildScoreboard(matchData),
+        ],
       ),
     );
   }
@@ -289,13 +238,12 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
       decoration: BoxDecoration(
-        color: AppColors.warning, // Yellow for LIVE
+        color: AppColors.warning,
         borderRadius: BorderRadius.circular(20.r),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Pulsing dot
           BlinkingDot(
             color: AppColors.white,
             size: 8,
@@ -316,7 +264,7 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
   /// Scoreboard with Team Logos and Scores
   Widget _buildScoreboard(Data matchData) {
     return Padding(
-      padding: const EdgeInsets.all(10),
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -328,7 +276,7 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
             ),
           ),
 
-          // Score (always center)
+          // Score
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 12.w),
             child: Text(
@@ -357,19 +305,10 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
     required String logo,
     required String name,
   }) {
-    // Calculate text width to decide if marquee is needed
     final textStyle = FontManager.bodyMedium(
       fontSize: 14,
       color: AppColors.white,
     );
-
-    final textPainter = TextPainter(
-      text: TextSpan(text: name, style: textStyle),
-      maxLines: 1,
-      textDirection: TextDirection.ltr,
-    )..layout(minWidth: 0, maxWidth: double.infinity);
-
-    final isOverflowing = textPainter.width > 90.w;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -395,32 +334,13 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
         ),
         AppSpacing.h8,
         SizedBox(
-          width: 120.w,
-          height: 20.h, // Fixed height for text area
-          child: isOverflowing
-              ? Marquee(
-                  text: name,
-                  style: textStyle,
-                  scrollAxis: Axis.horizontal,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  blankSpace: 20.0,
-                  velocity: 30.0,
-                  pauseAfterRound: const Duration(seconds: 1),
-                  startPadding: 10.0,
-                  accelerationDuration: const Duration(seconds: 1),
-                  accelerationCurve: Curves.linear,
-                  decelerationDuration: const Duration(milliseconds: 500),
-                  decelerationCurve: Curves.easeOut,
-                )
-              : Center(
-                  child: Text(
-                    name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.center,
-                    style: textStyle,
-                  ),
-                ),
+          width: double.infinity,
+          child: AutoMarqueeText(
+            text: name,
+            style: textStyle,
+            height: 20.h,
+            textAlign: TextAlign.center,
+          ),
         ),
       ],
     );
@@ -442,27 +362,21 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
     return SingleChildScrollView(
       padding: AppPadding.h16,
       child: Container(
-        padding: EdgeInsets.only(bottom: 24.h, top: 8.h),
+        padding: EdgeInsets.only(bottom: 24.h, top: 16.h),
         child: Column(
           children: [
-            AppSpacing.h12,
-
-            // Map events to widgets
             ...events.map((event) {
-              return Column(
-                children: [
-                  _buildTimelineEvent(
-                    "${event.time?.elapsed ?? 0}",
-                    event.player?.name ?? AppLocalizations.of(context).unknownPlayer,
-                    event.type ?? AppLocalizations.of(context).event,
-                    event.detail ?? "",
-                  ),
-                  AppSpacing.h16,
-                ],
+              return Padding(
+                padding: EdgeInsets.only(bottom: 16.h),
+                child: _buildTimelineEvent(
+                  "${event.time?.elapsed ?? 0}",
+                  event.player?.name ??
+                      AppLocalizations.of(context).unknownPlayer,
+                  event.type ?? AppLocalizations.of(context).event,
+                  event.detail ?? "",
+                ),
               );
             }),
-
-            // Match Information
             WidgetMatchInformation(
               stadium: widget.matchData.venue?.name ?? "-----------",
               referee: widget.matchData.referee ?? "-----------",
@@ -483,15 +397,11 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
                 widget.matchData.lineups;
         final isLoading = matchId != null ? provider.isLoading(matchId) : false;
 
-        debugPrint(
-            "Building LineupsTab: matchId=$matchId, loading=$isLoading, data=${lineups?.length}");
-
         if (isLoading && (lineups == null || lineups.isEmpty)) {
           return const Center(child: CircularProgressIndicator());
         }
 
         if (lineups == null || lineups.isEmpty) {
-          // Also wrap empty state in RefreshIndicator so user can retry manually
           return RefreshIndicator(
             onRefresh: () async {
               if (matchId != null) {
@@ -499,7 +409,6 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
               }
             },
             child: ListView(
-              // Changed to ListView to ensure pulling works even on empty
               physics: const AlwaysScrollableScrollPhysics(),
               children: [
                 SizedBox(height: 100.h),
@@ -515,16 +424,12 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
           );
         }
 
-        // Identify Home and Away Lineups
-        // We compare team ID with match home/away team ID
         final homeTeamId = widget.matchData.homeTeam?.id;
         final awayTeamId = widget.matchData.awayTeam?.id;
 
-        // Use firstWhere or similar logic.
-        // API usually returns 2 items.
         final homeLineup = lineups.firstWhere(
           (l) => l.team?.id == homeTeamId,
-          orElse: () => lineups[0], // Fallback
+          orElse: () => lineups[0],
         );
 
         final awayLineup = lineups.firstWhere(
@@ -532,11 +437,9 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
           orElse: () => lineups.length > 1 ? lineups[1] : lineups[0],
         );
 
-        // Helper to convert model players to UI players
         List<Player> getUiPlayers(List<dynamic>? startXI) {
           if (startXI == null) return [];
           return startXI.map((item) {
-            // item is StartXI from model
             final p = item.player;
             return Player(
               number: p?.number ?? "0",
@@ -558,41 +461,27 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             padding: AppPadding.h16,
-            child: Container(
-              padding: EdgeInsets.only(bottom: 16.h, top: 8.h),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  AppSpacing.h12,
-
-                  // Home Team Lineup
-                  TeamLineupCard(
-                    teamName: homeLineup.team?.name ?? "Home Team",
-                    formation: homeLineup.formation ?? "",
-                    players: homePlayers,
-                  ),
-
-                  AppSpacing.h32,
-
-                  // Away Team Lineup
-                  TeamLineupCard(
-                    teamName: awayLineup.team?.name ?? "Away Team",
-                    formation: awayLineup.formation ?? "",
-                    players: awayPlayers,
-                  ),
-
-                  AppSpacing.h24,
-
-                  // Match Information
-                  WidgetMatchInformation(
-                    stadium: widget.matchData.venue?.name ?? "-----------",
-                    referee: widget.matchData.referee ?? "-----------",
-                  ),
-
-                  AppSpacing.h16,
-                ],
-              ),
+            child: Column(
+              children: [
+                SizedBox(height: 16.h),
+                TeamLineupCard(
+                  teamName: homeLineup.team?.name ?? "Home Team",
+                  formation: homeLineup.formation ?? "",
+                  players: homePlayers,
+                ),
+                AppSpacing.h32,
+                TeamLineupCard(
+                  teamName: awayLineup.team?.name ?? "Away Team",
+                  formation: awayLineup.formation ?? "",
+                  players: awayPlayers,
+                ),
+                AppSpacing.h24,
+                WidgetMatchInformation(
+                  stadium: widget.matchData.venue?.name ?? "-----------",
+                  referee: widget.matchData.referee ?? "-----------",
+                ),
+                SizedBox(height: 16.h),
+              ],
             ),
           ),
         );
@@ -609,9 +498,6 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
             (matchId != null ? provider.getStatistics(matchId) : null) ??
                 widget.matchData.statistics;
         final isLoading = matchId != null ? provider.isLoading(matchId) : false;
-
-        debugPrint(
-            "Building StatsTab: matchId=$matchId, loading=$isLoading, data=${statistics?.length}");
 
         if (isLoading && (statistics == null || statistics.isEmpty)) {
           return const Center(child: CircularProgressIndicator());
@@ -660,21 +546,14 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
                 .statistics ??
             [];
 
-        // Combine all types to show
         final Set<String> types = {};
-        for (var s in homeStats) {
-          if (s.type != null) types.add(s.type!);
-        }
-        for (var s in awayStats) {
-          if (s.type != null) types.add(s.type!);
-        }
+        for (var s in homeStats) if (s.type != null) types.add(s.type!);
+        for (var s in awayStats) if (s.type != null) types.add(s.type!);
 
-        // Helper to extract int value
         int parseValue(dynamic value) {
           if (value == null) return 0;
           if (value is int) return value;
           if (value is String) {
-            // Remove % if present
             final clean = value.replaceAll('%', '').trim();
             return int.tryParse(clean) ?? 0;
           }
@@ -690,42 +569,30 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             padding: AppPadding.h16,
-            child: Container(
-              padding: EdgeInsets.only(bottom: 16.h, top: 8.h),
-              child: Column(
-                children: [
-                  AppSpacing.h12,
+            child: Column(
+              children: [
+                SizedBox(height: 16.h),
+                if (types.isEmpty)
+                  Text(AppLocalizations.of(context).noStatisticsData,
+                      style: FontManager.bodyMedium()),
+                ...types.map((type) {
+                  final homeItem = homeStats.firstWhere((s) => s.type == type,
+                      orElse: () => StatisticItem(type: type, value: 0));
+                  final awayItem = awayStats.firstWhere((s) => s.type == type,
+                      orElse: () => StatisticItem(type: type, value: 0));
 
-                  if (types.isEmpty)
-                    Text(AppLocalizations.of(context).noStatisticsData,
-                        style: FontManager.bodyMedium()),
-
-                  ...types.map((type) {
-                    final homeItem = homeStats.firstWhere((s) => s.type == type,
-                        orElse: () => StatisticItem(type: type, value: 0));
-                    final awayItem = awayStats.firstWhere((s) => s.type == type,
-                        orElse: () => StatisticItem(type: type, value: 0));
-
-                    return Column(
-                      children: [
-                        _buildStatRow(type, parseValue(homeItem.value),
-                            parseValue(awayItem.value)),
-                        AppSpacing.h16,
-                      ],
-                    );
-                  }),
-
-                  AppSpacing.h8,
-
-                  // Match Information
-                  WidgetMatchInformation(
-                    stadium: widget.matchData.venue?.name ?? "-----------",
-                    referee: widget.matchData.referee ?? "-----------",
-                  ),
-
-                  AppSpacing.h16,
-                ],
-              ),
+                  return Padding(
+                    padding: EdgeInsets.only(bottom: 16.h),
+                    child: _buildStatRow(type, parseValue(homeItem.value),
+                        parseValue(awayItem.value)),
+                  );
+                }),
+                WidgetMatchInformation(
+                  stadium: widget.matchData.venue?.name ?? "-----------",
+                  referee: widget.matchData.referee ?? "-----------",
+                ),
+                SizedBox(height: 16.h),
+              ],
             ),
           ),
         );
@@ -735,86 +602,46 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
 
   /// Timeline Event Item
   Widget _buildTimelineEvent(
-    String minute,
-    String player,
-    String type,
-    String detail,
-  ) {
+      String minute, String player, String type, String detail) {
     String iconPath = IconAssets.soccer_icon;
-
-    // Check type/detail for icon
     if (detail.toLowerCase().contains("yellow") ||
         type.toLowerCase().contains("card")) {
-      if (detail.toLowerCase().contains("yellow")) {
-        iconPath = IconAssets.yellow_card;
-      } else if (detail.toLowerCase().contains("red")) {
-        iconPath = IconAssets.red_card;
-      }
+      iconPath = detail.toLowerCase().contains("red")
+          ? IconAssets.red_card
+          : IconAssets.yellow_card;
     } else if (type.toLowerCase() == "goal") {
       iconPath = IconAssets.soccer_icon;
     }
 
-    // Fallback or specific mapping can be improved
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        /// Minute
-        Text(
-          "$minute''",
-          style: FontManager.bodyMedium(
-            fontSize: 14,
-            color: AppColors.textSecondary,
-          ),
-        ),
-
+        Text("$minute''",
+            style: FontManager.bodyMedium(
+                fontSize: 14, color: AppColors.textSecondary)),
         AppSpacing.w12,
-
-        /// Event Card
         Expanded(
           child: Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: 12.w,
-              vertical: 14.h,
-            ),
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(12.r),
-              border: Border.all(
-                color: Colors.grey.shade300,
-              ),
+              border: Border.all(color: Colors.grey.shade300),
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Image.asset(
-                  iconPath,
-                  height: 14.h,
-                  width: 14.h,
-                ),
+                Image.asset(iconPath, height: 14.h, width: 14.h),
                 AppSpacing.w8,
-
-                /// Text content
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      /// Player name
-                      Text(
-                        player,
-                        style: FontManager.bodyMedium(
-                          fontSize: 14,
-                        ),
-                      ),
-
+                      Text(player, style: FontManager.bodyMedium(fontSize: 14)),
                       SizedBox(height: 2.h),
-
-                      /// Event description
-                      Text(
-                        "$type - $detail",
-                        style: FontManager.bodySmall(
-                          color: AppColors.textSecondary,
-                        ),
-                      ),
+                      Text("$type - $detail",
+                          style: FontManager.bodySmall(
+                              color: AppColors.textSecondary)),
                     ],
                   ),
                 ),
@@ -826,12 +653,12 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
     );
   }
 
-  /// Stat Row - Card-based design matching the image
+  /// Stat Row
   Widget _buildStatRow(String statName, int homeValue, int awayValue) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
       decoration: BoxDecoration(
-        color: AppColors.white, // Light grey background
+        color: AppColors.white,
         border: Border.all(width: 1.w, color: Colors.grey.shade300),
         borderRadius: BorderRadius.circular(12.r),
         boxShadow: [
@@ -844,44 +671,23 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
       ),
       child: Column(
         children: [
-          // Values Row
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Home Value (left)
-              Text(
-                homeValue.toString(),
-                style: FontManager.heading3(
-                  color: AppColors.textPrimary,
-                  fontSize: 18,
-                ),
-              ),
-              // Stat Name (centered)
-              Text(
-                statName,
-                style: FontManager.labelMedium(
-                  color: AppColors.textPrimary,
-                  fontSize: 14,
-                ),
-              ),
-
-              // Away Value (right)
-              Text(
-                awayValue.toString(),
-                style: FontManager.heading3(
-                  color: AppColors.textPrimary,
-                  fontSize: 18,
-                ),
-              ),
+              Text(homeValue.toString(),
+                  style: FontManager.heading3(
+                      color: AppColors.textPrimary, fontSize: 18)),
+              Text(statName,
+                  style: FontManager.labelMedium(
+                      color: AppColors.textPrimary, fontSize: 14)),
+              Text(awayValue.toString(),
+                  style: FontManager.heading3(
+                      color: AppColors.textPrimary, fontSize: 18)),
             ],
           ),
-
           SizedBox(height: 12.h),
-
-          // Progress Bar
           Row(
             children: [
-              // Home team progress (orange)
               Expanded(
                 flex: homeValue == 0 && awayValue == 0
                     ? 1
@@ -889,7 +695,7 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
                 child: Container(
                   height: 8.h,
                   decoration: BoxDecoration(
-                    color: AppColors.primaryColor, // Orange
+                    color: AppColors.primaryColor,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(3.r),
                       bottomLeft: Radius.circular(3.r),
@@ -901,8 +707,6 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
                   ),
                 ),
               ),
-
-              // Away team progress (yellow)
               Expanded(
                 flex: homeValue == 0 && awayValue == 0
                     ? 1
@@ -910,7 +714,7 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
                 child: Container(
                   height: 8.h,
                   decoration: BoxDecoration(
-                    color: AppColors.warning, // Yellow
+                    color: AppColors.warning,
                     borderRadius: BorderRadius.only(
                       topRight: Radius.circular(3.r),
                       bottomRight: Radius.circular(3.r),

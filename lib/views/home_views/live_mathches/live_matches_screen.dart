@@ -49,7 +49,7 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
       TextEditingController(),
       TextEditingController(),
     ];
-    _tabPadding = EdgeInsets.symmetric(horizontal: 16.w);
+    _tabPadding = EdgeInsets.symmetric(horizontal: 22.w);
     // Fixtures are now fetched in HomeScreen
   }
 
@@ -90,7 +90,7 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
         },
       ),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           _buildSearchBar(),
           _buildTabBar(),
@@ -300,13 +300,17 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
         ),
         child: TabBar(
           controller: _tabController,
+          isScrollable: false,
+          indicatorSize: TabBarIndicatorSize.tab,
+          labelPadding: EdgeInsets.zero,
+          indicatorPadding:
+              EdgeInsets.symmetric(horizontal: 4.w, vertical: 4.h),
           labelColor: AppColors.white,
           unselectedLabelColor: AppColors.textPrimary,
           indicator: BoxDecoration(
             color: AppColors.primaryColor,
             borderRadius: BorderRadius.circular(8.r),
           ),
-          indicatorSize: TabBarIndicatorSize.tab,
           dividerColor: Colors.transparent,
           labelStyle: FontManager.labelMedium(fontSize: 14),
           unselectedLabelStyle: FontManager.labelMedium(fontSize: 14),
@@ -344,13 +348,8 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
 
     return ListView.builder(
       padding: EdgeInsets.only(top: 12.h, bottom: 16.h),
-      itemCount: matches.length + 1, // +1 for sponsored card
+      itemCount: matches.length,
       itemBuilder: (context, index) {
-        // Last item → sponsored card
-        // if (index == matches.length) {
-        //   return const SponsoredAdCard(onTryFreeTap: null);
-        // }
-
         final match = matches[index];
         return MatchCard(
           leagueName: match.league?.name ?? "Unknown League",
@@ -386,13 +385,8 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
 
     return ListView.builder(
       padding: EdgeInsets.only(top: 12.h, bottom: 16.h),
-      itemCount: matches.length + 1, // +1 for sponsored card
+      itemCount: matches.length,
       itemBuilder: (context, index) {
-        // // Last item → sponsored card
-        // if (index == matches.length) {
-        //   return const SponsoredAdCard(onTryFreeTap: null);
-        // }
-
         final match = matches[index];
         return MatchCard(
           leagueName: match.league?.name ?? "Unknown League",

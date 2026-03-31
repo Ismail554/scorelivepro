@@ -25,6 +25,7 @@ class AppPadding {
   // Horizontal padding (responsive)
   static EdgeInsets get h4 => EdgeInsets.symmetric(horizontal: 4.r);
   static EdgeInsets get h8 => EdgeInsets.symmetric(horizontal: 8.r);
+    static EdgeInsets get h10 => EdgeInsets.symmetric(horizontal: 10.r);
   static EdgeInsets get h12 => EdgeInsets.symmetric(horizontal: 12.r);
   static EdgeInsets get h16 => EdgeInsets.symmetric(horizontal: 16.r);
   static EdgeInsets get h20 => EdgeInsets.symmetric(horizontal: 20.r);
