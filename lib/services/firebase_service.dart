@@ -1,16 +1,10 @@
 import 'dart:io';
 import 'dart:math';
-<<<<<<< HEAD
 import 'dart:convert';
-import 'package:disable_battery_optimization/disable_battery_optimization.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
-=======
 import 'dart:typed_data';
 import 'package:disable_battery_optimization/disable_battery_optimization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
->>>>>>> 5950e2351edee7fa40dc7bfdc46664a081d45470
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 Future<void> handleBackgroundMessage(RemoteMessage message) async {
@@ -23,7 +17,6 @@ Future<void> handleBackgroundMessage(RemoteMessage message) async {
 class FirebaseService {
   // create an instance of firebase messaging
   final _firebaseMessaging = FirebaseMessaging.instance;
-  final _localNotifications = FlutterLocalNotificationsPlugin();
 
   /// Flutter Local Notifications plugin instance
   static final FlutterLocalNotificationsPlugin _localNotifications =
@@ -62,18 +55,7 @@ class FirebaseService {
         sound: true,
       );
 
-<<<<<<< HEAD
-      // Set foreground presentation options for iOS to show banners in app
-      await _firebaseMessaging.setForegroundNotificationPresentationOptions(
-        alert: true, 
-        badge: true, 
-        sound: true
-      );
-
-      // Initialize flutter_local_notifications for Android foreground popups
-=======
       // Initialize local notifications for foreground display
->>>>>>> 5950e2351edee7fa40dc7bfdc46664a081d45470
       await _initLocalNotifications();
 
       if (Platform.isIOS) {
@@ -126,46 +108,6 @@ class FirebaseService {
     }
   }
 
-<<<<<<< HEAD
-  Future<void> _initLocalNotifications() async {
-    const androidInitSettings = AndroidInitializationSettings('@mipmap/launcher_icon');
-    const iosInitSettings = DarwinInitializationSettings();
-    const initSettings = InitializationSettings(
-      android: androidInitSettings,
-      iOS: iosInitSettings,
-    );
-
-    await _localNotifications.initialize(
-      settings: initSettings,
-      onDidReceiveNotificationResponse: (response) {
-        if (response.payload != null) {
-          final data = jsonDecode(response.payload!);
-          handleMessage(RemoteMessage(data: data));
-        }
-      },
-    );
-
-    if (Platform.isAndroid) {
-      final androidPlugin = _localNotifications.resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>();
-      
-      if (androidPlugin != null) {
-        // Create high importance channel to ensure pop-ups and sound
-        await androidPlugin.createNotificationChannel(
-          const AndroidNotificationChannel(
-            'high_importance_channel',
-            'High Importance Notifications',
-            description: 'This channel is used for important notifications.',
-            importance: Importance.max,
-            playSound: true,
-            enableVibration: true,
-          ),
-        );
-      }
-    }
-  }
-
-=======
   /// Initialize flutter_local_notifications and create the Android channel
   Future<void> _initLocalNotifications() async {
     // Android initialization
@@ -184,7 +126,15 @@ class FirebaseService {
       iOS: iosSettings,
     );
 
-    await _localNotifications.initialize(settings: initSettings);
+    await _localNotifications.initialize(
+      settings: initSettings,
+      onDidReceiveNotificationResponse: (response) {
+        if (response.payload != null) {
+          final data = jsonDecode(response.payload!);
+          handleMessage(RemoteMessage(data: data));
+        }
+      },
+    );
 
     // Create the notification channel on Android
     if (Platform.isAndroid) {
@@ -197,6 +147,10 @@ class FirebaseService {
 
   /// Show a local notification (real status bar notification with sound + vibration)
   static Future<void> _showLocalNotification(RemoteMessage message) async {
+    // We only need to show logic manually on Android. 
+    // iOS handles foreground notifications natively due to setForegroundNotificationPresentationOptions.
+    if (!Platform.isAndroid) return;
+
     final notification = message.notification;
     if (notification == null) return;
 
@@ -235,10 +189,9 @@ class FirebaseService {
       title: notification.title,
       body: notification.body,
       notificationDetails: details,
+      payload: jsonEncode(message.data),
     );
   }
-
->>>>>>> 5950e2351edee7fa40dc7bfdc46664a081d45470
   /// Fetch FCM token with exponential backoff (retries up to 3 times).
   /// Handles SERVICE_NOT_AVAILABLE gracefully on OnePlus/Redmi devices.
   Future<String?> _getTokenWithRetry({int maxRetries = 3}) async {
@@ -330,31 +283,8 @@ class FirebaseService {
       debugPrint('Body: ${message.notification?.body}');
       debugPrint('Payload: ${message.data}');
 
-<<<<<<< HEAD
-      if (message.notification != null && Platform.isAndroid) {
-        _localNotifications.show(
-          id: message.hashCode,
-          title: message.notification!.title,
-          body: message.notification!.body,
-          notificationDetails: const NotificationDetails(
-            android: AndroidNotificationDetails(
-              'high_importance_channel',
-              'High Importance Notifications',
-              channelDescription: 'This channel is used for important notifications.',
-              importance: Importance.max,
-              priority: Priority.high,
-              icon: '@mipmap/launcher_icon',
-              playSound: true,
-              enableVibration: true,
-            ),
-          ),
-          payload: jsonEncode(message.data),
-        );
-      }
-=======
       // Show a real system notification in the status bar
       _showLocalNotification(message);
->>>>>>> 5950e2351edee7fa40dc7bfdc46664a081d45470
     });
   }
 }

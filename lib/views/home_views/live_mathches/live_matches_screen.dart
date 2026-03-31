@@ -347,9 +347,9 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
       itemCount: matches.length + 1, // +1 for sponsored card
       itemBuilder: (context, index) {
         // Last item → sponsored card
-        if (index == matches.length) {
-          return const SponsoredAdCard(onTryFreeTap: null);
-        }
+        // if (index == matches.length) {
+        //   return const SponsoredAdCard(onTryFreeTap: null);
+        // }
 
         final match = matches[index];
         return MatchCard(
