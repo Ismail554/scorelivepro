@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'dart:math';
+import 'dart:convert';
 import 'package:disable_battery_optimization/disable_battery_optimization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 Future<void> handleBackgroundMessage(RemoteMessage message) async {
   debugPrint('--- Push Notification Received (Background) ---');
@@ -14,6 +16,7 @@ Future<void> handleBackgroundMessage(RemoteMessage message) async {
 class FirebaseService {
   // create an instance of firebase messaging
   final _firebaseMessaging = FirebaseMessaging.instance;
+  final _localNotifications = FlutterLocalNotificationsPlugin();
 
   /// Whether the last FCM token fetch failed (SERVICE_NOT_AVAILABLE etc.)
   static bool fcmTokenFailed = false;
@@ -33,6 +36,16 @@ class FirebaseService {
         badge: true,
         sound: true,
       );
+
+      // Set foreground presentation options for iOS to show banners in app
+      await _firebaseMessaging.setForegroundNotificationPresentationOptions(
+        alert: true, 
+        badge: true, 
+        sound: true
+      );
+
+      // Initialize flutter_local_notifications for Android foreground popups
+      await _initLocalNotifications();
 
       if (Platform.isIOS) {
         String? apnsToken = await _firebaseMessaging.getAPNSToken();
@@ -81,6 +94,44 @@ class FirebaseService {
       try {
         initPushNotifications();
       } catch (_) {}
+    }
+  }
+
+  Future<void> _initLocalNotifications() async {
+    const androidInitSettings = AndroidInitializationSettings('@mipmap/launcher_icon');
+    const iosInitSettings = DarwinInitializationSettings();
+    const initSettings = InitializationSettings(
+      android: androidInitSettings,
+      iOS: iosInitSettings,
+    );
+
+    await _localNotifications.initialize(
+      settings: initSettings,
+      onDidReceiveNotificationResponse: (response) {
+        if (response.payload != null) {
+          final data = jsonDecode(response.payload!);
+          handleMessage(RemoteMessage(data: data));
+        }
+      },
+    );
+
+    if (Platform.isAndroid) {
+      final androidPlugin = _localNotifications.resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>();
+      
+      if (androidPlugin != null) {
+        // Create high importance channel to ensure pop-ups and sound
+        await androidPlugin.createNotificationChannel(
+          const AndroidNotificationChannel(
+            'high_importance_channel',
+            'High Importance Notifications',
+            description: 'This channel is used for important notifications.',
+            importance: Importance.max,
+            playSound: true,
+            enableVibration: true,
+          ),
+        );
+      }
     }
   }
 
@@ -166,6 +217,27 @@ class FirebaseService {
       debugPrint('Title: ${message.notification?.title}');
       debugPrint('Body: ${message.notification?.body}');
       debugPrint('Payload: ${message.data}');
+
+      if (message.notification != null && Platform.isAndroid) {
+        _localNotifications.show(
+          id: message.hashCode,
+          title: message.notification!.title,
+          body: message.notification!.body,
+          notificationDetails: const NotificationDetails(
+            android: AndroidNotificationDetails(
+              'high_importance_channel',
+              'High Importance Notifications',
+              channelDescription: 'This channel is used for important notifications.',
+              importance: Importance.max,
+              priority: Priority.high,
+              icon: '@mipmap/launcher_icon',
+              playSound: true,
+              enableVibration: true,
+            ),
+          ),
+          payload: jsonEncode(message.data),
+        );
+      }
     });
   }
 }

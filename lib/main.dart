@@ -15,15 +15,13 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: ".env");
-  // Initialize the Mobile Ads SDK.
-  MobileAds.instance.initialize();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await FirebaseService().initNotifications();
-
   try {
+    await dotenv.load(fileName: ".env");
+    // Initialize the Mobile Ads SDK.
+    await MobileAds.instance.initialize();
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    await FirebaseService().initNotifications();
     DioManager.init();
-
     runApp(
       MultiProvider(
         providers: [
