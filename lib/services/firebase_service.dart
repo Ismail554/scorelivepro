@@ -1,9 +1,10 @@
 import 'dart:io';
 import 'dart:math';
+import 'dart:typed_data';
 import 'package:disable_battery_optimization/disable_battery_optimization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:scorelivepro/app.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 Future<void> handleBackgroundMessage(RemoteMessage message) async {
   debugPrint('--- Push Notification Received (Background) ---');
@@ -16,6 +17,21 @@ class FirebaseService {
   // create an instance of firebase messaging
   final _firebaseMessaging = FirebaseMessaging.instance;
 
+  /// Flutter Local Notifications plugin instance
+  static final FlutterLocalNotificationsPlugin _localNotifications =
+      FlutterLocalNotificationsPlugin();
+
+  /// Android notification channel for high-importance foreground notifications
+  static const AndroidNotificationChannel _channel = AndroidNotificationChannel(
+    'high_importance_channel', // Must match AndroidManifest channel id
+    'High Importance Notifications',
+    description: 'This channel is used for important notifications.',
+    importance: Importance.max,
+    playSound: true,
+    enableVibration: true,
+    enableLights: true,
+  );
+
   /// Whether the last FCM token fetch failed (SERVICE_NOT_AVAILABLE etc.)
   static bool fcmTokenFailed = false;
   static String? lastFcmError;
@@ -24,9 +40,12 @@ class FirebaseService {
   Future<void> initNotifications() async {
     try {
       // Request battery optimization exemption on Android (OnePlus/Redmi fix)
+      // Made optional per developer request to improve UX on startup
+      /* 
       if (Platform.isAndroid) {
         await _requestBatteryOptimizationExemption();
       }
+      */
 
       // request permission from user
       await _firebaseMessaging.requestPermission(
@@ -34,6 +53,9 @@ class FirebaseService {
         badge: true,
         sound: true,
       );
+
+      // Initialize local notifications for foreground display
+      await _initLocalNotifications();
 
       if (Platform.isIOS) {
         String? apnsToken = await _firebaseMessaging.getAPNSToken();
@@ -85,6 +107,78 @@ class FirebaseService {
     }
   }
 
+  /// Initialize flutter_local_notifications and create the Android channel
+  Future<void> _initLocalNotifications() async {
+    // Android initialization
+    const androidSettings =
+        AndroidInitializationSettings('@drawable/ic_notification');
+
+    // iOS initialization
+    const iosSettings = DarwinInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
+    );
+
+    const initSettings = InitializationSettings(
+      android: androidSettings,
+      iOS: iosSettings,
+    );
+
+    await _localNotifications.initialize(settings: initSettings);
+
+    // Create the notification channel on Android
+    if (Platform.isAndroid) {
+      await _localNotifications
+          .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>()
+          ?.createNotificationChannel(_channel);
+    }
+  }
+
+  /// Show a local notification (real status bar notification with sound + vibration)
+  static Future<void> _showLocalNotification(RemoteMessage message) async {
+    final notification = message.notification;
+    if (notification == null) return;
+
+    final androidDetails = AndroidNotificationDetails(
+      _channel.id,
+      _channel.name,
+      channelDescription: _channel.description,
+      importance: Importance.max,
+      priority: Priority.high,
+      playSound: true,
+      enableVibration: true,
+      vibrationPattern: Int64List.fromList([0, 500, 200, 500, 200, 500]),
+      icon: '@drawable/ic_notification',
+      ticker: notification.title,
+      styleInformation: BigTextStyleInformation(
+        notification.body ?? '',
+        htmlFormatBigText: true,
+        contentTitle: notification.title,
+        htmlFormatContentTitle: true,
+      ),
+    );
+
+    const iosDetails = DarwinNotificationDetails(
+      presentAlert: true,
+      presentBadge: true,
+      presentSound: true,
+    );
+
+    final details = NotificationDetails(
+      android: androidDetails,
+      iOS: iosDetails,
+    );
+
+    await _localNotifications.show(
+      id: notification.hashCode, // unique id
+      title: notification.title,
+      body: notification.body,
+      notificationDetails: details,
+    );
+  }
+
   /// Fetch FCM token with exponential backoff (retries up to 3 times).
   /// Handles SERVICE_NOT_AVAILABLE gracefully on OnePlus/Redmi devices.
   Future<String?> _getTokenWithRetry({int maxRetries = 3}) async {
@@ -115,7 +209,8 @@ class FirebaseService {
   /// Request battery optimization exemption on Android.
   /// This is critical for OnePlus, Redmi/Xiaomi, Oppo, Huawei devices
   /// that aggressively kill background services including Google Play Services.
-  Future<void> _requestBatteryOptimizationExemption() async {
+  /// Call this manually from UI tests/settings when appropriate.
+  Future<void> requestBatteryOptimizationExemption() async {
     try {
       final isBatteryOptimizationDisabled =
           await DisableBatteryOptimization.isBatteryOptimizationDisabled;
@@ -161,42 +256,22 @@ class FirebaseService {
       lastFcmError = null;
     });
 
-    // foreground notifications
+    // Set foreground notification presentation (iOS)
+    await _firebaseMessaging.setForegroundNotificationPresentationOptions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
+    // foreground notifications — show real system notification with sound & vibration
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       debugPrint('--- Push Notification Received (Foreground) ---');
       debugPrint('Title: ${message.notification?.title}');
       debugPrint('Body: ${message.notification?.body}');
       debugPrint('Payload: ${message.data}');
 
-      if (message.notification != null && navigatorKey.currentContext != null) {
-        showDialog(
-          context: navigatorKey.currentContext!,
-          builder: (context) {
-            return AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              title: Text(message.notification?.title ?? "Notification"),
-              content: Text(message.notification?.body ?? ""),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context); // Close the dialog
-                  },
-                  child: const Text("Dismiss"),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context); // Close the dialog
-                    handleMessage(message); // Navigate if needed
-                  },
-                  child: const Text("View"),
-                ),
-              ],
-            );
-          },
-        );
-      }
+      // Show a real system notification in the status bar
+      _showLocalNotification(message);
     });
   }
 }

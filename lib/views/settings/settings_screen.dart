@@ -10,7 +10,8 @@ import 'package:scorelivepro/provider/auth_provider.dart';
 import 'package:scorelivepro/provider/notification_provider.dart';
 import 'package:scorelivepro/views/settings/profile_screen.dart';
 import 'package:scorelivepro/config/storage/secure_storage_helper.dart';
-
+import 'package:scorelivepro/services/firebase_service.dart';
+import 'dart:io';
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
@@ -201,6 +202,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             builder: (context) => LanguageSelectionScreen()));
                   },
                 ),
+                if (Platform.isAndroid) ...[
+                  _buildDivider(),
+                  _buildSettingsTile(
+                    icon: Icons.battery_alert_outlined,
+                    title: "Disable Battery Optimization",
+                    subtitle: "Ensure timely notifications",
+                    showChevron: true,
+                    onTap: () {
+                      FirebaseService().requestBatteryOptimizationExemption();
+                    },
+                  ),
+                ],
                 Consumer<AuthProvider>(
                   builder: (context, authProvider, child) {
                     if (authProvider.isLoggedIn) {
