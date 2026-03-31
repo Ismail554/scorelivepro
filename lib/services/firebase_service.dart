@@ -2,7 +2,8 @@ import 'dart:io';
 import 'dart:math';
 import 'package:disable_battery_optimization/disable_battery_optimization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:scorelivepro/app.dart';
 
 Future<void> handleBackgroundMessage(RemoteMessage message) async {
   debugPrint('--- Push Notification Received (Background) ---');
@@ -166,6 +167,36 @@ class FirebaseService {
       debugPrint('Title: ${message.notification?.title}');
       debugPrint('Body: ${message.notification?.body}');
       debugPrint('Payload: ${message.data}');
+
+      if (message.notification != null && navigatorKey.currentContext != null) {
+        showDialog(
+          context: navigatorKey.currentContext!,
+          builder: (context) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              title: Text(message.notification?.title ?? "Notification"),
+              content: Text(message.notification?.body ?? ""),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context); // Close the dialog
+                  },
+                  child: const Text("Dismiss"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context); // Close the dialog
+                    handleMessage(message); // Navigate if needed
+                  },
+                  child: const Text("View"),
+                ),
+              ],
+            );
+          },
+        );
+      }
     });
   }
 }
