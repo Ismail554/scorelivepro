@@ -162,6 +162,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     AppLocalizations.of(context).home,
                                 awayTeam: match.awayTeam?.name ??
                                     AppLocalizations.of(context).away,
+                                homeTeamId: match.homeTeam?.id,
+                                awayTeamId: match.awayTeam?.id,
                                 homeScore: match.goals?.home,
                                 awayScore: match.goals?.away,
                                 timeInfo: "${match.elapsed ?? 0}'",
@@ -235,6 +237,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     AppLocalizations.of(context).home,
                                 awayTeam: match.awayTeam?.name ??
                                     AppLocalizations.of(context).away,
+                                homeTeamId: match.homeTeam?.id,
+                                awayTeamId: match.awayTeam?.id,
                                 timeInfo: match.date != null
                                     ? DateFormat('EEE, HH:mm').format(
                                         DateTime.parse(match.date!).toLocal())

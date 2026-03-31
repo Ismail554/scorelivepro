@@ -6,6 +6,7 @@ import 'package:scorelivepro/l10n/app_localizations.dart';
 import 'package:scorelivepro/core/font_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:scorelivepro/provider/auth_provider.dart';
+import 'package:scorelivepro/provider/team_provider.dart';
 import 'package:scorelivepro/views/auth/login_screen.dart';
 import 'package:scorelivepro/views/favorites_views/favorites_teams_screen.dart';
 import 'package:scorelivepro/views/league_views/leagues_screen.dart';
@@ -69,6 +70,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   bool _isLoadingTeams = true;
   bool _isLoadingLeagues = true;
   bool _hasFetched = false;
+  int _lastFavoriteVersion = 0;
   final GlobalKey<AnimatedListState> _teamsListKey =
       GlobalKey<AnimatedListState>();
   final GlobalKey<AnimatedListState> _leaguesListKey =
@@ -368,6 +370,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                                     match.league?.name ?? "Unknown League",
                                 homeTeam: match.homeTeam?.name ?? "Home",
                                 awayTeam: match.awayTeam?.name ?? "Away",
+                                homeTeamId: match.homeTeam?.id,
+                                awayTeamId: match.awayTeam?.id,
                                 // Display scores if available, else time
                                 homeScore: match.goals?.home,
                                 awayScore: match.goals?.away,
@@ -418,7 +422,20 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                           ],
                         ),
                       ),
-                      _buildTeamsList(),
+                      Consumer<TeamProvider>(
+                        builder: (context, teamProvider, _) {
+                          // Re-fetch when favoriteVersion changes
+                          if (teamProvider.favoriteVersion >
+                              _lastFavoriteVersion) {
+                            _lastFavoriteVersion =
+                                teamProvider.favoriteVersion;
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              _fetchTeams();
+                            });
+                          }
+                          return _buildTeamsList();
+                        },
+                      ),
 
                       // Favorite Leagues Section
                       Padding(

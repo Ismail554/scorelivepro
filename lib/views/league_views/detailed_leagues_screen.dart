@@ -437,6 +437,8 @@ class _DetailedLeaguesScreenState extends State<DetailedLeaguesScreen>
           leagueName: match.league?.name ?? _leagueDetails?.name ?? "Unknown",
           homeTeam: match.homeTeam?.name ?? "Home",
           awayTeam: match.awayTeam?.name ?? "Away",
+          homeTeamId: match.homeTeam?.id,
+          awayTeamId: match.awayTeam?.id,
           homeScore: match.goals?.home,
           awayScore: match.goals?.away,
           timeInfo: timeInfo,

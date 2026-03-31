@@ -355,6 +355,8 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
           leagueName: match.league?.name ?? "Unknown League",
           homeTeam: match.homeTeam?.name ?? "Home",
           awayTeam: match.awayTeam?.name ?? "Away",
+          homeTeamId: match.homeTeam?.id,
+          awayTeamId: match.awayTeam?.id,
           homeScore: match.goals?.home,
           awayScore: match.goals?.away,
           timeInfo: "${match.elapsed ?? 0}'",
@@ -392,6 +394,8 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
           leagueName: match.league?.name ?? "Unknown League",
           homeTeam: match.homeTeam?.name ?? "Home",
           awayTeam: match.awayTeam?.name ?? "Away",
+          homeTeamId: match.homeTeam?.id,
+          awayTeamId: match.awayTeam?.id,
           homeScore: match.goals?.home,
           awayScore: match.goals?.away,
           timeInfo: isUpcoming

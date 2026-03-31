@@ -9,11 +9,13 @@ class TeamProvider extends ChangeNotifier {
   bool _hasMore = true;
   int _currentPage = 1;
   String _searchQuery = '';
+  int _favoriteVersion = 0;
 
   List<TeamModel> get teams => _teams;
   bool get isLoading => _isLoading;
   bool get hasMore => _hasMore;
   String get searchQuery => _searchQuery;
+  int get favoriteVersion => _favoriteVersion;
 
   void setSearchQuery(String query) {
     if (_searchQuery != query) {
@@ -61,6 +63,8 @@ class TeamProvider extends ChangeNotifier {
     final error = await TeamService.addTeamToFavorites(teamId);
     if (context.mounted) {
       if (error == null) {
+        _favoriteVersion++;
+        notifyListeners();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Row(
