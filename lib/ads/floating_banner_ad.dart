@@ -3,7 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:scorelivepro/ads/banner_ad_widget.dart';
 
 class FloatingBannerAd extends StatefulWidget {
-  const FloatingBannerAd({super.key});
+  final String? androidAdUnitId;
+  final String? iosAdUnitId;
+
+  const FloatingBannerAd({
+    super.key,
+    this.androidAdUnitId,
+    this.iosAdUnitId,
+  });
 
   @override
   State<FloatingBannerAd> createState() => _FloatingBannerAdState();
@@ -48,7 +55,10 @@ class _FloatingBannerAdState extends State<FloatingBannerAd> {
         child: Stack(
           alignment: Alignment.topRight,
           children: [
-            const BannerAdWidget(),
+            BannerAdWidget(
+              androidAdUnitId: widget.androidAdUnitId,
+              iosAdUnitId: widget.iosAdUnitId,
+            ),
             GestureDetector(
               onTap: _hideAdTemporarily,
               child: Container(

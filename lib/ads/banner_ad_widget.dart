@@ -4,7 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class BannerAdWidget extends StatefulWidget {
-  const BannerAdWidget({super.key});
+  final String? androidAdUnitId;
+  final String? iosAdUnitId;
+
+  const BannerAdWidget({
+    super.key,
+    this.androidAdUnitId,
+    this.iosAdUnitId,
+  });
 
   @override
   State<BannerAdWidget> createState() => _BannerAdWidgetState();
@@ -14,9 +21,14 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
   BannerAd? _bannerAd;
   bool _isAdLoaded = false;
   //ad unit id
-  final String adUnitId = Platform.isAndroid
-      ? "ca-app-pub-6967886775553979/7655620271"
-      : "ca-app-pub-6967886775553979/7825631347";
+  String get adUnitId {
+    if (Platform.isAndroid) {
+      return widget.androidAdUnitId ?? "ca-app-pub-6967886775553979/7655620271";
+    } else {
+      return widget.iosAdUnitId ?? "ca-app-pub-6967886775553979/7825631347";
+    }
+  }
+
   @override
   void initState() {
     super.initState();

@@ -8,7 +8,7 @@ import 'package:scorelivepro/utils/navigation_helper.dart';
 import 'package:scorelivepro/views/home_views/live_mathches/lineups_screen.dart';
 import 'package:scorelivepro/views/home_views/live_mathches/live_match_details_screen.dart';
 import 'package:scorelivepro/widget/home/match_card.dart';
-import 'package:scorelivepro/widget/home/sponsored_ad_card.dart';
+
 import 'package:scorelivepro/widget/mini_widget/mw_notification_bell.dart';
 import 'package:scorelivepro/widget/navigation/custom_bottom_nav_bar.dart';
 

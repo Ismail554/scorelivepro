@@ -57,7 +57,8 @@ class FavoriteLeague {
 }
 
 class FavoritesScreen extends StatefulWidget {
-  const FavoritesScreen({super.key});
+  final bool showBackButton;
+  const FavoritesScreen({super.key, this.showBackButton = false});
 
   @override
   State<FavoritesScreen> createState() => _FavoritesScreenState();
@@ -274,6 +275,27 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
+                        if (widget.showBackButton) ...[
+                          GestureDetector(
+                            onTap: () => Navigator.pop(context),
+                            child: Container(
+                              padding: EdgeInsets.all(8.w),
+                              decoration: BoxDecoration(
+                                color: AppColors.greyE8,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 4.w), // optical center for iOS back icon
+                                child: Icon(
+                                  Icons.arrow_back_ios,
+                                  color: AppColors.textPrimary,
+                                  size: 16.sp,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 12.w),
+                        ],
                         // LEFT SIDE (TITLE + SUBTITLE)
                         Expanded(
                           child: Column(

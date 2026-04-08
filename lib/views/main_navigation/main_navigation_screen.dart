@@ -8,6 +8,7 @@ import 'package:scorelivepro/views/news_views/news_screen.dart';
 import 'package:scorelivepro/views/settings/settings_screen.dart';
 import 'package:scorelivepro/services/socket_service.dart';
 import 'package:scorelivepro/widget/navigation/custom_bottom_nav_bar.dart';
+import 'package:scorelivepro/ads/floating_banner_ad.dart';
 
 /// Main Navigation Screen with Bottom Navigation Bar
 class MainNavigationScreen extends StatefulWidget {
@@ -60,9 +61,18 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _screens,
+      body: Stack(
+        children: [
+          IndexedStack(
+            index: _currentIndex,
+            children: _screens,
+          ),
+          if (_currentIndex == 0 || _currentIndex == 2)
+            const FloatingBannerAd(
+              androidAdUnitId: "ca-app-pub-6967886775553979/1289280562",
+              iosAdUnitId: "ca-app-pub-6967886775553979/4866649291",
+            ),
+        ],
       ),
       bottomNavigationBar: CustomBottomNavBar(
         currentIndex: _currentIndex,

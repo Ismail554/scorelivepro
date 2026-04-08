@@ -27,7 +27,8 @@ class NewsItem {
 }
 
 class NewsScreen extends StatefulWidget {
-  const NewsScreen({super.key});
+  final bool showBackButton;
+  const NewsScreen({super.key, this.showBackButton = false});
 
   @override
   State<NewsScreen> createState() => _NewsScreenState();
@@ -117,14 +118,36 @@ class _NewsScreenState extends State<NewsScreen> {
                 Padding(
                   padding:
                       EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      AppLocalizations.of(context).news,
-                      style: FontManager.heading2(
-                        color: AppColors.textPrimary,
+                  child: Row(
+                    children: [
+                      if (widget.showBackButton) ...[
+                        GestureDetector(
+                          onTap: () => Navigator.pop(context),
+                          child: Container(
+                            padding: EdgeInsets.all(8.w),
+                            decoration: BoxDecoration(
+                              color: AppColors.greyE8,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 4.w), // optical center for iOS back icon
+                              child: Icon(
+                                Icons.arrow_back_ios,
+                                color: AppColors.textPrimary,
+                                size: 16.sp,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 12.w),
+                      ],
+                      Text(
+                        AppLocalizations.of(context).news,
+                        style: FontManager.heading2(
+                          color: AppColors.textPrimary,
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
 

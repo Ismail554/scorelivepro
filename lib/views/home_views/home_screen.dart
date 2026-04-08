@@ -14,6 +14,7 @@ import 'package:scorelivepro/widget/home/match_card.dart';
 import 'package:scorelivepro/widget/home/quick_action_card.dart';
 import 'package:scorelivepro/widget/home/section_header.dart';
 import 'package:scorelivepro/widget/common/no_internet_banner.dart';
+import 'package:scorelivepro/widget/shimmer/match_card_shimmer.dart';
 import 'package:scorelivepro/views/home_views/live_mathches/live_matches_screen.dart';
 
 import 'package:scorelivepro/utils/match_status_helper.dart';
@@ -206,8 +207,15 @@ class _HomeScreenState extends State<HomeScreen> {
                         builder: (context, provider, child) {
                           if (provider.isLoadingUpcoming &&
                               provider.upcomingMatches.isEmpty) {
-                            return const Center(
-                                child: CircularProgressIndicator());
+                            return ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              padding: EdgeInsets.zero,
+                              itemCount: 2,
+                              itemBuilder: (context, index) {
+                                return const MatchCardShimmer();
+                              },
+                            );
                           }
 
                           if (provider.upcomingMatches.isEmpty) {
@@ -279,7 +287,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          const FavoritesScreen(),
+                                          const FavoritesScreen(
+                                              showBackButton: true),
                                     ));
                               },
                             ),
@@ -291,7 +300,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => const NewsScreen(),
+                                      builder: (context) => const NewsScreen(
+                                          showBackButton: true),
                                     ));
                               },
                             ),
