@@ -28,16 +28,27 @@ class ConnectivityProvider extends ChangeNotifier {
     final hasNetwork = results.any((r) => r != ConnectivityResult.none);
 
     if (hasNetwork) {
-      // Double-check with a real DNS lookup to catch "connected but no internet"
-      try {
-        final result = await InternetAddress.lookup('google.com')
-            .timeout(const Duration(seconds: 3));
-        _updateStatus(result.isNotEmpty && result[0].rawAddress.isNotEmpty);
-      } on SocketException catch (_) {
-        _updateStatus(false);
-      } on TimeoutException catch (_) {
-        _updateStatus(false);
+      // Double-check with a real DNS lookup to catch "connected but no internet".
+      // Try multiple hosts for redundancy (google.com may be blocked in some regions,
+      // and iOS simulator can behave differently with DNS).
+      final hosts = ['google.com', 'apple.com', 'cloudflare.com'];
+      bool connected = false;
+
+      for (final host in hosts) {
+        try {
+          final result = await InternetAddress.lookup(host)
+              .timeout(const Duration(seconds: 3));
+          if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+            connected = true;
+            break;
+          }
+        } catch (_) {
+          // Try the next host
+          continue;
+        }
       }
+
+      _updateStatus(connected);
     } else {
       _updateStatus(false);
     }
