@@ -226,5 +226,8 @@
       }
     }
   },
-  "loginRequiredForFavorites": "Devi accedere per aggiungere leghe ai Preferiti."
+  "loginRequiredForFavorites": "Devi accedere per aggiungere leghe ai Preferiti.",
+  "noInternetConnection": "Nessuna connessione Internet",
+  "checkYourConnection": "Controlla le impostazioni di rete",
+  "tryAgain": "Riprova"
 }

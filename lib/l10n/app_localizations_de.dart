@@ -635,4 +635,14 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get loginRequiredForFavorites =>
       'Sie müssen sich anmelden, um Ligen zu den Favoriten hinzuzufügen.';
+
+  @override
+  String get noInternetConnection => 'Keine Internetverbindung';
+
+  @override
+  String get checkYourConnection =>
+      'Bitte überprüfen Sie Ihre Netzwerkeinstellungen';
+
+  @override
+  String get tryAgain => 'Erneut versuchen';
 }

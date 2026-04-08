@@ -631,4 +631,13 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get loginRequiredForFavorites =>
       'You must login to add leagues to Favorites.';
+
+  @override
+  String get noInternetConnection => 'No Internet Connection';
+
+  @override
+  String get checkYourConnection => 'Please check your network settings';
+
+  @override
+  String get tryAgain => 'Try Again';
 }

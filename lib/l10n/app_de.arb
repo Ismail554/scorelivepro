@@ -226,5 +226,8 @@
       }
     }
   },
-  "loginRequiredForFavorites": "Sie müssen sich anmelden, um Ligen zu den Favoriten hinzuzufügen."
+  "loginRequiredForFavorites": "Sie müssen sich anmelden, um Ligen zu den Favoriten hinzuzufügen.",
+  "noInternetConnection": "Keine Internetverbindung",
+  "checkYourConnection": "Bitte überprüfen Sie Ihre Netzwerkeinstellungen",
+  "tryAgain": "Erneut versuchen"
 }

@@ -631,4 +631,13 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get loginRequiredForFavorites =>
       'Você deve fazer login para adicionar ligas aos Favoritos.';
+
+  @override
+  String get noInternetConnection => 'Sem conexão com a Internet';
+
+  @override
+  String get checkYourConnection => 'Verifique suas configurações de rede';
+
+  @override
+  String get tryAgain => 'Tentar novamente';
 }

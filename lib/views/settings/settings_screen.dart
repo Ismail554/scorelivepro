@@ -7,7 +7,6 @@ import 'package:scorelivepro/views/settings/app_info_screen.dart';
 import 'package:scorelivepro/views/settings/language_selection_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:scorelivepro/provider/auth_provider.dart';
-import 'package:scorelivepro/provider/notification_provider.dart';
 import 'package:scorelivepro/views/settings/profile_screen.dart';
 import 'package:scorelivepro/config/storage/secure_storage_helper.dart';
 import 'package:scorelivepro/services/firebase_service.dart';

@@ -226,5 +226,8 @@
       }
     }
   },
-  "loginRequiredForFavorites": "Você deve fazer login para adicionar ligas aos Favoritos."
+  "loginRequiredForFavorites": "Você deve fazer login para adicionar ligas aos Favoritos.",
+  "noInternetConnection": "Sem conexão com a Internet",
+  "checkYourConnection": "Verifique suas configurações de rede",
+  "tryAgain": "Tentar novamente"
 }

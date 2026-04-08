@@ -226,5 +226,8 @@
       }
     }
   },
-  "loginRequiredForFavorites": "You must login to add leagues to Favorites."
+  "loginRequiredForFavorites": "You must login to add leagues to Favorites.",
+  "noInternetConnection": "No Internet Connection",
+  "checkYourConnection": "Please check your network settings",
+  "tryAgain": "Try Again"
 }

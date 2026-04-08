@@ -9,6 +9,7 @@ import 'package:scorelivepro/widget/favorites/widget_add_to_favorites_dialog.dar
 import 'package:scorelivepro/widget/favorites/widget_team_browse_card.dart';
 import 'package:scorelivepro/widget/mini_widget/mw_notification_bell.dart';
 import 'package:scorelivepro/widget/shimmer_loading.dart';
+import 'package:scorelivepro/widget/common/no_internet_banner.dart';
 
 import 'package:provider/provider.dart';
 import 'package:scorelivepro/provider/team_provider.dart';
@@ -69,7 +70,8 @@ class _FavoritesTeamsScreenState extends State<FavoritesTeamsScreen> {
     debugPrint("FavoritesTeamsScreen: build called");
     return Scaffold(
       backgroundColor: AppColors.white,
-      body: Column(
+      body: NoInternetBanner(
+        child: Column(
         children: [
           // Header Section
           Container(
@@ -269,6 +271,7 @@ class _FavoritesTeamsScreenState extends State<FavoritesTeamsScreen> {
             ),
           ),
         ],
+      ),
       ),
     );
   }

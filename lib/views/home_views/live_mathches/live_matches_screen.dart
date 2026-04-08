@@ -16,6 +16,7 @@ import 'package:scorelivepro/models/live_ws_model.dart';
 import 'package:scorelivepro/utils/match_status_helper.dart';
 import 'package:scorelivepro/provider/match_provider.dart';
 import 'package:scorelivepro/widget/shimmer/match_card_shimmer.dart';
+import 'package:scorelivepro/widget/common/no_internet_banner.dart';
 
 class LiveMatchesScreen extends StatefulWidget {
   final int initialIndex;
@@ -89,7 +90,8 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
           NavigationHelper.navigateToMainScreen(context, index);
         },
       ),
-      body: Column(
+      body: NoInternetBanner(
+        child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           _buildSearchBar(),
@@ -132,6 +134,7 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
             ),
           ),
         ],
+      ),
       ),
     );
   }

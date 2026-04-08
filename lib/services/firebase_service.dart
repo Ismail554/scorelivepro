@@ -17,13 +17,43 @@ Future<void> handleBackgroundMessage(RemoteMessage message) async {
   // THIS IS THE PROOF!
   // If you see this print in your terminal while the app is closed,
   // it proves the OS woke up the app behind the scenes.
-  debugPrint("🔥 THE APP WOKE UP! Received message: ${message.data}");
+  print("🔥 THE APP WOKE UP! Received message: ${message.data}");
   
   // They can put their custom logic here (e.g. check local settings)
   final isEnabled = await SecureStorageHelper.getNotificationStatus();
   if (!isEnabled) {
     debugPrint('Notification ignored internally (user disabled in settings)');
     return;
+  }
+
+  // If this is a data-only message (silent push) and settings are ON,
+  // manually trigger the local notification popup.
+  if (message.notification == null && (message.data['title'] != null || message.data['body'] != null)) {
+      final localNotifications = FlutterLocalNotificationsPlugin();
+      await localNotifications.initialize(
+        settings: const InitializationSettings(
+          android: AndroidInitializationSettings('@drawable/ic_notification'),
+          iOS: DarwinInitializationSettings(
+            requestAlertPermission: false, requestBadgePermission: false, requestSoundPermission: false,
+          ),
+        ),
+      );
+
+      await localNotifications.show(
+        id: message.hashCode,
+        title: message.data['title'],
+        body: message.data['body'],
+        notificationDetails: const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'high_importance_channel',
+            'High Importance Notifications',
+            importance: Importance.max,
+            priority: Priority.high,
+          ),
+          iOS: DarwinNotificationDetails(),
+        ),
+        payload: jsonEncode(message.data),
+      );
   }
 }
 
@@ -160,12 +190,24 @@ class FirebaseService {
 
   /// Show a local notification (real status bar notification with sound + vibration)
   static Future<void> _showLocalNotification(RemoteMessage message) async {
-    // We only need to show logic manually on Android. 
-    // iOS handles foreground notifications natively due to setForegroundNotificationPresentationOptions.
-    if (!Platform.isAndroid) return;
-
     final notification = message.notification;
-    if (notification == null) return;
+    final data = message.data;
+    
+    // Extract title and body from notification payload or fallback to data payload
+    final String? title = notification?.title ?? data['title'];
+    final String? body = notification?.body ?? data['body'];
+
+    if (title == null && body == null) {
+      // Nothing to show if both are completely empty
+      return;
+    }
+
+    // iOS natively shows foreground popups ONLY if it is a Notification Payload (notification != null).
+    // If it's a Data-only payload (notification == null), iOS will NOT show it natively,
+    // so we must manually show it using flutter_local_notifications for BOTH Android and iOS!
+    if (Platform.isIOS && notification != null) {
+        return; 
+    }
 
     final androidDetails = AndroidNotificationDetails(
       _channel.id,
@@ -177,11 +219,11 @@ class FirebaseService {
       enableVibration: true,
       vibrationPattern: Int64List.fromList([0, 500, 200, 500, 200, 500]),
       icon: '@drawable/ic_notification',
-      ticker: notification.title,
+      ticker: title,
       styleInformation: BigTextStyleInformation(
-        notification.body ?? '',
+        body ?? '',
         htmlFormatBigText: true,
-        contentTitle: notification.title,
+        contentTitle: title,
         htmlFormatContentTitle: true,
       ),
     );
@@ -198,9 +240,9 @@ class FirebaseService {
     );
 
     await _localNotifications.show(
-      id: notification.hashCode, // unique id
-      title: notification.title,
-      body: notification.body,
+      id: notification?.hashCode ?? data.hashCode, // unique id
+      title: title,
+      body: body,
       notificationDetails: details,
       payload: jsonEncode(message.data),
     );

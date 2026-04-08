@@ -13,6 +13,7 @@ import 'package:scorelivepro/views/news_views/news_screen.dart';
 import 'package:scorelivepro/widget/home/match_card.dart';
 import 'package:scorelivepro/widget/home/quick_action_card.dart';
 import 'package:scorelivepro/widget/home/section_header.dart';
+import 'package:scorelivepro/widget/common/no_internet_banner.dart';
 import 'package:scorelivepro/views/home_views/live_mathches/live_matches_screen.dart';
 
 import 'package:scorelivepro/utils/match_status_helper.dart';
@@ -109,7 +110,8 @@ class _HomeScreenState extends State<HomeScreen> {
             // end of top stack
             //body part
             Expanded(
-              child: Container(
+              child: NoInternetBanner(
+                child: Container(
                 color: AppColors.white,
                 child: SingleChildScrollView(
                   child: Column(
@@ -305,7 +307,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-            )
+            ),
+          )
           ],
         ),
       ),

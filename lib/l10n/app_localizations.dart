@@ -1299,6 +1299,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You must login to add leagues to Favorites.'**
   String get loginRequiredForFavorites;
+
+  /// No description provided for @noInternetConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'No Internet Connection'**
+  String get noInternetConnection;
+
+  /// No description provided for @checkYourConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your network settings'**
+  String get checkYourConnection;
+
+  /// No description provided for @tryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try Again'**
+  String get tryAgain;
 }
 
 class _AppLocalizationsDelegate

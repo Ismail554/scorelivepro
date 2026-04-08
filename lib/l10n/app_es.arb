@@ -226,5 +226,8 @@
       }
     }
   },
-  "loginRequiredForFavorites": "Debes iniciar sesión para añadir ligas a Favoritos."
+  "loginRequiredForFavorites": "Debes iniciar sesión para añadir ligas a Favoritos.",
+  "noInternetConnection": "Sin conexión a Internet",
+  "checkYourConnection": "Por favor, comprueba tu conexión de red",
+  "tryAgain": "Intentar de nuevo"
 }

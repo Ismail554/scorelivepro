@@ -15,6 +15,7 @@ import 'package:scorelivepro/widget/mini_widget/mw_notification_bell.dart';
 import 'package:scorelivepro/widget/favorites/widget_add_to_favorites_dialog.dart';
 import 'package:scorelivepro/core/assets_manager.dart';
 import 'package:scorelivepro/ads/floating_banner_ad.dart';
+import 'package:scorelivepro/widget/common/no_internet_banner.dart';
 
 class LeaguesScreen extends StatefulWidget {
   final bool showBackButton;
@@ -248,8 +249,9 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
       backgroundColor: AppColors.white,
       body: Stack(
         children: [
-          Column(
-            children: [
+          NoInternetBanner(
+            child: Column(
+              children: [
               // Header Section
               Container(
                 color: AppColors.white,
@@ -343,7 +345,8 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
               Expanded(
                 child: _buildBody(),
               ),
-            ],
+              ],
+            ),
           ),
           const Positioned(
             left: 0,
