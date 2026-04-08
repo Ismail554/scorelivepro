@@ -17,7 +17,7 @@ Future<void> handleBackgroundMessage(RemoteMessage message) async {
   // THIS IS THE PROOF!
   // If you see this print in your terminal while the app is closed,
   // it proves the OS woke up the app behind the scenes.
-  print("🔥 THE APP WOKE UP! Received message: ${message.data}");
+  debugPrint("🔥 THE APP WOKE UP! Received message: ${message.data}");
   
   // They can put their custom logic here (e.g. check local settings)
   final isEnabled = await SecureStorageHelper.getNotificationStatus();
