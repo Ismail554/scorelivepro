@@ -3,15 +3,28 @@ import 'dart:math';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:disable_battery_optimization/disable_battery_optimization.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:scorelivepro/config/storage/secure_storage_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+@pragma('vm:entry-point')
 Future<void> handleBackgroundMessage(RemoteMessage message) async {
-  debugPrint('--- Push Notification Received (Background) ---');
-  debugPrint('Title: ${message.notification?.title}');
-  debugPrint('Body: ${message.notification?.body}');
-  debugPrint('Payload: ${message.data}');
+  // MUST initialize Firebase first if making API calls here
+  await Firebase.initializeApp();
+
+  // THIS IS THE PROOF!
+  // If you see this print in your terminal while the app is closed,
+  // it proves the OS woke up the app behind the scenes.
+  print("🔥 THE APP WOKE UP! Received message: ${message.data}");
+  
+  // They can put their custom logic here (e.g. check local settings)
+  final isEnabled = await SecureStorageHelper.getNotificationStatus();
+  if (!isEnabled) {
+    debugPrint('Notification ignored internally (user disabled in settings)');
+    return;
+  }
 }
 
 class FirebaseService {
@@ -277,8 +290,16 @@ class FirebaseService {
     );
 
     // foreground notifications — show real system notification with sound & vibration
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       debugPrint('--- Push Notification Received (Foreground) ---');
+      
+      // Check user preferences before showing
+      final isEnabled = await SecureStorageHelper.getNotificationStatus();
+      if (!isEnabled) {
+        debugPrint('Notification ignored (user disabled in settings)');
+        return;
+      }
+
       debugPrint('Title: ${message.notification?.title}');
       debugPrint('Body: ${message.notification?.body}');
       debugPrint('Payload: ${message.data}');

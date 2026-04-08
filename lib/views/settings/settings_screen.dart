@@ -12,6 +12,7 @@ import 'package:scorelivepro/views/settings/profile_screen.dart';
 import 'package:scorelivepro/config/storage/secure_storage_helper.dart';
 import 'package:scorelivepro/services/firebase_service.dart';
 import 'dart:io';
+
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
@@ -169,24 +170,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       _notificationsEnabled = val;
                     });
 
-                    // Call the API
-                    final success = await context
-                        .read<NotificationProvider>()
-                        .registerDevice(val);
-                    if (!success && context.mounted) {
-                      // Revert if API failed
-                      setState(() {
-                        _notificationsEnabled = !val;
-                      });
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                            content: Text(AppLocalizations.of(context)
-                                .failedNotificationUpdate)),
-                      );
-                    } else if (success) {
-                      // Save state locally
-                      await SecureStorageHelper.saveNotificationStatus(val);
-                    }
+                    // Save state locally.
+                    await SecureStorageHelper.saveNotificationStatus(val);
                   },
                 ),
                 _buildDivider(), // Line between items
@@ -358,8 +343,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
             // 5. DISCLAIMER BOX (Grey Box at bottom)
             Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(16.w),
+              width: double.maxFinite,
+              padding: EdgeInsets.all(16.r),
               decoration: BoxDecoration(
                 color: const Color(0xFFEBEBF0), // Darker grey for disclaimer
                 borderRadius: BorderRadius.circular(12.r),
@@ -434,7 +419,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       // Circular Icon
       leading: Container(
         width: 36.w,
-        height: 36.w,
+        height: 36.h,
         decoration: BoxDecoration(
           color: iconBgColor,
           shape: BoxShape.circle,
@@ -467,5 +452,4 @@ class _SettingsScreenState extends State<SettingsScreen> {
               : null),
     );
   }
-
 }
