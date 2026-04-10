@@ -67,7 +67,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             index: _currentIndex,
             children: _screens,
           ),
-          if (_currentIndex == 0 || _currentIndex == 2)
+          if (_currentIndex >= 0 && _currentIndex <= 3)
             const FloatingBannerAd(
               androidAdUnitId: "ca-app-pub-6967886775553979/1289280562",
               iosAdUnitId: "ca-app-pub-6967886775553979/4866649291",

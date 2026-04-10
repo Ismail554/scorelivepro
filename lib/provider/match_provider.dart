@@ -26,6 +26,12 @@ class MatchProvider extends ChangeNotifier with WidgetsBindingObserver {
     // Connect to socket
     SocketService.instance.connectSocket("");
     SocketService.instance.liveScoreNotifier.addListener(_onSocketUpdate);
+    SocketService.instance.isConnected.addListener(_onConnectionUpdate);
+  }
+
+  void _onConnectionUpdate() {
+    debugPrint("🌐 MatchProvider: Connection state changed: ${SocketService.instance.isConnected.value}");
+    notifyListeners();
   }
 
   @override
@@ -96,6 +102,7 @@ class MatchProvider extends ChangeNotifier with WidgetsBindingObserver {
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     SocketService.instance.liveScoreNotifier.removeListener(_onSocketUpdate);
+    SocketService.instance.isConnected.removeListener(_onConnectionUpdate);
     // Optional: SocketService.instance.disconnect();
     super.dispose();
   }
@@ -235,6 +242,7 @@ class MatchProvider extends ChangeNotifier with WidgetsBindingObserver {
     return list;
   }
 
+  bool get isLoadingLive => !SocketService.instance.isConnected.value;
   bool get isLoadingFixtures => _isLoadingUpcoming || _isLoadingFinished;
   bool get isLoadingUpcoming => _isLoadingUpcoming;
   bool get isLoadingFinished => _isLoadingFinished;

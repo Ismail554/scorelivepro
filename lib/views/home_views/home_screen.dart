@@ -136,16 +136,20 @@ class _HomeScreenState extends State<HomeScreen> {
                         builder: (context, provider, child) {
                           final matches = provider.liveMatches;
 
-                          if (matches.isEmpty) {
-                            return Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 16.w, vertical: 8.h),
-                              child: Text(
-                                AppLocalizations.of(context).noLiveMatches,
-                                style: FontManager.bodyMedium(
-                                    color: AppColors.textSecondary),
-                              ),
+                          if (provider.isLoadingLive && matches.isEmpty) {
+                            return ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              padding: EdgeInsets.zero,
+                              itemCount: 2,
+                              itemBuilder: (context, index) {
+                                return const MatchCardShimmer();
+                              },
                             );
+                          }
+
+                          if (matches.isEmpty) {
+                            return const SizedBox.shrink();
                           }
 
                           // Show only top 2 matches

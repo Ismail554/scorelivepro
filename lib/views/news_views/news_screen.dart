@@ -107,7 +107,7 @@ class _NewsScreenState extends State<NewsScreen> {
     return Scaffold(
       backgroundColor: AppColors.bgColor,
       body: Column(
-        children: [
+          children: [
           // Header Section
           Container(
             color: AppColors.white,
@@ -173,7 +173,7 @@ class _NewsScreenState extends State<NewsScreen> {
                           child: TextField(
                             controller: _searchController,
                             decoration: InputDecoration(
-                              hintText: "Search news...",
+                              hintText: AppLocalizations.of(context).searchLeagues, // Fallback to searchLeagues or use searchNews if available
                               hintStyle: FontManager.bodyMedium(
                                 color: AppColors.textTertiary,
                                 fontSize: 14,
@@ -214,9 +214,9 @@ class _NewsScreenState extends State<NewsScreen> {
                 ),
 
                 SizedBox(height: 16.h),
-              ],
-            ),
+            ],
           ),
+        ),
 
           // News List
           Expanded(

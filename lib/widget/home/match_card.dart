@@ -7,6 +7,7 @@ import 'package:scorelivepro/core/app_spacing.dart';
 import 'package:scorelivepro/core/font_manager.dart';
 import 'package:scorelivepro/provider/team_provider.dart';
 import 'package:scorelivepro/widget/mini_widget/mw_blinking_dot.dart';
+import 'package:scorelivepro/widget/mini_widget/mw_blinking_widget.dart';
 import 'package:scorelivepro/widget/common/auto_marquee_text.dart';
 
 /// Match status enum
@@ -226,17 +227,19 @@ class MatchCard extends StatelessWidget {
   Widget _buildStatusBadge(String badgeText) {
     switch (status) {
       case MatchStatus.live:
-        return Container(
-          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-          decoration: BoxDecoration(
-            color: AppColors.warning,
-            borderRadius: BorderRadius.circular(8.r),
-          ),
-          child: Text(
-            'LIVE',
-            style: FontManager.labelMedium(
-              color: AppColors.white,
-              fontSize: 12.sp,
+        return BlinkingWidget(
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+            decoration: BoxDecoration(
+              color: AppColors.warning,
+              borderRadius: BorderRadius.circular(8.r),
+            ),
+            child: Text(
+              'LIVE',
+              style: FontManager.labelMedium(
+                color: AppColors.white,
+                fontSize: 12.sp,
+              ),
             ),
           ),
         );

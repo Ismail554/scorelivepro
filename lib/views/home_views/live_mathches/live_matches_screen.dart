@@ -331,6 +331,10 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
   Widget _buildRealLiveMatchesList(MatchProvider provider) {
     final matches = provider.liveMatches;
 
+    if (provider.isLoadingLive && matches.isEmpty) {
+      return _buildShimmerList();
+    }
+
     if (matches.isEmpty) {
       return Center(
         child: Column(

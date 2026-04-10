@@ -16,6 +16,7 @@ import 'package:scorelivepro/widget/favorites/widget_add_to_favorites_dialog.dar
 import 'package:scorelivepro/core/assets_manager.dart';
 import 'package:scorelivepro/ads/floating_banner_ad.dart';
 import 'package:scorelivepro/widget/common/no_internet_banner.dart';
+import 'package:scorelivepro/widget/shimmer_loading.dart';
 
 class LeaguesScreen extends StatefulWidget {
   final bool showBackButton;
@@ -361,7 +362,7 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
 
   Widget _buildBody() {
     if (_isLoading) {
-      return Center(child: CircularProgressIndicator());
+      return const ShimmerLoading();
     }
 
     if (_errorMessage != null) {

@@ -11,50 +11,12 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 @pragma('vm:entry-point')
 Future<void> handleBackgroundMessage(RemoteMessage message) async {
-  // MUST initialize Firebase first if making API calls here
-  await Firebase.initializeApp();
-
-  // THIS IS THE PROOF!
-  // If you see this print in your terminal while the app is closed,
-  // it proves the OS woke up the app behind the scenes.
-  print("🔥 THE APP WOKE UP! Received message: ${message.data}");
-  
-  // They can put their custom logic here (e.g. check local settings)
-  final isEnabled = await SecureStorageHelper.getNotificationStatus();
-  if (!isEnabled) {
-    debugPrint('Notification ignored internally (user disabled in settings)');
-    return;
-  }
-
-  // If this is a data-only message (silent push) and settings are ON,
-  // manually trigger the local notification popup.
-  if (message.notification == null && (message.data['title'] != null || message.data['body'] != null)) {
-      final localNotifications = FlutterLocalNotificationsPlugin();
-      await localNotifications.initialize(
-        settings: const InitializationSettings(
-          android: AndroidInitializationSettings('@drawable/ic_notification'),
-          iOS: DarwinInitializationSettings(
-            requestAlertPermission: false, requestBadgePermission: false, requestSoundPermission: false,
-          ),
-        ),
-      );
-
-      await localNotifications.show(
-        id: message.hashCode,
-        title: message.data['title'],
-        body: message.data['body'],
-        notificationDetails: const NotificationDetails(
-          android: AndroidNotificationDetails(
-            'high_importance_channel',
-            'High Importance Notifications',
-            importance: Importance.max,
-            priority: Priority.high,
-          ),
-          iOS: DarwinNotificationDetails(),
-        ),
-        payload: jsonEncode(message.data),
-      );
-  }
+  // To avoid background isolate crashes, we remove FlutterSecureStorage and local notifications here.
+  // The OS will natively handle messages containing a 'notification' payload.
+  debugPrint('--- Push Notification Received (Background) ---');
+  debugPrint('Title: ${message.notification?.title}');
+  debugPrint('Body: ${message.notification?.body}');
+  debugPrint('Payload: ${message.data}');
 }
 
 class FirebaseService {
