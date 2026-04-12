@@ -251,99 +251,102 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
           NoInternetBanner(
             child: Column(
               children: [
-              // Header Section
-              Container(
-                color: AppColors.white,
-                padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).padding.top,
-                  bottom: 16.h,
-                ),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  child: Column(
-                    children: [
-                      // Title and Notification Bell
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              if (widget.showBackButton) ...[
-                                GestureDetector(
-                                  onTap: () => Navigator.pop(context),
-                                  child: Icon(
-                                    Icons.arrow_back_ios_new,
-                                    color: AppColors.textPrimary,
-                                    size: 20.sp,
-                                  ),
-                                ),
-                                SizedBox(width: 12.w),
-                              ],
-                              Text(
-                                AppLocalizations.of(context).leagues,
-                                style: FontManager.heading2(
-                                  color: AppColors.textPrimary,
-                                ),
-                              ),
-                            ],
-                          ),
-                          NotificationBell(
-                            hasNotification: true,
-                            iconColor: AppColors.black,
-                          ),
-                        ],
-                      ),
-
-                      SizedBox(height: 16.h),
-
-                      // Search Bar
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 16.w, vertical: 12.h),
-                        decoration: BoxDecoration(
-                          color: AppColors.greyE8,
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                        child: Row(
+                // Header Section
+                Container(
+                  color: AppColors.white,
+                  padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).padding.top,
+                    bottom: 16.h,
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    child: Column(
+                      children: [
+                        // Title and Notification Bell
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Icon(
-                              Icons.search,
-                              color: AppColors.textTertiary,
-                              size: 20.sp,
-                            ),
-                            SizedBox(width: 12.w),
-                            Expanded(
-                              child: TextField(
-                                controller: _searchController,
-                                decoration: InputDecoration(
-                                  hintText: AppLocalizations.of(context)
-                                      .searchLeagues,
-                                  hintStyle: FontManager.bodyMedium(
-                                    color: AppColors.textTertiary,
-                                    fontSize: 14,
+                            Row(
+                              children: [
+                                if (widget.showBackButton) ...[
+                                  GestureDetector(
+                                    onTap: () => Navigator.pop(context),
+                                    child: Icon(
+                                      Icons.arrow_back_ios_new,
+                                      color: AppColors.textPrimary,
+                                      size: 20.sp,
+                                    ),
                                   ),
-                                  border: InputBorder.none,
-                                  isDense: true,
-                                  contentPadding: EdgeInsets.zero,
+                                  SizedBox(width: 12.w),
+                                ],
+                                Text(
+                                  AppLocalizations.of(context).leagues,
+                                  style: FontManager.heading2(
+                                    color: AppColors.textPrimary,
+                                  ),
                                 ),
-                                style: FontManager.bodyMedium(
-                                  color: AppColors.textPrimary,
-                                  fontSize: 14,
-                                ),
+                              ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 16.0),
+                              child: NotificationBell(
+                                hasNotification: true,
+                                iconColor: AppColors.black,
                               ),
                             ),
                           ],
                         ),
-                      ),
-                    ],
+
+                        SizedBox(height: 16.h),
+
+                        // Search Bar
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 16.w, vertical: 12.h),
+                          decoration: BoxDecoration(
+                            color: AppColors.greyE8,
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.search,
+                                color: AppColors.textTertiary,
+                                size: 20.sp,
+                              ),
+                              SizedBox(width: 12.w),
+                              Expanded(
+                                child: TextField(
+                                  controller: _searchController,
+                                  decoration: InputDecoration(
+                                    hintText: AppLocalizations.of(context)
+                                        .searchLeagues,
+                                    hintStyle: FontManager.bodyMedium(
+                                      color: AppColors.textTertiary,
+                                      fontSize: 14,
+                                    ),
+                                    border: InputBorder.none,
+                                    isDense: true,
+                                    contentPadding: EdgeInsets.zero,
+                                  ),
+                                  style: FontManager.bodyMedium(
+                                    color: AppColors.textPrimary,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
 
-              // Leagues List
-              Expanded(
-                child: _buildBody(),
-              ),
+                // Leagues List
+                Expanded(
+                  child: _buildBody(),
+                ),
               ],
             ),
           ),
