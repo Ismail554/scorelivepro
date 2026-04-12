@@ -9,6 +9,7 @@ import 'package:scorelivepro/core/font_manager.dart';
 import 'package:scorelivepro/core/language_manager.dart';
 import 'package:scorelivepro/provider/language_provider.dart';
 import 'package:scorelivepro/widget/settings/language_card.dart';
+import 'package:scorelivepro/widget/custom_snackbar.dart';
 
 class LanguageSelectionScreen extends StatefulWidget {
   const LanguageSelectionScreen({super.key});
@@ -64,15 +65,11 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
 
     // Show success message
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
+      CustomSnackBar.show(
+        context: context,
+        message:
             "${AppLocalizations.of(context).language} ${AppLocalizations.of(context).changed}",
-            style: FontManager.bodyMedium(color: AppColors.white),
-          ),
-          backgroundColor: AppColors.primaryColor,
-          duration: const Duration(seconds: 2),
-        ),
+        isError: false,
       );
     }
   }

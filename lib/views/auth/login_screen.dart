@@ -5,7 +5,6 @@ import 'package:scorelivepro/core/app_spacing.dart';
 import 'package:scorelivepro/l10n/app_localizations.dart';
 
 import 'package:scorelivepro/core/assets_manager.dart';
-import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/font_manager.dart';
 import 'package:scorelivepro/provider/auth_provider.dart';
 import 'package:scorelivepro/views/auth/forgot_password/forgot_password_screen.dart';
@@ -13,6 +12,7 @@ import 'package:scorelivepro/views/auth/sign_up/sign_up_screen.dart';
 import 'package:scorelivepro/views/auth/sign_up/otp_verifiy_screen.dart';
 import 'package:scorelivepro/views/main_navigation/main_navigation_screen.dart';
 import 'package:scorelivepro/provider/notification_provider.dart';
+import 'package:scorelivepro/widget/custom_snackbar.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -172,10 +172,11 @@ class _LoginScreenState extends State<LoginScreen> {
                               final password = _passwordController.text;
 
                               if (email.isEmpty || password.isEmpty) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content: Text(AppLocalizations.of(context)
-                                          .emailPasswordEmpty)),
+                                CustomSnackBar.show(
+                                  context: context,
+                                  message: AppLocalizations.of(context)
+                                      .emailPasswordEmpty,
+                                  isError: true,
                                 );
                                 return;
                               }
@@ -191,10 +192,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                     .read<NotificationProvider>()
                                     .registerDevice(true);
 
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content: Text(AppLocalizations.of(context)
-                                          .loginSuccessful)),
+                                CustomSnackBar.show(
+                                  context: context,
+                                  message: AppLocalizations.of(context)
+                                      .loginSuccessful,
+                                  isError: false,
                                 );
                                 Navigator.pushReplacement(
                                   context,
@@ -217,10 +219,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 );
                               } else if (mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content: Text(authResult ??
-                                          AppLocalizations.of(context).loginFailedEmailPassword)),
+                                CustomSnackBar.show(
+                                  context: context,
+                                  message: authResult,
+                                  isError: true,
                                 );
                               }
                             },

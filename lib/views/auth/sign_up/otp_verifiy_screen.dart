@@ -10,6 +10,7 @@ import 'package:scorelivepro/views/auth/sign_up/congratulation_screen.dart';
 import 'package:scorelivepro/views/auth/forgot_password/create_new_password_screen.dart';
 import 'dart:async';
 import 'package:scorelivepro/l10n/app_localizations.dart';
+import 'package:scorelivepro/widget/custom_snackbar.dart';
 
 class OtpVerifyScreen extends StatefulWidget {
   final String email;
@@ -209,11 +210,11 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                             ? null
                             : () async {
                                 if (_pinController.text.length != 6) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text(
-                                            AppLocalizations.of(context)
-                                                .enterValidCode)),
+                                  CustomSnackBar.show(
+                                    context: context,
+                                    message: AppLocalizations.of(context)
+                                        .enterValidCode,
+                                    isError: true,
                                   );
                                   return;
                                 }
@@ -253,11 +254,11 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                                     );
                                   }
                                 } else if (context.mounted) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text(
-                                            AppLocalizations.of(context)
-                                                .verificationFailed)),
+                                  CustomSnackBar.show(
+                                    context: context,
+                                    message: AppLocalizations.of(context)
+                                        .verificationFailed,
+                                    isError: true,
                                   );
                                 }
                               },
@@ -313,13 +314,14 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                               }
 
                               if (context.mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content: Text(success
-                                          ? AppLocalizations.of(context)
-                                              .otpResentSuccess
-                                          : AppLocalizations.of(context)
-                                              .otpResentFailed)),
+                                CustomSnackBar.show(
+                                  context: context,
+                                  message: success
+                                      ? AppLocalizations.of(context)
+                                          .otpResentSuccess
+                                      : AppLocalizations.of(context)
+                                          .otpResentFailed,
+                                  isError: !success,
                                 );
                                 if (success) {
                                   setState(() {

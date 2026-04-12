@@ -10,6 +10,7 @@ import 'package:scorelivepro/provider/auth_provider.dart';
 import 'package:scorelivepro/views/settings/profile_screen.dart';
 import 'package:scorelivepro/config/storage/secure_storage_helper.dart';
 import 'package:scorelivepro/services/firebase_service.dart';
+import 'package:scorelivepro/widget/custom_snackbar.dart';
 import 'dart:io';
 
 class SettingsScreen extends StatefulWidget {
@@ -240,13 +241,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                             (route) => false,
                                           );
                                         } else if (context.mounted) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                  AppLocalizations.of(context)
-                                                      .failedDeleteAccount),
-                                            ),
+                                          CustomSnackBar.show(
+                                            context: context,
+                                            message: AppLocalizations.of(context)
+                                                .failedDeleteAccount,
+                                            isError: true,
                                           );
                                         }
                                       },

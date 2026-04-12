@@ -8,6 +8,7 @@ import 'package:scorelivepro/provider/auth_provider.dart';
 import 'package:scorelivepro/views/auth/login_screen.dart';
 import 'package:scorelivepro/views/auth/sign_up/otp_verifiy_screen.dart';
 import 'package:scorelivepro/core/utils/snackbar_util.dart';
+import 'package:scorelivepro/widget/custom_snackbar.dart';
 // ✅ Import Main Navigation
 import 'package:scorelivepro/views/main_navigation/main_navigation_screen.dart';
 import 'package:scorelivepro/l10n/app_localizations.dart';
@@ -247,17 +248,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   _emailController.text.isEmpty ||
                                   _passwordController.text.isEmpty ||
                                   _confirmPasswordController.text.isEmpty) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text("Please fill all fields")),
+                                CustomSnackBar.show(
+                                  context: context,
+                                  message: "Please fill all fields",
+                                  isError: true,
                                 );
                                 return;
                               }
 
                               if (!_agreeToTerms) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text("Please agree to terms")),
+                                CustomSnackBar.show(
+                                  context: context,
+                                  message: "Please agree to terms",
+                                  isError: true,
                                 );
                                 return;
                               }

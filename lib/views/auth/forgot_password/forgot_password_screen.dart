@@ -7,6 +7,7 @@ import 'package:scorelivepro/core/assets_manager.dart';
 import 'package:scorelivepro/core/font_manager.dart';
 import 'package:scorelivepro/provider/auth_provider.dart';
 import 'package:scorelivepro/views/auth/sign_up/otp_verifiy_screen.dart'; // For navigation
+import 'package:scorelivepro/widget/custom_snackbar.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -110,10 +111,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           ? null
                           : () async {
                               if (_emailController.text.isEmpty) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content: Text(AppLocalizations.of(context)
-                                          .pleaseEnterYourEmail)),
+                                CustomSnackBar.show(
+                                  context: context,
+                                  message: AppLocalizations.of(context)
+                                      .pleaseEnterYourEmail,
+                                  isError: true,
                                 );
                                 return;
                               }
@@ -122,17 +124,19 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                   .forgotPassword(_emailController.text);
 
                               if (success && context.mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content: Text(AppLocalizations.of(context)
-                                          .otpSentSuccessfully)),
+                                CustomSnackBar.show(
+                                  context: context,
+                                  message: AppLocalizations.of(context)
+                                      .otpSentSuccessfully,
+                                  isError: false,
                                 );
-                                NavigateToOtp();
+                                navigateToOtp();
                               } else if (context.mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content: Text(AppLocalizations.of(context)
-                                          .sendOtpFailed)),
+                                CustomSnackBar.show(
+                                  context: context,
+                                  message: AppLocalizations.of(context)
+                                      .sendOtpFailed,
+                                  isError: true,
                                 );
                               }
                             },
@@ -156,12 +160,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     );
   }
 
-  void NavigateToOtp() {
+  void navigateToOtp() {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => OtpVerifyScreen(
           email: _emailController.text,
+          isPasswordReset: true,
         ),
       ),
     );

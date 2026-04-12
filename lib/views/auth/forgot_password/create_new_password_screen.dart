@@ -6,7 +6,8 @@ import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/assets_manager.dart';
 import 'package:scorelivepro/core/font_manager.dart';
 import 'package:scorelivepro/provider/auth_provider.dart';
-import 'package:scorelivepro/views/auth/login_screen.dart';
+import 'package:scorelivepro/widget/custom_snackbar.dart';
+import 'package:scorelivepro/views/auth/sign_up/congratulation_screen.dart';
 
 class CreateNewPasswordScreen extends StatefulWidget {
   final String email;
@@ -165,20 +166,22 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
                           : () async {
                               if (_passwordController.text.isEmpty ||
                                   _confirmPasswordController.text.isEmpty) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content: Text(AppLocalizations.of(context)
-                                          .pleaseFillAllFields)),
+                                CustomSnackBar.show(
+                                  context: context,
+                                  message: AppLocalizations.of(context)
+                                      .pleaseFillAllFields,
+                                  isError: true,
                                 );
                                 return;
                               }
 
                               if (_passwordController.text !=
                                   _confirmPasswordController.text) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content: Text(AppLocalizations.of(context)
-                                          .passwordsDoNotMatch)),
+                                CustomSnackBar.show(
+                                  context: context,
+                                  message: AppLocalizations.of(context)
+                                      .passwordsDoNotMatch,
+                                  isError: true,
                                 );
                                 return;
                               }
@@ -191,23 +194,28 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
                               );
 
                               if (success && context.mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text(
-                                          "Password updated successfully. Please login.")),
+                                CustomSnackBar.show(
+                                  context: context,
+                                  message:
+                                      "Password updated successfully. Please login.",
+                                  isError: false,
                                 );
                                 Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const LoginScreen(),
+                                    builder: (context) =>
+                                        const CongratulationScreen(
+                                      isPasswordReset: true,
+                                    ),
                                   ),
                                   (route) => false,
                                 );
                               } else if (context.mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text(
-                                          "Failed to reset password. Please try again.")),
+                                CustomSnackBar.show(
+                                  context: context,
+                                  message:
+                                      "Failed to reset password. Please try again.",
+                                  isError: true,
                                 );
                               }
                             },

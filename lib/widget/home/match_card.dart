@@ -9,6 +9,7 @@ import 'package:scorelivepro/provider/team_provider.dart';
 import 'package:scorelivepro/widget/mini_widget/mw_blinking_dot.dart';
 import 'package:scorelivepro/widget/mini_widget/mw_blinking_widget.dart';
 import 'package:scorelivepro/widget/common/auto_marquee_text.dart';
+import 'package:scorelivepro/widget/custom_snackbar.dart';
 
 /// Match status enum
 enum MatchStatus {
@@ -345,15 +346,10 @@ class _FavoriteTeamPopupState extends State<_FavoriteTeamPopup>
 
     if (teamId == null) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text("Team ID not available"),
-            behavior: SnackBarBehavior.floating,
-            backgroundColor: Colors.redAccent,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            margin: const EdgeInsets.all(16),
-          ),
+        CustomSnackBar.show(
+          context: context,
+          message: "Team ID not available",
+          isError: true,
         );
       }
       return;

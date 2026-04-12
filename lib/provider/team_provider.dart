@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/models/team_model.dart';
 import 'package:scorelivepro/services/team_service.dart';
+import 'package:scorelivepro/widget/custom_snackbar.dart';
 
 class TeamProvider extends ChangeNotifier {
   List<TeamModel> _teams = [];
@@ -65,51 +65,17 @@ class TeamProvider extends ChangeNotifier {
       if (error == null) {
         _favoriteVersion++;
         notifyListeners();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                const Icon(Icons.check_circle_outline, color: Colors.white),
-                SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    "$teamName is added to favorites",
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                ),
-              ],
-            ),
-            behavior: SnackBarBehavior.floating,
-            backgroundColor: AppColors.success,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            margin: const EdgeInsets.all(16),
-          ),
+        CustomSnackBar.show(
+          context: context,
+          message: "$teamName is added to favorites",
+          isError: false,
         );
       } else {
         // Custom beautiful floating snackbar for any error (as requested)
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                const Icon(Icons.error_outline, color: Colors.white),
-                SizedBox(width: 8),
-                const Expanded(
-                  child: Text(
-                    "You must need to login for add teams to Favorite.",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ],
-            ),
-            behavior: SnackBarBehavior.floating,
-            backgroundColor: Colors.redAccent,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            margin: const EdgeInsets.all(16),
-          ),
+        CustomSnackBar.show(
+          context: context,
+          message: "You must need to login for add teams to Favorite.",
+          isError: true,
         );
       }
     }

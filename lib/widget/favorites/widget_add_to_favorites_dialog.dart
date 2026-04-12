@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:scorelivepro/provider/team_provider.dart';
 import 'package:scorelivepro/services/api_service.dart';
 import 'package:scorelivepro/services/league_service.dart';
+import 'package:scorelivepro/widget/custom_snackbar.dart';
 
 class AddToFavoritesDialog extends StatelessWidget {
   final int id;
@@ -173,54 +174,18 @@ class AddToFavoritesDialog extends StatelessWidget {
                               if (context.mounted) {
                                 Navigator.of(context).pop();
                                 if (error == null) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Row(
-                                        children: [
-                                          const Icon(Icons.check_circle_outline,
-                                              color: Colors.white),
-                                          SizedBox(width: 8),
-                                          Expanded(
-                                            child: Text(
-                                              AppLocalizations.of(context).addedToFavoritesMsg(name),
-                                              style: const TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      behavior: SnackBarBehavior.floating,
-                                      backgroundColor: AppColors.success,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      margin: const EdgeInsets.all(16),
-                                    ),
+                                  CustomSnackBar.show(
+                                    context: context,
+                                    message: AppLocalizations.of(context)
+                                        .addedToFavoritesMsg(name),
+                                    isError: false,
                                   );
                                 } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Row(
-                                        children: [
-                                          const Icon(Icons.error_outline,
-                                              color: Colors.white),
-                                          SizedBox(width: 8),
-                                          Expanded(
-                                            child: Text(
-                                              AppLocalizations.of(context).loginRequiredForFavorites,
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      behavior: SnackBarBehavior.floating,
-                                      backgroundColor: Colors.redAccent,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      margin: const EdgeInsets.all(16),
-                                    ),
+                                  CustomSnackBar.show(
+                                    context: context,
+                                    message: AppLocalizations.of(context)
+                                        .loginRequiredForFavorites,
+                                    isError: true,
                                   );
                                 }
                               }

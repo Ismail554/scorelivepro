@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:scorelivepro/provider/auth_provider.dart';
+import 'package:scorelivepro/widget/custom_snackbar.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -274,11 +275,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 if (_newPassController.text !=
                                     _confirmPassController.text) {
                                   if (context.mounted) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          content: Text(
-                                              AppLocalizations.of(context)
-                                                  .newPasswordsDoNotMatch)),
+                                    CustomSnackBar.show(
+                                      context: context,
+                                      message: AppLocalizations.of(context)
+                                          .newPasswordsDoNotMatch,
+                                      isError: true,
                                     );
                                   }
                                   return;
@@ -293,25 +294,25 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
                               if (context.mounted) {
                                 if (profileUpdated || passwordUpdated) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text(AppLocalizations.of(
-                                                    context)
-                                                .updatedSuccessfully +
-                                            (passwordUpdated
-                                                ? AppLocalizations.of(context)
-                                                    .passwordChanged
-                                                : ""))),
+                                  CustomSnackBar.show(
+                                    context: context,
+                                    message: AppLocalizations.of(context)
+                                            .updatedSuccessfully +
+                                        (passwordUpdated
+                                            ? AppLocalizations.of(context)
+                                                .passwordChanged
+                                            : ""),
+                                    isError: false,
                                   );
                                   Navigator.pop(context);
                                 } else if (_currentPassController
                                         .text.isNotEmpty ||
                                     _newPassController.text.isNotEmpty) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text(
-                                            AppLocalizations.of(context)
-                                                .failedUpdatePassword)),
+                                  CustomSnackBar.show(
+                                    context: context,
+                                    message: AppLocalizations.of(context)
+                                        .failedUpdatePassword,
+                                    isError: true,
                                   );
                                 } else {
                                   // No changes made

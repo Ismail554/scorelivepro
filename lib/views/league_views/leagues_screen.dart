@@ -17,6 +17,7 @@ import 'package:scorelivepro/core/assets_manager.dart';
 import 'package:scorelivepro/ads/floating_banner_ad.dart';
 import 'package:scorelivepro/widget/common/no_internet_banner.dart';
 import 'package:scorelivepro/widget/shimmer_loading.dart';
+import 'package:scorelivepro/widget/custom_snackbar.dart';
 
 class LeaguesScreen extends StatefulWidget {
   final bool showBackButton;
@@ -141,21 +142,18 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
         _favoritedLeagueIds.add(leagueId);
       });
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(error),
-            backgroundColor: Colors.red,
-          ),
+        CustomSnackBar.show(
+          context: context,
+          message: error,
+          isError: true,
         );
       }
     } else {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("$leagueName removed from favorites"),
-            backgroundColor: Colors.grey,
-            duration: const Duration(seconds: 1),
-          ),
+        CustomSnackBar.show(
+          context: context,
+          message: "$leagueName removed from favorites",
+          isError: false,
         );
       }
     }

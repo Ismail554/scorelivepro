@@ -6,7 +6,8 @@ import 'package:scorelivepro/core/font_manager.dart';
 import 'package:scorelivepro/views/auth/login_screen.dart';
 
 class CongratulationScreen extends StatelessWidget {
-  const CongratulationScreen({super.key});
+  final bool isPasswordReset;
+  const CongratulationScreen({super.key, this.isPasswordReset = false});
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +60,7 @@ class CongratulationScreen extends StatelessWidget {
                       Icons.check_rounded,
                       color: Colors.white,
                       size: 48.sp,
+                      weight: 20,
                     ),
                   ),
                 ),
@@ -71,7 +73,9 @@ class CongratulationScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 12.h),
                 Text(
-                  AppLocalizations.of(context).yourAccountCreated,
+                  isPasswordReset
+                      ? "Your password has been reset successfully"
+                      : AppLocalizations.of(context).yourAccountCreated,
                   textAlign: TextAlign.center,
                   style: FontManager.bodySmall(
                     color: AppColors.textSecondary,
