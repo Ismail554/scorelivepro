@@ -79,8 +79,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   /// 🔔 Notification Bell (Top Right)
                   Positioned(
-                    top: 45,
-                    right: 16,
+                    top: 55,
+                    right: 30,
                     child: NotificationBell(hasNotification: true),
                   ),
 
@@ -113,216 +113,219 @@ class _HomeScreenState extends State<HomeScreen> {
             Expanded(
               child: NoInternetBanner(
                 child: Container(
-                color: AppColors.white,
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Live Matches Section
-                      SectionHeader(
-                        title: AppLocalizations.of(context).liveMatches,
-                        actionText: AppLocalizations.of(context).live,
-                        shouldBlink: true,
-                        onSeeAllTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const LiveMatchesScreen()),
-                          );
-                        },
-                      ),
-                      Consumer<MatchProvider>(
-                        builder: (context, provider, child) {
-                          final matches = provider.liveMatches;
+                  color: AppColors.white,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Live Matches Section
+                        SectionHeader(
+                          title: AppLocalizations.of(context).liveMatches,
+                          actionText: AppLocalizations.of(context).live,
+                          shouldBlink: true,
+                          onSeeAllTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const LiveMatchesScreen()),
+                            );
+                          },
+                        ),
+                        Consumer<MatchProvider>(
+                          builder: (context, provider, child) {
+                            final matches = provider.liveMatches;
 
-                          if (provider.isLoadingLive && matches.isEmpty) {
+                            if (provider.isLoadingLive && matches.isEmpty) {
+                              return ListView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                padding: EdgeInsets.zero,
+                                itemCount: 2,
+                                itemBuilder: (context, index) {
+                                  return const MatchCardShimmer();
+                                },
+                              );
+                            }
+
+                            if (matches.isEmpty) {
+                              return const SizedBox.shrink();
+                            }
+
+                            // Show only top 2 matches
+                            final displayMatches = matches.take(2).toList();
+
                             return ListView.builder(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               padding: EdgeInsets.zero,
-                              itemCount: 2,
+                              itemCount: displayMatches.length,
                               itemBuilder: (context, index) {
-                                return const MatchCardShimmer();
+                                final match = displayMatches[index];
+                                return MatchCard(
+                                  leagueName: match.league?.name ??
+                                      AppLocalizations.of(context)
+                                          .unknownLeague,
+                                  homeTeam: match.homeTeam?.name ??
+                                      AppLocalizations.of(context).home,
+                                  awayTeam: match.awayTeam?.name ??
+                                      AppLocalizations.of(context).away,
+                                  homeTeamId: match.homeTeam?.id,
+                                  awayTeamId: match.awayTeam?.id,
+                                  homeScore: match.goals?.home,
+                                  awayScore: match.goals?.away,
+                                  timeInfo: "${match.elapsed ?? 0}'",
+                                  status: MatchStatusHelper.getMatchStatus(
+                                      match.statusShort),
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            LiveMatchDetailsScreen(
+                                                matchData: match),
+                                      ),
+                                    );
+                                  },
+                                );
                               },
                             );
-                          }
+                          },
+                        ),
+                        AppSpacing.h8,
 
-                          if (matches.isEmpty) {
-                            return const SizedBox.shrink();
-                          }
+                        // Upcoming Matches Section
+                        SectionHeader(
+                          title: AppLocalizations.of(context).upcomingMatches,
+                          shouldBlink: true,
+                          onSeeAllTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const LiveMatchesScreen(
+                                        initialIndex: 1,
+                                      )),
+                            );
+                          },
+                        ),
+                        Consumer<MatchProvider>(
+                          builder: (context, provider, child) {
+                            if (provider.isLoadingUpcoming &&
+                                provider.upcomingMatches.isEmpty) {
+                              return ListView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                padding: EdgeInsets.zero,
+                                itemCount: 2,
+                                itemBuilder: (context, index) {
+                                  return const MatchCardShimmer();
+                                },
+                              );
+                            }
 
-                          // Show only top 2 matches
-                          final displayMatches = matches.take(2).toList();
+                            if (provider.upcomingMatches.isEmpty) {
+                              return Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 16.w, vertical: 8.h),
+                                child: Text(
+                                  AppLocalizations.of(context)
+                                      .noUpcomingMatches,
+                                  style: FontManager.bodyMedium(
+                                      color: AppColors.textSecondary),
+                                ),
+                              );
+                            }
 
-                          return ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            padding: EdgeInsets.zero,
-                            itemCount: displayMatches.length,
-                            itemBuilder: (context, index) {
-                              final match = displayMatches[index];
-                              return MatchCard(
-                                leagueName: match.league?.name ??
-                                    AppLocalizations.of(context).unknownLeague,
-                                homeTeam: match.homeTeam?.name ??
-                                    AppLocalizations.of(context).home,
-                                awayTeam: match.awayTeam?.name ??
-                                    AppLocalizations.of(context).away,
-                                homeTeamId: match.homeTeam?.id,
-                                awayTeamId: match.awayTeam?.id,
-                                homeScore: match.goals?.home,
-                                awayScore: match.goals?.away,
-                                timeInfo: "${match.elapsed ?? 0}'",
-                                status: MatchStatusHelper.getMatchStatus(
-                                    match.statusShort),
+                            // Show only top 2 matches
+                            final upcomingDisplay =
+                                provider.upcomingMatches.take(2).toList();
+                            return ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              padding: EdgeInsets.zero,
+                              itemCount: upcomingDisplay.length,
+                              itemBuilder: (context, index) {
+                                final match = upcomingDisplay[index];
+                                return MatchCard(
+                                  leagueName: match.league?.name ??
+                                      AppLocalizations.of(context)
+                                          .unknownLeague,
+                                  homeTeam: match.homeTeam?.name ??
+                                      AppLocalizations.of(context).home,
+                                  awayTeam: match.awayTeam?.name ??
+                                      AppLocalizations.of(context).away,
+                                  homeTeamId: match.homeTeam?.id,
+                                  awayTeamId: match.awayTeam?.id,
+                                  timeInfo: match.date != null
+                                      ? DateFormat('EEE, HH:mm').format(
+                                          DateTime.parse(match.date!).toLocal())
+                                      : AppLocalizations.of(context).upcoming,
+                                  status: MatchStatus.upcoming,
+                                  onTap: () {
+                                    // TODO: Navigate to match details
+                                  },
+                                );
+                              },
+                            );
+                          },
+                        ),
+                        AppSpacing.h8,
+
+                        // Quick Actions Section
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 16.w, vertical: 16.h),
+                          child: Text(
+                            AppLocalizations.of(context).quickActions,
+                            style: FontManager.heading3(
+                                color: AppColors.textPrimary),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8.w),
+                          child: Row(
+                            children: [
+                              QuickActionCard(
+                                icon: Icons.star,
+                                title: AppLocalizations.of(context).myFavorites,
+                                iconColor: AppColors.warning,
                                 onTap: () {
                                   Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          LiveMatchDetailsScreen(
-                                              matchData: match),
-                                    ),
-                                  );
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const FavoritesScreen(
+                                                showBackButton: true),
+                                      ));
                                 },
-                              );
-                            },
-                          );
-                        },
-                      ),
-                      AppSpacing.h8,
-
-                      // Upcoming Matches Section
-                      SectionHeader(
-                        title: AppLocalizations.of(context).upcomingMatches,
-                        shouldBlink: true,
-                        onSeeAllTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const LiveMatchesScreen(
-                                      initialIndex: 1,
-                                    )),
-                          );
-                        },
-                      ),
-                      Consumer<MatchProvider>(
-                        builder: (context, provider, child) {
-                          if (provider.isLoadingUpcoming &&
-                              provider.upcomingMatches.isEmpty) {
-                            return ListView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              padding: EdgeInsets.zero,
-                              itemCount: 2,
-                              itemBuilder: (context, index) {
-                                return const MatchCardShimmer();
-                              },
-                            );
-                          }
-
-                          if (provider.upcomingMatches.isEmpty) {
-                            return Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 16.w, vertical: 8.h),
-                              child: Text(
-                                AppLocalizations.of(context).noUpcomingMatches,
-                                style: FontManager.bodyMedium(
-                                    color: AppColors.textSecondary),
                               ),
-                            );
-                          }
-
-                          // Show only top 2 matches
-                          final upcomingDisplay =
-                              provider.upcomingMatches.take(2).toList();
-                          return ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            padding: EdgeInsets.zero,
-                            itemCount: upcomingDisplay.length,
-                            itemBuilder: (context, index) {
-                              final match = upcomingDisplay[index];
-                              return MatchCard(
-                                leagueName: match.league?.name ??
-                                    AppLocalizations.of(context).unknownLeague,
-                                homeTeam: match.homeTeam?.name ??
-                                    AppLocalizations.of(context).home,
-                                awayTeam: match.awayTeam?.name ??
-                                    AppLocalizations.of(context).away,
-                                homeTeamId: match.homeTeam?.id,
-                                awayTeamId: match.awayTeam?.id,
-                                timeInfo: match.date != null
-                                    ? DateFormat('EEE, HH:mm').format(
-                                        DateTime.parse(match.date!).toLocal())
-                                    : AppLocalizations.of(context).upcoming,
-                                status: MatchStatus.upcoming,
+                              QuickActionCard(
+                                icon: Icons.newspaper,
+                                title: AppLocalizations.of(context).latestNews,
+                                iconColor: AppColors.info,
                                 onTap: () {
-                                  // TODO: Navigate to match details
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const NewsScreen(
+                                            showBackButton: true),
+                                      ));
                                 },
-                              );
-                            },
-                          );
-                        },
-                      ),
-                      AppSpacing.h8,
-
-                      // Quick Actions Section
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 16.w, vertical: 16.h),
-                        child: Text(
-                          AppLocalizations.of(context).quickActions,
-                          style: FontManager.heading3(
-                              color: AppColors.textPrimary),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8.w),
-                        child: Row(
-                          children: [
-                            QuickActionCard(
-                              icon: Icons.star,
-                              title: AppLocalizations.of(context).myFavorites,
-                              iconColor: AppColors.warning,
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const FavoritesScreen(
-                                              showBackButton: true),
-                                    ));
-                              },
-                            ),
-                            QuickActionCard(
-                              icon: Icons.newspaper,
-                              title: AppLocalizations.of(context).latestNews,
-                              iconColor: AppColors.info,
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const NewsScreen(
-                                          showBackButton: true),
-                                    ));
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                      AppSpacing.h16,
+                        AppSpacing.h16,
 
-                      // Sponsored Ad Card
-                      BannerAdWidget(),
-                      AppSpacing.h16,
-                    ],
+                        // Sponsored Ad Card
+                        BannerAdWidget(),
+                        AppSpacing.h16,
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          )
+            )
           ],
         ),
       ),

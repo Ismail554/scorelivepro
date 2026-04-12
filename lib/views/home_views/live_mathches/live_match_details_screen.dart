@@ -203,9 +203,12 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
             ),
 
             // Notification Bell
-            NotificationBell(
-              hasNotification: true,
-              onTap: () {},
+            Padding(
+              padding: const EdgeInsets.only(right: 16.0),
+              child: NotificationBell(
+                hasNotification: true,
+                onTap: () {},
+              ),
             ),
           ],
         ),
