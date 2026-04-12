@@ -10,6 +10,7 @@ import 'package:scorelivepro/provider/auth_provider.dart';
 import 'package:scorelivepro/views/settings/profile_screen.dart';
 import 'package:scorelivepro/config/storage/secure_storage_helper.dart';
 import 'package:scorelivepro/services/firebase_service.dart';
+import 'package:scorelivepro/provider/notification_provider.dart';
 import 'package:scorelivepro/widget/custom_snackbar.dart';
 import 'dart:io';
 
@@ -172,6 +173,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                     // Save state locally.
                     await SecureStorageHelper.saveNotificationStatus(val);
+
+                    // Sync state with the backend
+                    if (context.mounted) {
+                      context.read<NotificationProvider>().registerDevice(val);
+                    }
                   },
                 ),
                 _buildDivider(), // Line between items

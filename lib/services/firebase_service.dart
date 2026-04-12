@@ -11,12 +11,17 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 @pragma('vm:entry-point')
 Future<void> handleBackgroundMessage(RemoteMessage message) async {
-  // To avoid background isolate crashes, we remove FlutterSecureStorage and local notifications here.
-  // The OS will natively handle messages containing a 'notification' payload.
   debugPrint('--- Push Notification Received (Background) ---');
   debugPrint('Title: ${message.notification?.title}');
   debugPrint('Body: ${message.notification?.body}');
   debugPrint('Payload: ${message.data}');
+
+  // If the push message only contains 'data' (no 'notification' payload),
+  // Android/iOS won't show it automatically in the background. 
+  // We must handle this manually to ensure it appears.
+  if (message.notification == null && (message.data['title'] != null || message.data['body'] != null)) {
+    await FirebaseService.showBackgroundDataNotification(message);
+  }
 }
 
 class FirebaseService {
@@ -29,7 +34,7 @@ class FirebaseService {
 
   /// Android notification channel for high-importance foreground notifications
   static const AndroidNotificationChannel _channel = AndroidNotificationChannel(
-    'high_importance_channel', // Must match AndroidManifest channel id
+    'scorelive_high_importance_channel', // Must match AndroidManifest channel id
     'High Importance Notifications',
     description: 'This channel is used for important notifications.',
     importance: Importance.max,
@@ -206,6 +211,55 @@ class FirebaseService {
       title: title,
       body: body,
       notificationDetails: details,
+      payload: jsonEncode(message.data),
+    );
+  }
+
+  /// Manually shows a local notification in the background isolate
+  /// for data-only messages where the OS will not natively display it.
+  static Future<void> showBackgroundDataNotification(RemoteMessage message) async {
+    final title = message.data['title'];
+    final body = message.data['body'];
+    
+    if (title == null && body == null) return;
+
+    final plugin = FlutterLocalNotificationsPlugin();
+    
+    const androidSettings = AndroidInitializationSettings('@drawable/ic_notification');
+    const iosSettings = DarwinInitializationSettings();
+    const initSettings = InitializationSettings(android: androidSettings, iOS: iosSettings);
+    
+    await plugin.initialize(initSettings);
+
+    final androidDetails = AndroidNotificationDetails(
+      _channel.id,
+      _channel.name,
+      channelDescription: _channel.description,
+      importance: Importance.max,
+      priority: Priority.high,
+      playSound: true,
+      enableVibration: true,
+      icon: '@drawable/ic_notification',
+      ticker: title,
+      styleInformation: BigTextStyleInformation(
+        body ?? '',
+        htmlFormatBigText: true,
+        contentTitle: title,
+        htmlFormatContentTitle: true,
+      ),
+    );
+
+    const iosDetails = DarwinNotificationDetails(
+      presentAlert: true,
+      presentBadge: true,
+      presentSound: true,
+    );
+
+    await plugin.show(
+      message.data.hashCode,
+      title,
+      body,
+      NotificationDetails(android: androidDetails, iOS: iosDetails),
       payload: jsonEncode(message.data),
     );
   }

@@ -14,7 +14,7 @@
             android:value="ca-app-pub-6967886775553979~4866649291"/>
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="high_importance_channel" />
+            android:value="scorelive_high_importance_channel" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -56,7 +56,7 @@
         <!-- FCM default notification channel (Android 8+) -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="high_importance_channel" />
+            android:value="scorelive_high_importance_channel" />
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

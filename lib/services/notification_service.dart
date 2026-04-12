@@ -58,6 +58,23 @@ class NotificationService {
     );
   }
 
+  static Future<bool> deleteNotification(int id) async {
+    final result = await DioManager.apiRequest(
+      url: ApiEndPoint.deleteNotification(id),
+      methods: Methods.delete,
+    );
+
+    return result.fold(
+      (error) {
+        debugPrint("Error deleting notification: $error");
+        return false;
+      },
+      (data) {
+        return true;
+      },
+    );
+  }
+
   static Future<bool> testPushNotification(String token) async {
     final result = await DioManager.apiRequest(
       url: ApiEndPoint.testToken(token),

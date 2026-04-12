@@ -107,7 +107,7 @@ class NotificationProvider extends ChangeNotifier {
     await NotificationService.markAllAsRead();
   }
 
-  void deleteNotification(String id) {
+  Future<void> deleteNotification(String id) async {
     final notification = _notifications.firstWhere((n) => n.id == id,
         orElse: () => _notifications.first);
     if (notification.id == id) {
@@ -116,6 +116,11 @@ class NotificationProvider extends ChangeNotifier {
       }
       _notifications.removeWhere((n) => n.id == id);
       notifyListeners();
+      
+      final intId = int.tryParse(id);
+      if (intId != null) {
+        await NotificationService.deleteNotification(intId);
+      }
     }
   }
 
