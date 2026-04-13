@@ -3,7 +3,6 @@ import 'dart:math';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:disable_battery_optimization/disable_battery_optimization.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:scorelivepro/config/storage/secure_storage_helper.dart';
 import 'package:flutter/material.dart';
@@ -229,7 +228,7 @@ class FirebaseService {
     const iosSettings = DarwinInitializationSettings();
     const initSettings = InitializationSettings(android: androidSettings, iOS: iosSettings);
     
-    await plugin.initialize(initSettings);
+    await plugin.initialize(settings: initSettings);
 
     final androidDetails = AndroidNotificationDetails(
       _channel.id,
@@ -256,10 +255,10 @@ class FirebaseService {
     );
 
     await plugin.show(
-      message.data.hashCode,
-      title,
-      body,
-      NotificationDetails(android: androidDetails, iOS: iosDetails),
+      id: message.data.hashCode,
+      title: title,
+      body: body,
+      notificationDetails: NotificationDetails(android: androidDetails, iOS: iosDetails),
       payload: jsonEncode(message.data),
     );
   }
@@ -295,6 +294,11 @@ class FirebaseService {
   /// that aggressively kill background services including Google Play Services.
   /// Call this manually from UI tests/settings when appropriate.
   Future<void> requestBatteryOptimizationExemption() async {
+    if (!Platform.isAndroid) {
+      debugPrint("ℹ️ Battery optimization exemption is only managed on Android.");
+      return;
+    }
+
     try {
       final isBatteryOptimizationDisabled =
           await DisableBatteryOptimization.isBatteryOptimizationDisabled;

@@ -229,5 +229,39 @@
   "loginRequiredForFavorites": "Devi accedere per aggiungere leghe ai Preferiti.",
   "noInternetConnection": "Nessuna connessione Internet",
   "checkYourConnection": "Controlla le impostazioni di rete",
-  "tryAgain": "Riprova"
-}
+  "tryAgain": "Riprova",
+  "passwordResetSuccess": "Password aggiornata con successo. Per favore, effettua il login.",
+  "passwordResetFailed": "Reimpostazione della password fallita. Per favore, riprova.",
+  "resetPassword": "Reimposta password",
+  "confirmNewPasswordHint": "Conferma la tua nuova password",
+  "createNewPassword": "Crea nuova password",
+  "newPasswordDifferentText": "La tua nuova password deve essere diversa dalle password utilizzate in precedenza.",
+  "removeLeagueTitle": "Rimuovere la lega?",
+  "removeTeamTitle": "Rimuovere la squadra?",
+  "removeFromFavoritesConfirm": "Sei sicuro di voler rimuovere {name} dai tuoi preferiti?",
+  "@removeFromFavoritesConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "remove": "Rimuovi",
+  "removedSuccessfullyMsg": "{name} rimosso con successo",
+  "@removedSuccessfullyMsg": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "noTeamsFoundForQuery": "Nessuna squadra trovata per \"{query}\"",
+  "@noTeamsFoundForQuery": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "searchTeams": "Cerca squadre..."
+}

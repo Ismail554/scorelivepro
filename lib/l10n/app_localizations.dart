@@ -1317,6 +1317,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Try Again'**
   String get tryAgain;
+
+  /// No description provided for @passwordResetSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Password updated successfully. Please login.'**
+  String get passwordResetSuccess;
+
+  /// No description provided for @passwordResetFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to reset password. Please try again.'**
+  String get passwordResetFailed;
+
+  /// No description provided for @resetPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Password'**
+  String get resetPassword;
+
+  /// No description provided for @confirmNewPasswordHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm your new password'**
+  String get confirmNewPasswordHint;
+
+  /// No description provided for @createNewPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Create New Password'**
+  String get createNewPassword;
+
+  /// No description provided for @newPasswordDifferentText.
+  ///
+  /// In en, this message translates to:
+  /// **'Your new password must be different from previously used passwords.'**
+  String get newPasswordDifferentText;
+
+  /// No description provided for @removeLeagueTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove League?'**
+  String get removeLeagueTitle;
+
+  /// No description provided for @removeTeamTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Team?'**
+  String get removeTeamTitle;
+
+  /// No description provided for @removeFromFavoritesConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to remove {name} from your favorites?'**
+  String removeFromFavoritesConfirm(String name);
+
+  /// No description provided for @remove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get remove;
+
+  /// No description provided for @removedSuccessfullyMsg.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} removed successfully'**
+  String removedSuccessfullyMsg(String name);
+
+  /// No description provided for @noTeamsFoundForQuery.
+  ///
+  /// In en, this message translates to:
+  /// **'No teams found for \"{query}\"'**
+  String noTeamsFoundForQuery(String query);
+
+  /// No description provided for @searchTeams.
+  ///
+  /// In en, this message translates to:
+  /// **'Search teams...'**
+  String get searchTeams;
 }
 
 class _AppLocalizationsDelegate

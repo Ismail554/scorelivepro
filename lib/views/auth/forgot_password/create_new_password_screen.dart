@@ -86,12 +86,12 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
 
                 // Title
                 Text(
-                  "Create New Password",
+                  AppLocalizations.of(context).createNewPassword,
                   style: FontManager.heading2(fontSize: 22.sp),
                 ),
                 SizedBox(height: 8.h),
                 Text(
-                  "Your new password must be different from previously used passwords.",
+                  AppLocalizations.of(context).newPasswordDifferentText,
                   textAlign: TextAlign.center,
                   style: FontManager.bodySmall(
                     color: AppColors.textSecondary,
@@ -101,13 +101,13 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
                 SizedBox(height: 40.h),
 
                 // Password Field
-                _buildLabel("New Password"),
+                _buildLabel(AppLocalizations.of(context).newPassword),
                 SizedBox(height: 8.h),
                 TextFormField(
                   controller: _passwordController,
                   obscureText: !_isPasswordVisible,
                   decoration: _inputDecoration(
-                    hintText: "Enter your new password",
+                    hintText: AppLocalizations.of(context).enterNewPassword,
                     prefixIcon: Icons.lock_outline,
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -128,13 +128,13 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
                 SizedBox(height: 20.h),
 
                 // Confirm Password Field
-                _buildLabel("Confirm Password"),
+                _buildLabel(AppLocalizations.of(context).confirmPassword),
                 SizedBox(height: 8.h),
                 TextFormField(
                   controller: _confirmPasswordController,
                   obscureText: !_isConfirmPasswordVisible,
                   decoration: _inputDecoration(
-                    hintText: "Confirm your new password",
+                    hintText: AppLocalizations.of(context).confirmNewPasswordHint,
                     prefixIcon: Icons.lock_outline,
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -194,12 +194,12 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
                               );
 
                               if (success && context.mounted) {
-                                CustomSnackBar.show(
-                                  context: context,
-                                  message:
-                                      "Password updated successfully. Please login.",
-                                  isError: false,
-                                );
+                                  CustomSnackBar.show(
+                                    context: context,
+                                    message: AppLocalizations.of(context)
+                                        .passwordResetSuccess,
+                                    isError: false,
+                                  );
                                 Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
@@ -210,19 +210,19 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
                                   ),
                                   (route) => false,
                                 );
-                              } else if (context.mounted) {
-                                CustomSnackBar.show(
-                                  context: context,
-                                  message:
-                                      "Failed to reset password. Please try again.",
-                                  isError: true,
-                                );
-                              }
+                                } else if (context.mounted) {
+                                  CustomSnackBar.show(
+                                    context: context,
+                                    message: AppLocalizations.of(context)
+                                        .passwordResetFailed,
+                                    isError: true,
+                                  );
+                                }
                             },
                       child: auth.isLoading
                           ? const CircularProgressIndicator(color: Colors.white)
                           : Text(
-                              "Reset Password",
+                              AppLocalizations.of(context).resetPassword,
                               style: FontManager.labelLarge(
                                 color: Colors.white,
                                 fontSize: 16,

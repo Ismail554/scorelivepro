@@ -645,4 +645,52 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get tryAgain => 'Erneut versuchen';
+
+  @override
+  String get passwordResetSuccess =>
+      'Passwort erfolgreich aktualisiert. Bitte anmelden.';
+
+  @override
+  String get passwordResetFailed =>
+      'Passwort-Reset fehlgeschlagen. Bitte versuchen Sie es erneut.';
+
+  @override
+  String get resetPassword => 'Passwort zurücksetzen';
+
+  @override
+  String get confirmNewPasswordHint => 'Bestätige dein neues Passwort';
+
+  @override
+  String get createNewPassword => 'Neues Passwort erstellen';
+
+  @override
+  String get newPasswordDifferentText =>
+      'Dein neues Passwort muss sich von zuvor verwendeten Passworten unterscheiden.';
+
+  @override
+  String get removeLeagueTitle => 'Liga entfernen?';
+
+  @override
+  String get removeTeamTitle => 'Team entfernen?';
+
+  @override
+  String removeFromFavoritesConfirm(String name) {
+    return 'Möchten Sie $name wirklich aus Ihren Favoriten entfernen?';
+  }
+
+  @override
+  String get remove => 'Entfernen';
+
+  @override
+  String removedSuccessfullyMsg(String name) {
+    return '$name erfolgreich entfernt';
+  }
+
+  @override
+  String noTeamsFoundForQuery(String query) {
+    return 'Keine Teams für \"$query\" gefunden';
+  }
+
+  @override
+  String get searchTeams => 'Teams suchen...';
 }

@@ -114,10 +114,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     showDialog(
       context: context,
       builder: (context) => ConfirmationDialog(
-        title: "Remove Team?",
-        message:
-            "Are you sure you want to remove ${team.name} from your favorites?",
-        confirmText: "Remove",
+        title: AppLocalizations.of(context).removeTeamTitle,
+        message: AppLocalizations.of(context)
+            .removeFromFavoritesConfirm(team.name ?? 'Unknown'),
+        confirmText: AppLocalizations.of(context).remove,
         isDestructive: true,
         onConfirm: () async {
           _teamsListKey.currentState?.removeItem(
@@ -151,7 +151,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             } else {
               CustomSnackBar.show(
                   context: context,
-                  message: "${team.name} removed successfully");
+                  message: AppLocalizations.of(context)
+                      .removedSuccessfullyMsg(team.name ?? 'Unknown'));
             }
           }
         },
@@ -168,10 +169,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     showDialog(
       context: context,
       builder: (context) => ConfirmationDialog(
-        title: "Remove League?",
-        message:
-            "Are you sure you want to remove ${league.name} from your favorites?",
-        confirmText: "Remove",
+        title: AppLocalizations.of(context).removeLeagueTitle,
+        message: AppLocalizations.of(context)
+            .removeFromFavoritesConfirm(league.name ?? 'Unknown'),
+        confirmText: AppLocalizations.of(context).remove,
         isDestructive: true,
         onConfirm: () async {
           _leaguesListKey.currentState?.removeItem(
@@ -205,7 +206,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             } else {
               CustomSnackBar.show(
                   context: context,
-                  message: "${league.name} removed successfully");
+                  message: AppLocalizations.of(context)
+                      .removedSuccessfullyMsg(league.name ?? 'Unknown'));
             }
           }
         },

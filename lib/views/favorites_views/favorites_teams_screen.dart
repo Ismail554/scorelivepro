@@ -139,7 +139,7 @@ class _FavoritesTeamsScreenState extends State<FavoritesTeamsScreen> {
                             controller: _searchController,
                             onChanged: _onSearchChanged,
                             decoration: InputDecoration(
-                              hintText: "Search teams...",
+                              hintText: AppLocalizations.of(context).searchTeams,
                               hintStyle: FontManager.bodyMedium(
                                 color: AppColors.textTertiary,
                                 fontSize: 14,
@@ -198,7 +198,9 @@ class _FavoritesTeamsScreenState extends State<FavoritesTeamsScreen> {
                                     Text(
                                       provider.searchQuery.isEmpty
                                           ? AppLocalizations.of(context).noTeams
-                                          : 'No teams found for "${provider.searchQuery}"',
+                                          : AppLocalizations.of(context)
+                                              .noTeamsFoundForQuery(
+                                                  provider.searchQuery),
                                       style: FontManager.bodyLarge(
                                         color: AppColors.textSecondary,
                                       ),
