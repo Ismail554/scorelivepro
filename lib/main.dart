@@ -12,6 +12,7 @@ import 'package:scorelivepro/services/dio_service.dart';
 import 'package:provider/provider.dart';
 import 'package:scorelivepro/provider/team_provider.dart';
 import 'package:scorelivepro/services/firebase_service.dart';
+import 'package:scorelivepro/services/att_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 
@@ -20,7 +21,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
     await dotenv.load(fileName: ".env");
-    // Initialize the Mobile Ads SDK.
+
+    // Step 1: Request ATT permission on iOS BEFORE initializing ads.
+    // This ensures Apple's consent dialog appears first.
+    // On Android this call is a safe no-op.
+    await ATTService().requestTrackingPermission();
+
+    // Step 2: Initialize the Mobile Ads SDK after ATT consent.
     await MobileAds.instance.initialize();
     await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
     await FirebaseService().initNotifications();
