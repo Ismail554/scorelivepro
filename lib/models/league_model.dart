@@ -1,3 +1,5 @@
+import 'package:scorelivepro/core/utils/string_sanitizer.dart';
+
 class LeagueModel {
   final int? id;
   final String? name;
@@ -16,7 +18,7 @@ class LeagueModel {
   factory LeagueModel.fromJson(Map<String, dynamic> json) {
     return LeagueModel(
       id: json['id'],
-      name: json['name'],
+      name: StringSanitizer.sanitize(json['name']),
       country:
           json['country'] != null ? Country.fromJson(json['country']) : null,
       logo: json['logo'],
