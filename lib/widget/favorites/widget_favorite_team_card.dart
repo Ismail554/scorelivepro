@@ -47,21 +47,10 @@ class FavoriteTeamCard extends StatelessWidget {
               color: AppColors.greyE8.withValues(alpha: 0.5),
               shape: BoxShape.circle,
             ),
-            child: logoUrl != null
-                ? Image.network(
-                    logoUrl!,
-                    fit: BoxFit.contain,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Image.asset(
-                        IconAssets.soccer_icon,
-                        fit: BoxFit.contain,
-                      );
-                    },
-                  )
-                : Image.asset(
-                    IconAssets.soccer_icon,
-                    fit: BoxFit.contain,
-                  ),
+            child: Image.asset(
+              IconAssets.soccer_icon,
+              fit: BoxFit.contain,
+            ),
           ),
 
           SizedBox(width: 16.w),

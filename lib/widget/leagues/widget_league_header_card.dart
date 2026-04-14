@@ -117,32 +117,16 @@ class LeagueHeaderCard extends StatelessWidget {
                     ),
                     clipBehavior: Clip.antiAlias,
                     child: Center(
-                      child: logoUrl != null
-                          ? Image.network(
-                              logoUrl!,
-                              fit: BoxFit.contain,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  flagEmoji != null
-                                      ? Text(
-                                          flagEmoji!,
-                                          style: TextStyle(fontSize: 40.sp),
-                                        )
-                                      : Icon(
-                                          Icons.flag,
-                                          color: AppColors.white,
-                                          size: 40.sp,
-                                        ),
+                      child: flagEmoji != null
+                          ? Text(
+                              flagEmoji!,
+                              style: TextStyle(fontSize: 40.sp),
                             )
-                          : flagEmoji != null
-                              ? Text(
-                                  flagEmoji!,
-                                  style: TextStyle(fontSize: 40.sp),
-                                )
-                              : Icon(
-                                  Icons.flag,
-                                  color: AppColors.white,
-                                  size: 40.sp,
-                                ),
+                          : Icon(
+                              Icons.flag,
+                              color: AppColors.white,
+                              size: 40.sp,
+                            ),
                     ),
                   ),
 

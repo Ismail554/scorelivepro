@@ -244,21 +244,10 @@ class _FavoritesTeamsScreenState extends State<FavoritesTeamsScreen> {
                                     .id, // Assuming id is non-nullable in model, or handle null
                                 name: "${team.name}",
                                 subtitle: "",
-                                logo: team.logo != null
-                                    ? Image.network(
-                                        team.logo!,
-                                        fit: BoxFit.contain,
-                                        errorBuilder:
-                                            (context, error, stackTrace) =>
-                                                Image.asset(
-                                          IconAssets.soccer_icon,
-                                          fit: BoxFit.contain,
-                                        ),
-                                      )
-                                    : Image.asset(
-                                        IconAssets.soccer_icon,
-                                        fit: BoxFit.contain,
-                                      ),
+                                logo: Image.asset(
+                                  IconAssets.soccer_icon,
+                                  fit: BoxFit.contain,
+                                ),
                                 isLeague: false,
                               ),
                             );

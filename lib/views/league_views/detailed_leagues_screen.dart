@@ -652,14 +652,7 @@ class _DetailedLeaguesScreenState extends State<DetailedLeaguesScreen>
                   shape: BoxShape.circle,
                 ),
                 clipBehavior: Clip.antiAlias,
-                child: team.logo != null && team.logo!.isNotEmpty
-                    ? Image.network(
-                        team.logo!,
-                        fit: BoxFit.contain,
-                        errorBuilder: (context, error, stackTrace) =>
-                            Icon(Icons.shield, size: 62.sp, color: Colors.grey),
-                      )
-                    : Icon(Icons.shield, size: 62.sp, color: Colors.grey),
+                child: Icon(Icons.shield, size: 62.sp, color: Colors.grey),
               ),
 
               AppSpacing.h12,

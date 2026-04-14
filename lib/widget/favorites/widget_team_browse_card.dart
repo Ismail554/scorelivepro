@@ -56,19 +56,10 @@ class TeamBrowseCard extends StatelessWidget {
               shape: BoxShape.circle,
               border: Border.all(color: AppColors.greyE8, width: 0.5),
             ),
-            child: logoUrl != null
-                ? Image.network(
-                    logoUrl!,
-                    fit: BoxFit.contain,
-                    errorBuilder: (context, error, stackTrace) => Image.asset(
-                      IconAssets.soccer_icon,
-                      fit: BoxFit.contain,
-                    ),
-                  )
-                : Image.asset(
-                    IconAssets.soccer_icon,
-                    fit: BoxFit.contain,
-                  ),
+            child: Image.asset(
+              IconAssets.soccer_icon,
+              fit: BoxFit.contain,
+            ),
           ),
 
           SizedBox(width: 16.w),

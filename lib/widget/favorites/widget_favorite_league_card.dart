@@ -48,23 +48,11 @@ class FavoriteLeagueCard extends StatelessWidget {
               color: AppColors.greyE8,
               shape: BoxShape.circle,
             ),
-            child: logoUrl != null
-                ? Image.network(
-                    logoUrl!,
-                    fit: BoxFit.contain,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Icon(
-                        Icons.emoji_events,
-                        color: AppColors.warning,
-                        size: 24.sp,
-                      );
-                    },
-                  )
-                : Icon(
-                    Icons.emoji_events,
-                    color: AppColors.warning,
-                    size: 24.sp,
-                  ),
+            child: Icon(
+              Icons.emoji_events,
+              color: AppColors.warning,
+              size: 24.sp,
+            ),
           ),
 
           SizedBox(width: 16.w),

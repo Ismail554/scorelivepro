@@ -102,18 +102,10 @@ class StandingsTeamCard extends StatelessWidget {
                       ),
                       padding: EdgeInsets.all(6.w),
                       clipBehavior: Clip.antiAlias,
-                      child: logoUrl != null
-                          ? Image.network(
-                              logoUrl!,
-                              fit: BoxFit.contain,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  Image.asset(IconAssets.soccer_icon,
-                                      fit: BoxFit.contain),
-                            )
-                          : Image.asset(
-                              IconAssets.soccer_icon,
-                              fit: BoxFit.contain,
-                            ),
+                      child: Image.asset(
+                        IconAssets.soccer_icon,
+                        fit: BoxFit.contain,
+                      ),
                     ),
                     AppSpacing.w12,
                     // Team Name

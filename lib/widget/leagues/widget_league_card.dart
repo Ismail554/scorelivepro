@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/font_manager.dart';
@@ -128,17 +128,10 @@ class LeagueCard extends StatelessWidget {
           color: AppColors.greyE8,
           shape: BoxShape.circle,
         ),
-        child: CachedNetworkImage(
-          imageUrl: logoUrl!,
-          placeholder: (context, url) => Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: CircularProgressIndicator(strokeWidth: 2),
-          ),
-          errorWidget: (context, url, error) => Icon(
-            Icons.broken_image,
-            color: AppColors.textSecondary,
-            size: 20.sp,
-          ),
+        child: Icon(
+          Icons.emoji_events,
+          color: AppColors.warning,
+          size: 24.sp,
         ),
       );
     }

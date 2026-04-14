@@ -12,7 +12,7 @@ import 'package:scorelivepro/widget/home/all_matches/widget_match_information.da
 import 'package:scorelivepro/widget/mini_widget/mw_notification_bell.dart';
 import 'package:scorelivepro/widget/navigation/custom_bottom_nav_bar.dart';
 import 'package:scorelivepro/widget/navigation/transparent_tab_bar.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+
 import 'package:provider/provider.dart';
 import 'package:scorelivepro/provider/match_provider.dart';
 import 'package:scorelivepro/widget/common/auto_marquee_text.dart';
@@ -325,13 +325,9 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
           ),
           child: Padding(
             padding: EdgeInsets.all(8.w),
-            child: CachedNetworkImage(
-              imageUrl: logo,
+            child: Image.asset(
+              IconAssets.soccer_icon,
               fit: BoxFit.contain,
-              placeholder: (context, url) =>
-                  Image.asset(IconAssets.soccer_icon),
-              errorWidget: (context, url, error) =>
-                  Image.asset(IconAssets.soccer_icon),
             ),
           ),
         ),
