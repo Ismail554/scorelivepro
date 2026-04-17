@@ -20,12 +20,12 @@ class StringSanitizer {
 
     // Standalone org name prefixes
     'FIFA ': '',
-    'UEFA ': 'UeFa ',
-    'AFC ': 'AfC ',
-    'CAF ': 'cAf ',
-    'CONMEBOL ': 'conmebol ',
-    'CONCACAF ': 'concacaf ',
-    'OFC ': 'ofc ',
+    'UEFA ': ' ',
+    'AFC ': ' ',
+    'CAF ': ' ',
+    'CONMEBOL ': ' ',
+    'CONCACAF ': ' ',
+    'OFC ': ' ',
   };
 
   /// Removes trademarked organization names from [text].
