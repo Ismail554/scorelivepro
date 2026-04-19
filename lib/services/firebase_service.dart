@@ -7,6 +7,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:scorelivepro/config/storage/secure_storage_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:scorelivepro/services/notification_service.dart';
 
 @pragma('vm:entry-point')
 Future<void> handleBackgroundMessage(RemoteMessage message) async {
@@ -97,6 +98,10 @@ class FirebaseService {
         debugPrint("FCM Token: $fcmToken");
         fcmTokenFailed = false;
         lastFcmError = null;
+
+        // Register device with backend
+        final isActive = await SecureStorageHelper.getNotificationStatus();
+        await NotificationService.registerDevice(fcmToken, isActive);
       } else {
         debugPrint("⚠️ Failed to get FCM token after all retries.");
         fcmTokenFailed = true;

@@ -176,7 +176,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                     // Sync state with the backend
                     if (context.mounted) {
-                      context.read<NotificationProvider>().registerDevice(val);
+                      context.read<NotificationProvider>().updateNotificationPreferences(val);
                     }
                   },
                 ),

@@ -43,7 +43,7 @@ class _NewsScreenState extends State<NewsScreen> {
     const NewsItem(
       imageUrl: ImageAssets.news_im1,
       category: "Transfer",
-      title: "Manchester United Signs New Midfielder in Record Deal",
+      title: "United Signs New Midfielder in Record Deal",
       description:
           "The Red Devils have completed the signing of a world-class midfielder in a deal worth €100",
       timeAgo: "2 hours ago",
@@ -52,9 +52,9 @@ class _NewsScreenState extends State<NewsScreen> {
     const NewsItem(
       imageUrl: ImageAssets.home_bg,
       category: "Match",
-      title: "Premier League: Arsenal Defeats Liverpool 3-1",
+      title: "Popular League: Arsenal Defeats Liverpool 3-1",
       description:
-          "Arsenal secured a crucial victory against Liverpool in a thrilling match at the Emirates Stadium",
+          "Arsenal secured a crucial victory against Chelsea in a thrilling match at the Emirates Stadium",
       timeAgo: "5 hours ago",
       categoryType: "League",
     ),
@@ -107,7 +107,7 @@ class _NewsScreenState extends State<NewsScreen> {
     return Scaffold(
       backgroundColor: AppColors.bgColor,
       body: Column(
-          children: [
+        children: [
           // Header Section
           Container(
             color: AppColors.white,
@@ -130,7 +130,9 @@ class _NewsScreenState extends State<NewsScreen> {
                               shape: BoxShape.circle,
                             ),
                             child: Padding(
-                              padding: EdgeInsets.only(left: 4.w), // optical center for iOS back icon
+                              padding: EdgeInsets.only(
+                                  left:
+                                      4.w), // optical center for iOS back icon
                               child: Icon(
                                 Icons.arrow_back_ios,
                                 color: AppColors.textPrimary,
@@ -173,7 +175,8 @@ class _NewsScreenState extends State<NewsScreen> {
                           child: TextField(
                             controller: _searchController,
                             decoration: InputDecoration(
-                              hintText: AppLocalizations.of(context).searchLeagues, // Fallback to searchLeagues or use searchNews if available
+                              hintText: AppLocalizations.of(context)
+                                  .searchLeagues, // Fallback to searchLeagues or use searchNews if available
                               hintStyle: FontManager.bodyMedium(
                                 color: AppColors.textTertiary,
                                 fontSize: 14,
@@ -214,9 +217,9 @@ class _NewsScreenState extends State<NewsScreen> {
                 ),
 
                 SizedBox(height: 16.h),
-            ],
+              ],
+            ),
           ),
-        ),
 
           // News List
           Expanded(

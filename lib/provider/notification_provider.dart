@@ -133,30 +133,7 @@ class NotificationProvider extends ChangeNotifier {
         return false;
       }
 
-      // 2. Detect OS
-      String osType = Platform.isAndroid ? 'android' : 'ios';
-
-      final result = await DioManager.apiRequest(
-        url: ApiEndPoint.registerDevice(),
-        methods: Methods.post,
-        body: {
-          "registration_id": fcmToken,
-          "type": osType,
-          "active": active,
-        },
-      );
-
-      return result.fold(
-        (error) {
-          debugPrint("Error registering device notifications: $error");
-          return false;
-        },
-        (data) {
-          debugPrint(
-              "Successfully registered device notifications ($osType): $active");
-          return true;
-        },
-      );
+      return await NotificationService.registerDevice(fcmToken, active);
     } catch (e) {
       debugPrint("Exception registering device: $e");
       return false;
@@ -177,5 +154,9 @@ class NotificationProvider extends ChangeNotifier {
       debugPrint("Exception during test push: $e");
       return false;
     }
+  }
+
+  Future<bool> updateNotificationPreferences(bool active) async {
+    return await NotificationService.updateNotificationSettings(active, active);
   }
 }
