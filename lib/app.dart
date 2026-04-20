@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/app_colors.dart';
@@ -11,6 +12,9 @@ import 'package:scorelivepro/provider/language_provider.dart';
 
 class ScoreLivePro extends StatelessWidget {
   const ScoreLivePro({super.key});
+  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  static FirebaseAnalyticsObserver observer = 
+      FirebaseAnalyticsObserver(analytics: analytics);
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +29,8 @@ class ScoreLivePro extends StatelessWidget {
           builder: (context, languageProvider, _) {
             return MaterialApp(
               debugShowCheckedModeBanner: false,
+
+
 
               title: "Score Live Pro",
               localizationsDelegates: const [
@@ -59,6 +65,7 @@ class ScoreLivePro extends StatelessWidget {
                   elevation: 0,
                 )),
               ),
+              navigatorObservers: <NavigatorObserver>[observer],
               home: child,
             );
           },

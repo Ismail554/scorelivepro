@@ -16,6 +16,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:provider/provider.dart';
 import 'package:scorelivepro/provider/match_provider.dart';
 import 'package:scorelivepro/widget/common/auto_marquee_text.dart';
+import 'package:scorelivepro/services/firebase_service.dart';
 import 'package:scorelivepro/widget/mini_widget/mw_blinking_dot.dart';
 
 import 'package:scorelivepro/models/live_ws_model.dart' hide Player;
@@ -35,6 +36,7 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
   @override
   void initState() {
     super.initState();
+    FirebaseService.logScreenView('Match Details Screen', 'LiveMatchDetailsScreen');
     _tabController = TabController(length: 3, vsync: this);
 
     // Fetch details using provider

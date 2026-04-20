@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:disable_battery_optimization/disable_battery_optimization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:scorelivepro/config/storage/secure_storage_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -45,6 +46,14 @@ class FirebaseService {
   /// Whether the last FCM token fetch failed (SERVICE_NOT_AVAILABLE etc.)
   static bool fcmTokenFailed = false;
   static String? lastFcmError;
+  
+  /// Centralized method to log screen views to Firebase Analytics
+  static Future<void> logScreenView(String screenName, String screenClass) async {
+    await FirebaseAnalytics.instance.logScreenView(
+      screenName: screenName,
+      screenClass: screenClass,
+    );
+  }
 
   // function to initialize notifications
   Future<void> initNotifications() async {

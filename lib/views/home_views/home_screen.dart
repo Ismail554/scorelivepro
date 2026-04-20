@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:scorelivepro/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
@@ -19,6 +20,7 @@ import 'package:scorelivepro/views/home_views/live_mathches/live_matches_screen.
 
 import 'package:scorelivepro/utils/match_status_helper.dart';
 import 'package:scorelivepro/widget/mini_widget/mw_notification_bell.dart';
+import 'package:scorelivepro/services/firebase_service.dart';
 
 import 'package:provider/provider.dart';
 import 'package:scorelivepro/provider/match_provider.dart';
@@ -34,11 +36,13 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    FirebaseService.logScreenView('Home Screen', 'HomeScreen');
     // Fetch fixtures on load for LiveMatchesScreen
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<MatchProvider>(context, listen: false).fetchFixtures();
     });
   }
+
 
   @override
   Widget build(BuildContext context) {

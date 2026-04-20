@@ -14,8 +14,6 @@ import 'package:scorelivepro/provider/team_provider.dart';
 import 'package:scorelivepro/services/firebase_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
