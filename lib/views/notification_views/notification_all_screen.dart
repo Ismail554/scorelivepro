@@ -6,6 +6,7 @@ import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/app_spacing.dart';
 import 'package:scorelivepro/l10n/app_localizations.dart';
 import 'package:scorelivepro/core/font_manager.dart';
+import 'package:scorelivepro/services/firebase_service.dart';
 import 'package:scorelivepro/widget/notifications/widget_notification_card.dart';
 
 class NotificationAllScreen extends StatefulWidget {
@@ -19,6 +20,7 @@ class _NotificationAllScreenState extends State<NotificationAllScreen> {
   @override
   void initState() {
     super.initState();
+    FirebaseService.logScreenView('Home Screen', 'HomeScreen');
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<NotificationProvider>(context, listen: false)
           .fetchNotifications();

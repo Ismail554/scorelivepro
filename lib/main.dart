@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart' show Firebase;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:scorelivepro/app.dart';
 import 'package:scorelivepro/firebase_options.dart';
@@ -15,10 +16,13 @@ import 'package:scorelivepro/services/firebase_service.dart';
 import 'package:scorelivepro/services/att_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Lock the orientation to portrait
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   try {
     await dotenv.load(fileName: ".env");
 
@@ -29,7 +33,8 @@ void main() async {
 
     // Step 2: Initialize the Mobile Ads SDK after ATT consent.
     await MobileAds.instance.initialize();
-    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform);
     await FirebaseService().initNotifications();
     DioManager.init();
     runApp(

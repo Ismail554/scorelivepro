@@ -7,6 +7,7 @@ import 'package:scorelivepro/core/font_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:scorelivepro/provider/auth_provider.dart';
 import 'package:scorelivepro/provider/team_provider.dart';
+import 'package:scorelivepro/services/firebase_service.dart';
 import 'package:scorelivepro/views/auth/login_screen.dart';
 import 'package:scorelivepro/views/favorites_views/favorites_teams_screen.dart';
 import 'package:scorelivepro/views/league_views/leagues_screen.dart';
@@ -54,6 +55,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   @override
   void initState() {
     super.initState();
+    FirebaseService.logScreenView('Favorites Screen', 'FavoritesScreen');
   }
 
   Future<void> _fetchFavorites() async {
@@ -319,11 +321,11 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const LoginScreen()));
+                                      builder: (context) =>
+                                          const LoginScreen()));
                             },
                           );
                         }),
-
                         SectionHeader(
                           title: AppLocalizations.of(context).upcomingMatches,
                           onSeeAllTap: null,
@@ -376,7 +378,6 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                           },
                         ),
                         AppSpacing.h12,
-
                         Padding(
                           padding: EdgeInsets.symmetric(
                             horizontal: 16.w,
@@ -424,7 +425,6 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                             return _buildTeamsList();
                           },
                         ),
-
                         Padding(
                           padding: EdgeInsets.symmetric(
                               horizontal: 16.w, vertical: 14.h),

@@ -7,6 +7,7 @@ import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/app_spacing.dart';
 import 'package:scorelivepro/core/assets_manager.dart';
 import 'package:scorelivepro/core/font_manager.dart';
+import 'package:scorelivepro/services/firebase_service.dart';
 import 'package:scorelivepro/views/favorites_views/favorites_screen.dart';
 import 'package:scorelivepro/views/home_views/live_mathches/live_match_details_screen.dart';
 import 'package:scorelivepro/views/news_views/news_screen.dart';
@@ -34,6 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    FirebaseService.logScreenView('Home Screen', 'HomeScreen');
     // Fetch fixtures on load for LiveMatchesScreen
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<MatchProvider>(context, listen: false).fetchFixtures();

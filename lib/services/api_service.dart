@@ -95,5 +95,5 @@ class ApiEndPoint {
 
   static String notificationToggle(
           bool receiveLiveNotifications, bool receiveNewsUpdates) =>
-      "$_baseUrl/users/profile/settings/"; // body: { "receive_live_notifications": false, "receive_news_updates": false }
+      "$_baseUrl/auth/profile/settings/"; // body: { "receive_live_notifications": false, "receive_news_updates": false }
 }
