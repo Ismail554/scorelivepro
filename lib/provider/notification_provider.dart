@@ -163,6 +163,34 @@ class NotificationProvider extends ChangeNotifier {
     }
   }
 
+  /// Toggle notification settings on the backend (separate from device registration)
+  Future<bool> toggleNotificationSettings(bool enabled) async {
+    try {
+      final result = await DioManager.apiRequest(
+        url: ApiEndPoint.toggleNotification(),
+        methods: Methods.put,
+        body: {
+          "receive_live_notifications": enabled,
+          "receive_news_updates": enabled,
+        },
+      );
+
+      return result.fold(
+        (error) {
+          debugPrint("Error toggling notification settings: $error");
+          return false;
+        },
+        (data) {
+          debugPrint("Successfully toggled notification settings: $enabled");
+          return true;
+        },
+      );
+    } catch (e) {
+      debugPrint("Exception toggling notification settings: $e");
+      return false;
+    }
+  }
+
   /// Trigger a test push notification to this device
   Future<bool> testPushNotification() async {
     try {

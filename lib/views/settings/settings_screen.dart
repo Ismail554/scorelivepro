@@ -174,9 +174,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     // Save state locally.
                     await SecureStorageHelper.saveNotificationStatus(val);
 
-                    // Sync state with the backend
+                    // Update notification preferences on the backend
                     if (context.mounted) {
-                      context.read<NotificationProvider>().registerDevice(val);
+                      context
+                          .read<NotificationProvider>()
+                          .toggleNotificationSettings(val);
                     }
                   },
                 ),

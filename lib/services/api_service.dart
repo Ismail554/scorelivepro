@@ -90,5 +90,8 @@ class ApiEndPoint {
   static String appleLogin() =>
       "$_baseUrl/auth/apple/"; // body: {   "id_token": "eyJhbGci... (long Apple JWT)",   "user": {     "name": {       "firstName": "John",       "lastName": "Doe"     }   } }
 
-      static String testToken(String token) => "$_baseUrl/notifications/test-push/?token=$token" ; // body: { "token": "fcm_token"}
+  static String testToken(String token) =>
+      "$_baseUrl/notifications/test-push/?token=$token"; // body: { "token": "fcm_token"}
+  static String toggleNotification() =>
+      "$_baseUrl/auth/profile/settings/"; // Method: PUT , body : { "receive_live_notifications": false, "receive_news_updates": false }
 }
