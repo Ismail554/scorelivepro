@@ -28,7 +28,7 @@ class SocketService {
   Future<void> connectSocket(String token) async {
     _lastToken = token;
     _isManuallyClosed = false;
-    
+
     if (isConnected.value) {
       debugPrint("🔹 WebSocket already connected. Skipping...");
       return;
@@ -88,12 +88,13 @@ class SocketService {
     if (_isManuallyClosed) return;
 
     _reconnectTimer?.cancel();
-    
+
     _retryCount++;
     // Exponential backoff: 2s, 4s, 8s, 16s, max 30s
     int delaySeconds = (pow(2, _retryCount).toInt()).clamp(2, 30);
-    
-    debugPrint("🔄 Scheduling WebSocket reconnection in $delaySeconds seconds...");
+
+    debugPrint(
+        "🔄 Scheduling WebSocket reconnection in $delaySeconds seconds...");
     _reconnectTimer = Timer(Duration(seconds: delaySeconds), () {
       connectSocket(_lastToken ?? "");
     });
@@ -103,9 +104,8 @@ class SocketService {
     try {
       if (message is String) {
         final data = jsonDecode(message);
-        // Only log first 200 chars to avoid console spam, but let us know it arrived.
-        debugPrint(
-            "📌 WebSocket Message (Preview): ${message.length > 200 ? '${message.substring(0, 200)}...' : message}");
+        // Log the full socket response as requested
+        print("📌 WebSocket Message (Full Response): $message");
 
         // Parse specific event types
         if (data is Map<String, dynamic>) {

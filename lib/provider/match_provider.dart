@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:scorelivepro/models/live_ws_model.dart';
 import 'package:scorelivepro/services/match_service.dart';
@@ -62,6 +63,9 @@ class MatchProvider extends ChangeNotifier with WidgetsBindingObserver {
   void _onSocketUpdate() {
     final update = SocketService.instance.liveScoreNotifier.value;
     debugPrint("🔄 MatchProvider received socket update: ${update?.type}");
+    if (update != null) {
+      print("Full socket response in MatchProvider: ${jsonEncode(update.toJson())}");
+    }
     if (update != null && update.data != null) {
       bool hasChanges = false;
       for (var matchData in update.data!) {
@@ -260,7 +264,7 @@ class MatchProvider extends ChangeNotifier with WidgetsBindingObserver {
       notifyListeners();
     }
 
-    debugPrint("Fetching match details for matchId: $matchId");
+    print("Fetching match details for matchId: $matchId");
 
     try {
       // Fetch concurrently

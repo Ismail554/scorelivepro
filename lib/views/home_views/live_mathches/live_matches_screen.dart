@@ -353,31 +353,40 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
       );
     }
 
-    return ListView.builder(
-      padding: EdgeInsets.only(top: 12.h, bottom: 16.h),
-      itemCount: matches.length,
-      itemBuilder: (context, index) {
-        final match = matches[index];
-        return MatchCard(
-          leagueName: match.league?.name ?? "Unknown League",
-          homeTeam: match.homeTeam?.name ?? "Home",
-          awayTeam: match.awayTeam?.name ?? "Away",
-          homeTeamId: match.homeTeam?.id,
-          awayTeamId: match.awayTeam?.id,
-          homeScore: match.goals?.home,
-          awayScore: match.goals?.away,
-          timeInfo: "${match.elapsed ?? 0}'",
-          status: MatchStatusHelper.getMatchStatus(match.statusShort),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => LiveMatchDetailsScreen(matchData: match),
-              ),
-            );
-          },
-        );
+    return RefreshIndicator(
+      color: AppColors.primaryColor,
+      backgroundColor: AppColors.white,
+      onRefresh: () async {
+        // Pull to refresh action
+        await Future.delayed(const Duration(seconds: 1));
       },
+      child: ListView.builder(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: EdgeInsets.only(top: 12.h, bottom: 16.h),
+        itemCount: matches.length,
+        itemBuilder: (context, index) {
+          final match = matches[index];
+          return MatchCard(
+            leagueName: match.league?.name ?? "Unknown League",
+            homeTeam: match.homeTeam?.name ?? "Home",
+            awayTeam: match.awayTeam?.name ?? "Away",
+            homeTeamId: match.homeTeam?.id,
+            awayTeamId: match.awayTeam?.id,
+            homeScore: match.goals?.home,
+            awayScore: match.goals?.away,
+            timeInfo: "${match.elapsed ?? 0}'",
+            status: MatchStatusHelper.getMatchStatus(match.statusShort),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => LiveMatchDetailsScreen(matchData: match),
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 
@@ -392,50 +401,63 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
       );
     }
 
-    return ListView.builder(
-      padding: EdgeInsets.only(top: 12.h, bottom: 16.h),
-      itemCount: matches.length,
-      itemBuilder: (context, index) {
-        final match = matches[index];
-        return MatchCard(
-          leagueName: match.league?.name ?? "Unknown League",
-          homeTeam: match.homeTeam?.name ?? "Home",
-          awayTeam: match.awayTeam?.name ?? "Away",
-          homeTeamId: match.homeTeam?.id,
-          awayTeamId: match.awayTeam?.id,
-          homeScore: match.goals?.home,
-          awayScore: match.goals?.away,
-          timeInfo: isUpcoming
-              ? (match.date != null
-                  ? DateTime.parse(match.date!)
-                      .toLocal()
-                      .toString()
-                      .substring(11, 16)
-                  : "-")
-              : "${match.elapsed ?? 90}'",
-          status: MatchStatusHelper.getMatchStatus(match.statusShort),
-          onTap: () {
-            if (isUpcoming) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => HomeLineupsScreen(
-                    matchData: match,
-                  ),
-                ),
-              );
-            } else {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      LiveMatchDetailsScreen(matchData: match),
-                ),
-              );
-            }
-          },
-        );
+    return RefreshIndicator(
+      color: AppColors.primaryColor,
+      backgroundColor: AppColors.white,
+      onRefresh: () async {
+        final provider = Provider.of<MatchProvider>(context, listen: false);
+        if (isUpcoming) {
+          await provider.fetchUpcomingMatches(refresh: true);
+        } else {
+          await provider.fetchFinishedMatches(refresh: true);
+        }
       },
+      child: ListView.builder(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: EdgeInsets.only(top: 12.h, bottom: 16.h),
+        itemCount: matches.length,
+        itemBuilder: (context, index) {
+          final match = matches[index];
+          return MatchCard(
+            leagueName: match.league?.name ?? "Unknown League",
+            homeTeam: match.homeTeam?.name ?? "Home",
+            awayTeam: match.awayTeam?.name ?? "Away",
+            homeTeamId: match.homeTeam?.id,
+            awayTeamId: match.awayTeam?.id,
+            homeScore: match.goals?.home,
+            awayScore: match.goals?.away,
+            timeInfo: isUpcoming
+                ? (match.date != null
+                    ? DateTime.parse(match.date!)
+                        .toLocal()
+                        .toString()
+                        .substring(11, 16)
+                    : "-")
+                : "${match.elapsed ?? 90}'",
+            status: MatchStatusHelper.getMatchStatus(match.statusShort),
+            onTap: () {
+              if (isUpcoming) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => HomeLineupsScreen(
+                      matchData: match,
+                    ),
+                  ),
+                );
+              } else {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        LiveMatchDetailsScreen(matchData: match),
+                  ),
+                );
+              }
+            },
+          );
+        },
+      ),
     );
   }
 }
