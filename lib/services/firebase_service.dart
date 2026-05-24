@@ -17,9 +17,10 @@ Future<void> handleBackgroundMessage(RemoteMessage message) async {
   debugPrint('Payload: ${message.data}');
 
   // If the push message only contains 'data' (no 'notification' payload),
-  // Android/iOS won't show it automatically in the background. 
+  // Android/iOS won't show it automatically in the background.
   // We must handle this manually to ensure it appears.
-  if (message.notification == null && (message.data['title'] != null || message.data['body'] != null)) {
+  if (message.notification == null &&
+      (message.data['title'] != null || message.data['body'] != null)) {
     await FirebaseService.showBackgroundDataNotification(message);
   }
 }
@@ -46,9 +47,10 @@ class FirebaseService {
   /// Whether the last FCM token fetch failed (SERVICE_NOT_AVAILABLE etc.)
   static bool fcmTokenFailed = false;
   static String? lastFcmError;
-  
+
   /// Centralized method to log screen views to Firebase Analytics
-  static Future<void> logScreenView(String screenName, String screenClass) async {
+  static Future<void> logScreenView(
+      String screenName, String screenClass) async {
     await FirebaseAnalytics.instance.logScreenView(
       screenName: screenName,
       screenClass: screenClass,
@@ -167,7 +169,7 @@ class FirebaseService {
   static Future<void> _showLocalNotification(RemoteMessage message) async {
     final notification = message.notification;
     final data = message.data;
-    
+
     // Extract title and body from notification payload or fallback to data payload
     final String? title = notification?.title ?? data['title'];
     final String? body = notification?.body ?? data['body'];
@@ -181,7 +183,7 @@ class FirebaseService {
     // If it's a Data-only payload (notification == null), iOS will NOT show it natively,
     // so we must manually show it using flutter_local_notifications for BOTH Android and iOS!
     if (Platform.isIOS && notification != null) {
-        return; 
+      return;
     }
 
     final androidDetails = AndroidNotificationDetails(
@@ -194,6 +196,8 @@ class FirebaseService {
       enableVibration: true,
       vibrationPattern: Int64List.fromList([0, 500, 200, 500, 200, 500]),
       icon: '@drawable/ic_notification',
+      color: const Color(0xFFFF7931),
+      largeIcon: const DrawableResourceAndroidBitmap('ic_notification'),
       ticker: title,
       styleInformation: BigTextStyleInformation(
         body ?? '',
@@ -225,18 +229,21 @@ class FirebaseService {
 
   /// Manually shows a local notification in the background isolate
   /// for data-only messages where the OS will not natively display it.
-  static Future<void> showBackgroundDataNotification(RemoteMessage message) async {
+  static Future<void> showBackgroundDataNotification(
+      RemoteMessage message) async {
     final title = message.data['title'];
     final body = message.data['body'];
-    
+
     if (title == null && body == null) return;
 
     final plugin = FlutterLocalNotificationsPlugin();
-    
-    const androidSettings = AndroidInitializationSettings('@drawable/ic_notification');
+
+    const androidSettings =
+        AndroidInitializationSettings('@drawable/ic_notification');
     const iosSettings = DarwinInitializationSettings();
-    const initSettings = InitializationSettings(android: androidSettings, iOS: iosSettings);
-    
+    const initSettings =
+        InitializationSettings(android: androidSettings, iOS: iosSettings);
+
     await plugin.initialize(settings: initSettings);
 
     final androidDetails = AndroidNotificationDetails(
@@ -248,6 +255,8 @@ class FirebaseService {
       playSound: true,
       enableVibration: true,
       icon: '@drawable/ic_notification',
+      color: const Color(0xFFFF7931),
+      largeIcon: const DrawableResourceAndroidBitmap('ic_notification'),
       ticker: title,
       styleInformation: BigTextStyleInformation(
         body ?? '',
@@ -267,10 +276,12 @@ class FirebaseService {
       id: message.data.hashCode,
       title: title,
       body: body,
-      notificationDetails: NotificationDetails(android: androidDetails, iOS: iosDetails),
+      notificationDetails:
+          NotificationDetails(android: androidDetails, iOS: iosDetails),
       payload: jsonEncode(message.data),
     );
   }
+
   /// Fetch FCM token with exponential backoff (retries up to 3 times).
   /// Handles SERVICE_NOT_AVAILABLE gracefully on OnePlus/Redmi devices.
   Future<String?> _getTokenWithRetry({int maxRetries = 3}) async {
@@ -304,7 +315,8 @@ class FirebaseService {
   /// Call this manually from UI tests/settings when appropriate.
   Future<void> requestBatteryOptimizationExemption() async {
     if (!Platform.isAndroid) {
-      debugPrint("ℹ️ Battery optimization exemption is only managed on Android.");
+      debugPrint(
+          "ℹ️ Battery optimization exemption is only managed on Android.");
       return;
     }
 
@@ -314,8 +326,7 @@ class FirebaseService {
 
       if (isBatteryOptimizationDisabled != null &&
           !isBatteryOptimizationDisabled) {
-        debugPrint(
-            "🔋 Battery optimization is ON. Requesting exemption...");
+        debugPrint("🔋 Battery optimization is ON. Requesting exemption...");
         await DisableBatteryOptimization
             .showDisableBatteryOptimizationSettings();
       } else {
@@ -363,7 +374,7 @@ class FirebaseService {
     // foreground notifications — show real system notification with sound & vibration
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       debugPrint('--- Push Notification Received (Foreground) ---');
-      
+
       // Check user preferences before showing
       final isEnabled = await SecureStorageHelper.getNotificationStatus();
       if (!isEnabled) {

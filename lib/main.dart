@@ -50,7 +50,7 @@ void main() async {
     runApp(
       MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: "Score Live Pro",
+        title: "Score Live PRO",
         home: Scaffold(
           body: Center(
             child: Column(

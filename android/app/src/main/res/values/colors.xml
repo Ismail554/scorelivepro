@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Notification accent color (orange matching app theme) -->
-    <color name="notification_color">#FFFF7A28</color>
+    <color name="notification_color">#FF7931</color>
+    <!-- Splash screen background color -->
+    <color name="splash_bg">#FF7931</color>
 </resources>
