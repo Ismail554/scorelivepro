@@ -1,6 +1,6 @@
 // This is a generated file; do not edit or check into version control.
-FLUTTER_ROOT=C:\dev_tools\flutter
-FLUTTER_APPLICATION_PATH=D:\Ismail_flutter\scorelivepro
+FLUTTER_ROOT=/home/ismail/development_tools/flutter
+FLUTTER_APPLICATION_PATH=/home/ismail/Ismail_Flutter/scorelivepro
 COCOAPODS_PARALLEL_CODE_SIGN=true
 FLUTTER_BUILD_DIR=build
 FLUTTER_BUILD_NAME=1.0.0

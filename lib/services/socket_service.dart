@@ -41,7 +41,7 @@ class SocketService {
 
     try {
       final String wsUrl =
-          dotenv.env['SOCKET_URL'] ?? "wss://api.scorelivepro.it/ws/live/";
+          dotenv.env['SOCKET_URL'] ?? "ws://10.10.13.43:8010/ws/live/";
       final uri = Uri.parse(wsUrl);
 
       Map<String, dynamic> headers = {};
