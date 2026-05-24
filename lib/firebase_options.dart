@@ -3,6 +3,7 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -43,43 +44,41 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBRU7YQGEx5m0WUsZpiK7KUX7Ri-du5Wkg',
-    appId: '1:641571105178:web:5511cf0511e62c634d3223',
-    messagingSenderId: '641571105178',
-    projectId: 'scorelivepro-67f37',
-    authDomain: 'scorelivepro-67f37.firebaseapp.com',
-    storageBucket: 'scorelivepro-67f37.firebasestorage.app',
-    measurementId: 'G-RXZQGNCLH4',
+  static FirebaseOptions get web => FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_WEB_API_KEY'] ?? '',
+    appId: dotenv.env['FIREBASE_WEB_APP_ID'] ?? '',
+    messagingSenderId: dotenv.env['FIREBASE_MESSAGING_SENDER_ID'] ?? '',
+    projectId: dotenv.env['FIREBASE_PROJECT_ID'] ?? '',
+    authDomain: dotenv.env['FIREBASE_AUTH_DOMAIN'] ?? '',
+    storageBucket: dotenv.env['FIREBASE_STORAGE_BUCKET'] ?? '',
+    measurementId: dotenv.env['FIREBASE_MEASUREMENT_ID'] ?? '',
   );
 
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCOvSl7-jPmdZ8kN-G5LrrRWGb9yZwyCDI',
-    appId: '1:641571105178:android:e7356ebdea86e43e4d3223',
-    messagingSenderId: '641571105178',
-    projectId: 'scorelivepro-67f37',
-    storageBucket: 'scorelivepro-67f37.firebasestorage.app',
+  static FirebaseOptions get android => FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_ANDROID_API_KEY'] ?? '',
+    appId: dotenv.env['FIREBASE_ANDROID_APP_ID'] ?? '',
+    messagingSenderId: dotenv.env['FIREBASE_MESSAGING_SENDER_ID'] ?? '',
+    projectId: dotenv.env['FIREBASE_PROJECT_ID'] ?? '',
+    storageBucket: dotenv.env['FIREBASE_STORAGE_BUCKET'] ?? '',
   );
 
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDqqhz7XoWjd8OUTaSTu-YULv8A6woy60c',
-    appId: '1:641571105178:ios:00a4d620b66960334d3223',
-    messagingSenderId: '641571105178',
-    projectId: 'scorelivepro-67f37',
-    storageBucket: 'scorelivepro-67f37.firebasestorage.app',
-    androidClientId:
-        '641571105178-brdjpvqttg4jj0j1nfg1qleh8ka766oi.apps.googleusercontent.com',
-    iosBundleId: 'com.scorelivepro.app.dev',
+  static FirebaseOptions get ios => FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_IOS_API_KEY'] ?? '',
+    appId: dotenv.env['FIREBASE_IOS_APP_ID'] ?? '',
+    messagingSenderId: dotenv.env['FIREBASE_MESSAGING_SENDER_ID'] ?? '',
+    projectId: dotenv.env['FIREBASE_PROJECT_ID'] ?? '',
+    storageBucket: dotenv.env['FIREBASE_STORAGE_BUCKET'] ?? '',
+    androidClientId: dotenv.env['FIREBASE_ANDROID_CLIENT_ID'] ?? '',
+    iosBundleId: dotenv.env['FIREBASE_IOS_BUNDLE_ID'] ?? '',
   );
 
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDqqhz7XoWjd8OUTaSTu-YULv8A6woy60c',
-    appId: '1:641571105178:ios:b67d564eb6f46a4d4d3223',
-    messagingSenderId: '641571105178',
-    projectId: 'scorelivepro-67f37',
-    storageBucket: 'scorelivepro-67f37.firebasestorage.app',
-    androidClientId:
-        '641571105178-brdjpvqttg4jj0j1nfg1qleh8ka766oi.apps.googleusercontent.com',
-    iosBundleId: 'com.scorelivepro.app',
+  static FirebaseOptions get macos => FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_MACOS_API_KEY'] ?? '',
+    appId: dotenv.env['FIREBASE_MACOS_APP_ID'] ?? '',
+    messagingSenderId: dotenv.env['FIREBASE_MESSAGING_SENDER_ID'] ?? '',
+    projectId: dotenv.env['FIREBASE_PROJECT_ID'] ?? '',
+    storageBucket: dotenv.env['FIREBASE_STORAGE_BUCKET'] ?? '',
+    androidClientId: dotenv.env['FIREBASE_ANDROID_CLIENT_ID'] ?? '',
+    iosBundleId: dotenv.env['FIREBASE_MACOS_BUNDLE_ID'] ?? '',
   );
 }
