@@ -199,6 +199,7 @@ class FirebaseService {
       color: const Color(0xFFFFA500),
       largeIcon: const DrawableResourceAndroidBitmap('app_logo'),
       ticker: title,
+      visibility: NotificationVisibility.public,
       styleInformation: BigTextStyleInformation(
         body ?? '',
         htmlFormatBigText: true,
@@ -256,8 +257,9 @@ class FirebaseService {
       enableVibration: true,
       icon: '@drawable/ic_notification',
       color: const Color(0xFFFFA500),
-      largeIcon: const DrawableResourceAndroidBitmap('ic_notification'),
+      largeIcon: const DrawableResourceAndroidBitmap('app_logo'),
       ticker: title,
+      visibility: NotificationVisibility.public,
       styleInformation: BigTextStyleInformation(
         body ?? '',
         htmlFormatBigText: true,

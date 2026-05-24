@@ -33,7 +33,7 @@ class NotificationService {
         return null;
       },
       (data) {
-        debugPrint("📱 Notifications received in device: $data");
+        debugPrint("📱 All Notifications in device: $data");
         if (data != null && data is List) {
           return data.map((json) => NotificationModel.fromJson(json)).toList();
         }

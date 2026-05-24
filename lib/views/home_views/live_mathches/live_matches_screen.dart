@@ -92,49 +92,49 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
       ),
       body: NoInternetBanner(
         child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          _buildSearchBar(),
-          _buildTabBar(),
-          const SizedBox(height: 12),
-          _buildCategoryChips(),
-          const SizedBox(height: 12),
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                Consumer<MatchProvider>(
-                  builder: (context, provider, child) {
-                    return _buildRealLiveMatchesList(provider);
-                  },
-                ),
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            _buildSearchBar(),
+            _buildTabBar(),
+            const SizedBox(height: 12),
+            _buildCategoryChips(),
+            const SizedBox(height: 12),
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  Consumer<MatchProvider>(
+                    builder: (context, provider, child) {
+                      return _buildRealLiveMatchesList(provider);
+                    },
+                  ),
 
-                // Upcoming Matches
-                Consumer<MatchProvider>(
-                  builder: (context, provider, child) {
-                    return provider.isLoadingUpcoming &&
-                            provider.upcomingMatches.isEmpty
-                        ? _buildShimmerList()
-                        : _buildRealMatchesList(provider.upcomingMatches,
-                            isUpcoming: true);
-                  },
-                ),
+                  // Upcoming Matches
+                  Consumer<MatchProvider>(
+                    builder: (context, provider, child) {
+                      return provider.isLoadingUpcoming &&
+                              provider.upcomingMatches.isEmpty
+                          ? _buildShimmerList()
+                          : _buildRealMatchesList(provider.upcomingMatches,
+                              isUpcoming: true);
+                    },
+                  ),
 
-                // Finished Matches
-                Consumer<MatchProvider>(
-                  builder: (context, provider, child) {
-                    return provider.isLoadingFinished &&
-                            provider.finishedMatches.isEmpty
-                        ? _buildShimmerList()
-                        : _buildRealMatchesList(provider.finishedMatches,
-                            isUpcoming: false);
-                  },
-                ),
-              ],
+                  // Finished Matches
+                  Consumer<MatchProvider>(
+                    builder: (context, provider, child) {
+                      return provider.isLoadingFinished &&
+                              provider.finishedMatches.isEmpty
+                          ? _buildShimmerList()
+                          : _buildRealMatchesList(provider.finishedMatches,
+                              isUpcoming: false);
+                    },
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
       ),
     );
   }
@@ -341,7 +341,7 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.sports_soccer,
-                size: 64,
+                size: 64.sp,
                 color: AppColors.textSecondary.withValues(alpha: 0.5)),
             SizedBox(height: 16.h),
             Text(
@@ -380,7 +380,8 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => LiveMatchDetailsScreen(matchData: match),
+                  builder: (context) =>
+                      LiveMatchDetailsScreen(matchData: match),
                 ),
               );
             },

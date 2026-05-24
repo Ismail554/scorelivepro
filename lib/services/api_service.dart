@@ -2,10 +2,10 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ApiEndPoint {
   static String get _baseUrl =>
-      dotenv.env['BASE_URL'] ?? "http://10.10.13.43:8010";
+      dotenv.env['BASE_URL'] ?? "https://api.scorelivepro.it";
   // "https://api.scorelivepro.it";
   static String get baseUrl =>
-      dotenv.env['BASE_URL'] ?? "http://10.10.13.43:8010";
+      dotenv.env['BASE_URL'] ?? "https://api.scorelivepro.it";
 
   static String lineups(int id) => "$_baseUrl/sports/fixtures/$id/lineups/";
   static String statistics(int id) =>
