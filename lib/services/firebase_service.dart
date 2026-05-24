@@ -196,8 +196,8 @@ class FirebaseService {
       enableVibration: true,
       vibrationPattern: Int64List.fromList([0, 500, 200, 500, 200, 500]),
       icon: '@drawable/ic_notification',
-      color: const Color(0xFFFF7931),
-      largeIcon: const DrawableResourceAndroidBitmap('ic_notification'),
+      color: const Color(0xFFFFA500),
+      largeIcon: const DrawableResourceAndroidBitmap('app_logo'),
       ticker: title,
       styleInformation: BigTextStyleInformation(
         body ?? '',
@@ -255,7 +255,7 @@ class FirebaseService {
       playSound: true,
       enableVibration: true,
       icon: '@drawable/ic_notification',
-      color: const Color(0xFFFF7931),
+      color: const Color(0xFFFFA500),
       largeIcon: const DrawableResourceAndroidBitmap('ic_notification'),
       ticker: title,
       styleInformation: BigTextStyleInformation(
