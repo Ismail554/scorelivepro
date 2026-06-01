@@ -32,7 +32,7 @@ class _FloatingBannerAdState extends State<FloatingBannerAd> {
     });
 
     _timer?.cancel();
-    _timer = Timer(const Duration(seconds: 15), () {
+    _timer = Timer(const Duration(minutes: 1), () {
       if (mounted) {
         setState(() {
           _isVisible = true;

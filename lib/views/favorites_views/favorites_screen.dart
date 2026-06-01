@@ -10,7 +10,7 @@ import 'package:scorelivepro/provider/team_provider.dart';
 import 'package:scorelivepro/views/auth/login_screen.dart';
 import 'package:scorelivepro/views/favorites_views/favorites_teams_screen.dart';
 import 'package:scorelivepro/views/league_views/leagues_screen.dart';
-import 'package:scorelivepro/ads/floating_banner_ad.dart';
+
 
 import 'package:scorelivepro/widget/favorites/widget_favorite_league_card.dart';
 import 'package:scorelivepro/widget/favorites/widget_favorite_team_card.dart';
@@ -467,12 +467,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               ],
             ),
           ),
-          const Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: FloatingBannerAd(),
-          ),
+
         ],
       ),
     );
