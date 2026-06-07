@@ -18,6 +18,8 @@ import 'package:scorelivepro/core/assets_manager.dart';
 import 'package:scorelivepro/widget/common/no_internet_banner.dart';
 import 'package:scorelivepro/widget/shimmer_loading.dart';
 import 'package:scorelivepro/widget/custom_snackbar.dart';
+import 'package:provider/provider.dart';
+import 'package:scorelivepro/provider/connectivity_provider.dart';
 
 class LeaguesScreen extends StatefulWidget {
   final bool showBackButton;
@@ -38,6 +40,7 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
   String? _errorMessage;
   int _currentPage = 1;
   bool _hasMore = true;
+  int _activeFetchId = 0;
 
   @override
   void initState() {
@@ -160,6 +163,7 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
   }
 
   Future<void> _fetchLeagues() async {
+    final query = _searchController.text.trim();
     setState(() {
       _isLoading = true;
       _errorMessage = null;
@@ -169,12 +173,16 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
       _hasMore = true; // Reset hasMore on new search
     });
 
+    final fetchId = ++_activeFetchId;
+
     try {
-      final query = _searchController.text.trim();
       final response = await LeagueService.fetchLeagues(
         page: 1,
         search: query.isNotEmpty ? query : null,
       );
+
+      if (!mounted) return;
+      if (fetchId != _activeFetchId) return;
 
       if (response != null) {
         setState(() {
@@ -184,14 +192,18 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
           _isLoading = false;
         });
       } else {
+        final isConnected = Provider.of<ConnectivityProvider>(context, listen: false).isConnected;
         setState(() {
-          _errorMessage = "Failed to load leagues";
+          _errorMessage = isConnected ? "Failed to load leagues" : AppLocalizations.of(context).noInternetConnection;
           _isLoading = false;
         });
       }
     } catch (e) {
+      if (!mounted) return;
+      if (fetchId != _activeFetchId) return;
+      final isConnected = Provider.of<ConnectivityProvider>(context, listen: false).isConnected;
       setState(() {
-        _errorMessage = "Error: $e";
+        _errorMessage = isConnected ? "Error: $e" : AppLocalizations.of(context).noInternetConnection;
         _isLoading = false;
       });
     }
@@ -200,18 +212,23 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
   Future<void> _loadMoreLeagues() async {
     if (_isMoreLoading || !_hasMore) return; // Add guard clause
 
+    final query = _searchController.text.trim();
     setState(() {
       _isMoreLoading = true;
     });
 
+    final fetchId = ++_activeFetchId;
+
     try {
       final nextPage = _currentPage + 1;
-      final query = _searchController.text.trim();
 
       final response = await LeagueService.fetchLeagues(
         page: nextPage,
         search: query.isNotEmpty ? query : null,
       );
+
+      if (!mounted) return;
+      if (fetchId != _activeFetchId) return;
 
       if (response != null) {
         setState(() {
@@ -223,12 +240,25 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
           _isMoreLoading = false;
         });
       } else {
+        final isConnected = Provider.of<ConnectivityProvider>(context, listen: false).isConnected;
+        CustomSnackBar.show(
+          context: context,
+          message: isConnected ? "Failed to load more leagues" : AppLocalizations.of(context).noInternetConnection,
+          isError: true,
+        );
         setState(() {
           _isMoreLoading = false;
-          // Don't set hasMore to false on error, allow retry
         });
       }
     } catch (e) {
+      if (!mounted) return;
+      if (fetchId != _activeFetchId) return;
+      final isConnected = Provider.of<ConnectivityProvider>(context, listen: false).isConnected;
+      CustomSnackBar.show(
+        context: context,
+        message: isConnected ? "Error loading more: $e" : AppLocalizations.of(context).noInternetConnection,
+        isError: true,
+      );
       setState(() {
         _isMoreLoading = false;
       });
@@ -237,6 +267,7 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
 
   @override
   void dispose() {
+    _debounce?.cancel();
     _searchController.dispose();
     _scrollController.dispose();
     super.dispose();

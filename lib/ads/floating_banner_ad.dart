@@ -18,6 +18,7 @@ class FloatingBannerAd extends StatefulWidget {
 
 class _FloatingBannerAdState extends State<FloatingBannerAd> {
   bool _isVisible = true;
+  bool _isAdLoaded = false;
   Timer? _timer;
 
   @override
@@ -58,23 +59,38 @@ class _FloatingBannerAdState extends State<FloatingBannerAd> {
             BannerAdWidget(
               androidAdUnitId: widget.androidAdUnitId,
               iosAdUnitId: widget.iosAdUnitId,
+              onAdLoaded: () {
+                if (mounted) {
+                  setState(() {
+                    _isAdLoaded = true;
+                  });
+                }
+              },
+              onAdFailedToLoad: () {
+                if (mounted) {
+                  setState(() {
+                    _isAdLoaded = false;
+                  });
+                }
+              },
             ),
-            GestureDetector(
-              onTap: _hideAdTemporarily,
-              child: Container(
-                margin: const EdgeInsets.only(right: 4, top: 4),
-                padding: const EdgeInsets.all(2),
-                decoration: const BoxDecoration(
-                  color: Colors.black54,
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.close,
-                  color: Colors.white,
-                  size: 16,
+            if (_isAdLoaded)
+              GestureDetector(
+                onTap: _hideAdTemporarily,
+                child: Container(
+                  margin: const EdgeInsets.only(right: 4, top: 4),
+                  padding: const EdgeInsets.all(2),
+                  decoration: const BoxDecoration(
+                    color: Colors.black54,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.close,
+                    color: Colors.white,
+                    size: 16,
+                  ),
                 ),
               ),
-            ),
           ],
         ),
       ),

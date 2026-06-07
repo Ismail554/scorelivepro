@@ -11,7 +11,10 @@ import 'package:scorelivepro/views/settings/profile_screen.dart';
 import 'package:scorelivepro/config/storage/secure_storage_helper.dart';
 import 'package:scorelivepro/services/firebase_service.dart';
 import 'package:scorelivepro/provider/notification_provider.dart';
+import 'package:scorelivepro/views/settings/terms_conditon_view.dart';
 import 'package:scorelivepro/widget/custom_snackbar.dart';
+import 'package:scorelivepro/provider/language_provider.dart';
+import 'package:scorelivepro/core/language_manager.dart';
 import 'dart:io';
 
 class SettingsScreen extends StatefulWidget {
@@ -183,16 +186,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   },
                 ),
                 _buildDivider(), // Line between items
-                _buildSettingsTile(
-                  icon: Icons.language,
-                  title: AppLocalizations.of(context).language,
-                  subtitle: AppLocalizations.of(context).language,
-                  showChevron: true,
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => LanguageSelectionScreen()));
+                Consumer<LanguageProvider>(
+                  builder: (context, langProvider, _) {
+                    final currentLangName = LanguageManager.getLanguageName(
+                        langProvider.currentLocale);
+                    return _buildSettingsTile(
+                      icon: Icons.language,
+                      title: AppLocalizations.of(context).language,
+                      subtitle: currentLangName,
+                      showChevron: true,
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    LanguageSelectionScreen()));
+                      },
+                    );
                   },
                 ),
                 if (Platform.isAndroid) ...[
@@ -251,8 +261,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                         } else if (context.mounted) {
                                           CustomSnackBar.show(
                                             context: context,
-                                            message: AppLocalizations.of(context)
-                                                .failedDeleteAccount,
+                                            message:
+                                                AppLocalizations.of(context)
+                                                    .failedDeleteAccount,
                                             isError: true,
                                           );
                                         }
@@ -299,7 +310,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   icon: Icons.lock_outline,
                   title: AppLocalizations.of(context).termsOfService,
                   showChevron: true,
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const TermsAndConditionsView()));
+                  },
                 ),
               ],
             ),

@@ -313,6 +313,18 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                               });
                             }
                             return const SizedBox.shrink();
+                          } else {
+                            if (_hasFetched) {
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                if (mounted) {
+                                  setState(() {
+                                    _hasFetched = false;
+                                    _favoriteTeams = [];
+                                    _favoriteLeagues = [];
+                                  });
+                                }
+                              });
+                            }
                           }
                           return SyncFavoritesCard(
                             onLoginTap: () {

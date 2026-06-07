@@ -13,6 +13,7 @@ import 'package:scorelivepro/widget/common/no_internet_banner.dart';
 
 import 'package:provider/provider.dart';
 import 'package:scorelivepro/provider/team_provider.dart';
+import 'package:scorelivepro/provider/connectivity_provider.dart';
 
 // Removed BrowseTeam class as we use HomeTeam from model
 
@@ -176,6 +177,40 @@ class _FavoritesTeamsScreenState extends State<FavoritesTeamsScreen> {
                   child: Builder(builder: (context) {
                     if (provider.isLoading && provider.teams.isEmpty) {
                       return const ShimmerLoading();
+                    }
+
+                    if (provider.errorMessage != null && provider.teams.isEmpty) {
+                      final hasNet = Provider.of<ConnectivityProvider>(context, listen: false).isConnected;
+                      return LayoutBuilder(
+                        builder: (context, constraints) {
+                          return SingleChildScrollView(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            child: SizedBox(
+                              height: constraints.maxHeight,
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.error_outline, size: 48.sp, color: Colors.red),
+                                    SizedBox(height: 16.h),
+                                    Text(
+                                      hasNet ? provider.errorMessage! : AppLocalizations.of(context).noInternetConnection,
+                                      style: TextStyle(color: Colors.red, fontSize: 14.sp),
+                                    ),
+                                    SizedBox(height: 16.h),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        Provider.of<TeamProvider>(context, listen: false).fetchTeams(refresh: true);
+                                      },
+                                      child: Text(AppLocalizations.of(context).retry),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      );
                     }
 
                     if (provider.teams.isEmpty && !provider.isLoading) {

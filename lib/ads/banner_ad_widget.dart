@@ -6,11 +6,15 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 class BannerAdWidget extends StatefulWidget {
   final String? androidAdUnitId;
   final String? iosAdUnitId;
+  final VoidCallback? onAdLoaded;
+  final VoidCallback? onAdFailedToLoad;
 
   const BannerAdWidget({
     super.key,
     this.androidAdUnitId,
     this.iosAdUnitId,
+    this.onAdLoaded,
+    this.onAdFailedToLoad,
   });
 
   @override
@@ -39,9 +43,13 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
 
   // Load the banner ad
   void _loadAd() async {
+    if (!mounted) return;
+
+    final width = MediaQuery.sizeOf(context).width.truncate();
     // Get the size before loading the ad.
-    final size = await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
-        MediaQuery.sizeOf(context).width.truncate());
+    final size = await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(width);
+
+    if (!mounted) return;
 
     if (size == null) {
       // Unable to get the size.
@@ -54,17 +62,23 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
     });
     _bannerAd = BannerAd(
       adUnitId: adUnitId,
-      size: AdSize.banner,
+      size: size,
       request: adRequest,
       listener: BannerAdListener(
         onAdLoaded: (ad) {
+          if (!mounted) {
+            ad.dispose();
+            return;
+          }
           setState(() {
             _isAdLoaded = true;
           });
+          widget.onAdLoaded?.call();
           debugPrint('Ad loaded: ${ad.adUnitId}');
         },
         onAdFailedToLoad: (ad, error) {
           ad.dispose();
+          widget.onAdFailedToLoad?.call();
           debugPrint('Ad failed to load: $error');
         },
       ),
@@ -83,9 +97,7 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
       return SizedBox(
         width: double.maxFinite,
         height: _bannerAd?.size.height.toDouble(),
-        child: _isAdLoaded && _bannerAd != null
-            ? AdWidget(ad: _bannerAd!)
-            : const SizedBox.shrink(),
+        child: AdWidget(ad: _bannerAd!),
       );
     }
     return const SizedBox.shrink();

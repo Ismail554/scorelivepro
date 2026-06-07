@@ -11,11 +11,16 @@ class TeamProvider extends ChangeNotifier {
   String _searchQuery = '';
   int _favoriteVersion = 0;
 
+  String? _errorMessage;
+
   List<TeamModel> get teams => _teams;
   bool get isLoading => _isLoading;
   bool get hasMore => _hasMore;
   String get searchQuery => _searchQuery;
   int get favoriteVersion => _favoriteVersion;
+  String? get errorMessage => _errorMessage;
+
+  int _activeFetchId = 0;
 
   void setSearchQuery(String query) {
     if (_searchQuery != query) {
@@ -29,15 +34,24 @@ class TeamProvider extends ChangeNotifier {
       _teams = [];
       _currentPage = 1;
       _hasMore = true;
+      _errorMessage = null;
     } else {
       if (!_hasMore || _isLoading) return;
     }
 
     _isLoading = true;
+    _errorMessage = null;
     notifyListeners();
+
+    final fetchId = ++_activeFetchId;
 
     final response =
         await TeamService.fetchTeams(page: _currentPage, search: _searchQuery);
+
+    if (fetchId != _activeFetchId) {
+      // Discard stale results from previous requests
+      return;
+    }
 
     if (response != null) {
       if (response.results.isNotEmpty) {
@@ -51,6 +65,7 @@ class TeamProvider extends ChangeNotifier {
         _hasMore = false;
       }
     } else {
+      _errorMessage = "Failed to load teams";
       _hasMore = false; // Stop pagination on error or empty response
     }
 
