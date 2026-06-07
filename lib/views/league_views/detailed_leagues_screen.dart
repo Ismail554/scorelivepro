@@ -422,10 +422,14 @@ class _DetailedLeaguesScreenState extends State<DetailedLeaguesScreen>
         // Custom Time Parsing for `MatchCard` internal comma parsing
         String timeInfo = "-";
         if (match.date != null) {
-          final localDate = DateTime.parse(match.date!).toLocal();
-          final dateStr = localDate.toString().substring(0, 10);
-          final timeStr = localDate.toString().substring(11, 16);
-          timeInfo = "$dateStr, $timeStr";
+          final parsed = DateTime.tryParse(match.date!);
+          if (parsed != null) {
+            final localDate = parsed.toLocal();
+            final localStr = localDate.toString();
+            final dateStr = localStr.length >= 10 ? localStr.substring(0, 10) : localStr;
+            final timeStr = localStr.length >= 16 ? localStr.substring(11, 16) : "";
+            timeInfo = timeStr.isNotEmpty ? "$dateStr, $timeStr" : dateStr;
+          }
         }
 
         // Ensure live matches override date with minutes elapsed

@@ -33,7 +33,7 @@ class SectionHeader extends StatelessWidget {
               shouldBlink
                   ? BlinkingDot(
                       color: AppColors.warning,
-                      size: 8,
+                      size: 10.sp,
                     )
                   : Container(
                       width: 8.w,

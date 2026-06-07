@@ -208,7 +208,7 @@ class AppStrings {
   static const String about = "About";
   static const String appInfo = "App Info";
   static const String version = "Version";
-  static const String versionNumber = "Version 1.0.0";
+  static const String versionNumber = "Version 2.0.0";
   static const String privacyAndTerms = "Privacy & Terms";
   static const String privacyPolicy = "Privacy Policy";
   static const String termsOfService = "Terms of Service";

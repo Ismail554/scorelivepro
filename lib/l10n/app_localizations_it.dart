@@ -130,7 +130,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get infoDesc =>
-      'ScoreLivePRO non è progettato per raccogliere dati personali o proteggere dati sensibili. Questa app è destinata solo a scopi di intrattenimento e informazione.';
+      'ScoreLivePRO non memorizza le tue credenziali private. Tutte le informazioni sulle partite, i risultati in diretta e le statistiche sono solo a scopo informativo e di intrattenimento. Ci impegniamo a proteggere la tua privacy.';
 
   @override
   String get langChangeAlert =>
@@ -276,7 +276,7 @@ class AppLocalizationsIt extends AppLocalizations {
       '© 2024 ScoreLivePRO. Tutti i diritti riservati.\nFatto con ❤️ per i tifosi di calcio di tutto il mondo';
 
   @override
-  String get versionNumber => 'Versione 1.0.0';
+  String get versionNumber => 'Versione 2.0.0';
 
   @override
   String get selectLanguage => 'Seleziona la lingua preferita per l\'app.';

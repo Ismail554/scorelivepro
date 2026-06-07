@@ -39,7 +39,7 @@
   "appName": "Score Live Pro",
   "realScoreNews": "Echtzeit-Fußballergebnisse und Nachrichten",
   "copywrite": "© 2025 ScoreLivePRO",
-  "infoDesc": "ScoreLivePRO ist nicht zum Sammeln persönlicher Daten oder zum Sichern sensibler Daten bestimmt. Diese App dient nur zu Unterhaltungs- und Informationszwecken.",
+  "infoDesc": "ScoreLivePRO speichert keine privaten Zugangsdaten. Alle Spielinformationen, Live-Ergebnisse und Statistiken dienen ausschließlich Unterhaltungs- und Informationszwecken. Wir verpflichten uns zum Schutz Ihrer Privatsphäre.",
   "langChangeAlert": "Sprachänderungen werden nach dem Neustart der App wirksam.",
   "changed": "geändert",
   "signOut": "Abmelden",
@@ -85,7 +85,7 @@
   "website": "Webseite",
   "followUs": "Folgen Sie uns",
   "footerCopyright": "© 2024 ScoreLivePRO. Alle Rechte vorbehalten.\nMit ❤️ für Fußballfans weltweit gemacht",
-  "versionNumber": "Version 1.0.0",
+  "versionNumber": "Version 2.0.0",
   "selectLanguage": "Wählen Sie Ihre bevorzugte Sprache für die App.",
   "onboardingTitle1": "Echtzeit-Ergebnisse",
   "onboardingTitle2": "Blitzschnelle Benachrichtigungen",
@@ -264,4 +264,4 @@
     }
   },
   "searchTeams": "Teams suchen..."
-}
+}

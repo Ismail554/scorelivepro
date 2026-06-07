@@ -378,8 +378,11 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                                   homeScore: match.goals?.home,
                                   awayScore: match.goals?.away,
                                   timeInfo: match.date != null
-                                      ? DateFormat('EEE, HH:mm').format(
-                                          DateTime.parse(match.date!).toLocal())
+                                      ? (() {
+                                          final parsed = DateTime.tryParse(match.date!);
+                                          if (parsed == null) return "Upcoming";
+                                          return DateFormat('EEE, HH:mm').format(parsed.toLocal());
+                                        })()
                                       : "Upcoming",
                                   status: MatchStatus.upcoming,
                                 );

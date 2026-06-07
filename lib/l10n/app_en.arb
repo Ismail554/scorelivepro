@@ -39,7 +39,7 @@
   "appName": "Score Live Pro",
   "realScoreNews": "Real-Time Football Scores & News",
   "copywrite": "© 2025 ScoreLivePRO",
-  "infoDesc": "ScoreLivePRO is not meant for collecting PII or securing sensitive data. This app is designed for entertainment and informational purposes only.",
+  "infoDesc": "ScoreLivePRO does not store your private credentials. All match information, live scores, and statistics are for entertainment and informational purposes only. We are committed to protecting your privacy.",
   "langChangeAlert": "Language changes will take effect after restarting the app.",
   "changed": "changed",
   "signOut": "Sign Out",
@@ -85,7 +85,7 @@
   "website": "Website",
   "followUs": "Follow Us",
   "footerCopyright": "© 2024 ScoreLivePRO. All rights reserved.\nMade with ❤️ for football fans worldwide",
-  "versionNumber": "Version 1.0.0",
+  "versionNumber": "Version 2.0.0",
   "selectLanguage": "Select your preferred language for the app.",
   "onboardingTitle1": "Real-Time Scores",
   "onboardingTitle2": "Lightning Fast Notifications",
@@ -264,4 +264,4 @@
     }
   },
   "searchTeams": "Search teams..."
-}
+}

@@ -343,7 +343,7 @@ abstract class AppLocalizations {
   /// No description provided for @infoDesc.
   ///
   /// In en, this message translates to:
-  /// **'ScoreLivePRO is not meant for collecting PII or securing sensitive data. This app is designed for entertainment and informational purposes only.'**
+  /// **'ScoreLivePRO does not store your private credentials. All match information, live scores, and statistics are for entertainment and informational purposes only. We are committed to protecting your privacy.'**
   String get infoDesc;
 
   /// No description provided for @langChangeAlert.
@@ -619,7 +619,7 @@ abstract class AppLocalizations {
   /// No description provided for @versionNumber.
   ///
   /// In en, this message translates to:
-  /// **'Version 1.0.0'**
+  /// **'Version 2.0.0'**
   String get versionNumber;
 
   /// No description provided for @selectLanguage.

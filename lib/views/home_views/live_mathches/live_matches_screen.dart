@@ -429,10 +429,12 @@ class _LiveMatchesScreenState extends State<LiveMatchesScreen>
             awayScore: match.goals?.away,
             timeInfo: isUpcoming
                 ? (match.date != null
-                    ? DateTime.parse(match.date!)
-                        .toLocal()
-                        .toString()
-                        .substring(11, 16)
+                    ? (() {
+                        final parsed = DateTime.tryParse(match.date!);
+                        if (parsed == null) return "-";
+                        final localStr = parsed.toLocal().toString();
+                        return localStr.length >= 16 ? localStr.substring(11, 16) : "-";
+                      })()
                     : "-")
                 : "${match.elapsed ?? 90}'",
             status: MatchStatusHelper.getMatchStatus(match.statusShort),

@@ -86,7 +86,7 @@ class AppInfoScreen extends StatelessWidget {
             _buildCard(
               child: Column(
                 children: [
-                  _buildInfoRow(AppLocalizations.of(context).version, "1.0.0"),
+                  _buildInfoRow(AppLocalizations.of(context).version, "2.0.0"),
                   _buildDivider(),
                   _buildInfoRow(
                       AppLocalizations.of(context).buildNumber, "100"),

@@ -261,8 +261,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                   homeTeamId: match.homeTeam?.id,
                                   awayTeamId: match.awayTeam?.id,
                                   timeInfo: match.date != null
-                                      ? DateFormat('EEE, HH:mm').format(
-                                          DateTime.parse(match.date!).toLocal())
+                                      ? (() {
+                                          final parsed = DateTime.tryParse(match.date!);
+                                          if (parsed == null) return AppLocalizations.of(context).upcoming;
+                                          return DateFormat('EEE, HH:mm').format(parsed.toLocal());
+                                        })()
                                       : AppLocalizations.of(context).upcoming,
                                   status: MatchStatus.upcoming,
                                   onTap: () {
