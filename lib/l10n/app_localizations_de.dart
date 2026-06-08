@@ -333,6 +333,14 @@ class AppLocalizationsDe extends AppLocalizations {
   String get pleaseEnterYourEmail => 'Bitte geben Sie Ihre E-Mail ein';
 
   @override
+  String get enterValidEmail =>
+      'Bitte geben Sie eine gültige E-Mail-Adresse ein';
+
+  @override
+  String get passwordTooShort =>
+      'Das Passwort muss mindestens 6 Zeichen lang sein';
+
+  @override
   String get otpSentSuccessfully => 'OTP erfolgreich gesendet';
 
   @override

@@ -21,6 +21,20 @@ import 'package:scorelivepro/widget/custom_snackbar.dart';
 import 'package:provider/provider.dart';
 import 'package:scorelivepro/provider/connectivity_provider.dart';
 
+class LeaguesCacheEntry {
+  final List<LeagueModel> leagues;
+  final int currentPage;
+  final bool hasMore;
+  final DateTime timestamp;
+
+  LeaguesCacheEntry({
+    required this.leagues,
+    required this.currentPage,
+    required this.hasMore,
+    required this.timestamp,
+  });
+}
+
 class LeaguesScreen extends StatefulWidget {
   final bool showBackButton;
   const LeaguesScreen({super.key, this.showBackButton = false});
@@ -41,6 +55,8 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
   int _currentPage = 1;
   bool _hasMore = true;
   int _activeFetchId = 0;
+
+  static final Map<String, LeaguesCacheEntry> _leaguesCache = {};
 
   @override
   void initState() {
@@ -162,16 +178,32 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
     }
   }
 
-  Future<void> _fetchLeagues() async {
+  Future<void> _fetchLeagues({bool refresh = false}) async {
     final query = _searchController.text.trim();
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-      _currentPage = 1;
-      _allLeagues.clear();
-      _filteredLeagues.clear();
-      _hasMore = true; // Reset hasMore on new search
-    });
+
+    // Check cache first (unless refresh is requested)
+    final cachedEntry = _leaguesCache[query];
+    final hasCache = cachedEntry != null && !refresh;
+
+    if (hasCache) {
+      setState(() {
+        _allLeagues = List.from(cachedEntry.leagues);
+        _filteredLeagues = List.from(cachedEntry.leagues);
+        _currentPage = cachedEntry.currentPage;
+        _hasMore = cachedEntry.hasMore;
+        _isLoading = false; // Turn off loading!
+        _errorMessage = null;
+      });
+    } else {
+      setState(() {
+        _isLoading = true;
+        _errorMessage = null;
+        _currentPage = 1;
+        _allLeagues.clear();
+        _filteredLeagues.clear();
+        _hasMore = true; // Reset hasMore on new search
+      });
+    }
 
     final fetchId = ++_activeFetchId;
 
@@ -190,22 +222,35 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
           _filteredLeagues = List.from(_allLeagues);
           _hasMore = response.next != null;
           _isLoading = false;
+          _currentPage = 1;
         });
+
+        // Save/Update Cache
+        _leaguesCache[query] = LeaguesCacheEntry(
+          leagues: List.from(_allLeagues),
+          currentPage: 1,
+          hasMore: _hasMore,
+          timestamp: DateTime.now(),
+        );
       } else {
-        final isConnected = Provider.of<ConnectivityProvider>(context, listen: false).isConnected;
-        setState(() {
-          _errorMessage = isConnected ? "Failed to load leagues" : AppLocalizations.of(context).noInternetConnection;
-          _isLoading = false;
-        });
+        if (!hasCache) {
+          final isConnected = Provider.of<ConnectivityProvider>(context, listen: false).isConnected;
+          setState(() {
+            _errorMessage = isConnected ? "Failed to load leagues" : AppLocalizations.of(context).noInternetConnection;
+            _isLoading = false;
+          });
+        }
       }
     } catch (e) {
       if (!mounted) return;
       if (fetchId != _activeFetchId) return;
-      final isConnected = Provider.of<ConnectivityProvider>(context, listen: false).isConnected;
-      setState(() {
-        _errorMessage = isConnected ? "Error: $e" : AppLocalizations.of(context).noInternetConnection;
-        _isLoading = false;
-      });
+      if (!hasCache) {
+        final isConnected = Provider.of<ConnectivityProvider>(context, listen: false).isConnected;
+        setState(() {
+          _errorMessage = isConnected ? "Error: $e" : AppLocalizations.of(context).noInternetConnection;
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -234,11 +279,18 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
         setState(() {
           _currentPage = nextPage;
           _allLeagues.addAll(response.results);
-          _filteredLeagues =
-              List.from(_allLeagues); // No filtering needed, API does it
+          _filteredLeagues = List.from(_allLeagues); // No filtering needed, API does it
           _hasMore = response.next != null;
           _isMoreLoading = false;
         });
+
+        // Update Cache
+        _leaguesCache[query] = LeaguesCacheEntry(
+          leagues: List.from(_allLeagues),
+          currentPage: nextPage,
+          hasMore: _hasMore,
+          timestamp: DateTime.now(),
+        );
       } else {
         final isConnected = Provider.of<ConnectivityProvider>(context, listen: false).isConnected;
         CustomSnackBar.show(
@@ -432,45 +484,51 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
       );
     }
 
-    return ListView.builder(
-      controller: _scrollController,
-      padding: EdgeInsets.only(top: 8.h, bottom: 60.h),
-      itemCount: _filteredLeagues.length + 1 + (_isMoreLoading ? 1 : 0),
-      itemBuilder: (context, index) {
-        // Loading indicator at the bottom
-        if (index == _filteredLeagues.length + 1) {
-          return Padding(
-            padding: EdgeInsets.symmetric(vertical: 16.h),
-            child: const Center(child: CircularProgressIndicator()),
-          );
-        }
+    return RefreshIndicator(
+      onRefresh: () => _fetchLeagues(refresh: true),
+      color: AppColors.primaryColor,
+      backgroundColor: AppColors.white,
+      child: ListView.builder(
+        controller: _scrollController,
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: EdgeInsets.only(top: 8.h, bottom: 60.h),
+        itemCount: _filteredLeagues.length + 1 + (_isMoreLoading ? 1 : 0),
+        itemBuilder: (context, index) {
+          // Loading indicator at the bottom
+          if (index == _filteredLeagues.length + 1) {
+            return Padding(
+              padding: EdgeInsets.symmetric(vertical: 16.h),
+              child: const Center(child: CircularProgressIndicator()),
+            );
+          }
 
-        // Premium upgrade card (now at second to last position if loading)
-        if (index == _filteredLeagues.length) {
-          return PremiumUpgradeCard(
-            onUpgradeTap: () {
-              // TODO: Navigate to upgrade screen
+          // Premium upgrade card (now at second to last position if loading)
+          if (index == _filteredLeagues.length) {
+            return PremiumUpgradeCard(
+              onUpgradeTap: () {
+                // TODO: Navigate to upgrade screen
+              },
+            );
+          }
+
+          final league = _filteredLeagues[index];
+          return LeagueCard(
+            leagueName: league.name ?? "Unknown League",
+            countryOrRegion: league.country?.name ?? "Unknown Country",
+            logoUrl: league.logo,
+            isFavorited: _favoritedLeagueIds.contains(league.id),
+            onFavoriteToggle: () =>
+                _toggleFavorite(league.id!, league.name ?? "League"),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          DetailedLeaguesScreen(leagueId: league.id!)));
             },
           );
-        }
-
-        final league = _filteredLeagues[index];
-        return LeagueCard(
-          leagueName: league.name ?? "Unknown League",
-          countryOrRegion: league.country?.name ?? "Unknown Country",
-          logoUrl: league.logo,
-          isFavorited: _favoritedLeagueIds.contains(league.id),
-          onFavoriteToggle: () =>
-              _toggleFavorite(league.id!, league.name ?? "League"),
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        DetailedLeaguesScreen(leagueId: league.id!)));
-          },
-        );
-      },
+        },
+      ),
     );
   }
 }

@@ -164,8 +164,10 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
                       onPressed: auth.isLoading
                           ? null
                           : () async {
-                              if (_passwordController.text.isEmpty ||
-                                  _confirmPasswordController.text.isEmpty) {
+                              final password = _passwordController.text.trim();
+                              final confirmPassword = _confirmPasswordController.text.trim();
+
+                              if (password.isEmpty || confirmPassword.isEmpty) {
                                 CustomSnackBar.show(
                                   context: context,
                                   message: AppLocalizations.of(context)
@@ -175,8 +177,16 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
                                 return;
                               }
 
-                              if (_passwordController.text !=
-                                  _confirmPasswordController.text) {
+                              if (password.length < 6) {
+                                CustomSnackBar.show(
+                                  context: context,
+                                  message: AppLocalizations.of(context).passwordTooShort,
+                                  isError: true,
+                                );
+                                return;
+                              }
+
+                              if (password != confirmPassword) {
                                 CustomSnackBar.show(
                                   context: context,
                                   message: AppLocalizations.of(context)
@@ -189,8 +199,8 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
                               final success = await auth.passwordResetConfirm(
                                 widget.email,
                                 widget.otp,
-                                _passwordController.text,
-                                _confirmPasswordController.text,
+                                password,
+                                confirmPassword,
                               );
 
                               if (success && context.mounted) {

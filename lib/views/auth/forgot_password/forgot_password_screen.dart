@@ -110,7 +110,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       onPressed: auth.isLoading
                           ? null
                           : () async {
-                              if (_emailController.text.isEmpty) {
+                              final email = _emailController.text.trim();
+                              if (email.isEmpty) {
                                 CustomSnackBar.show(
                                   context: context,
                                   message: AppLocalizations.of(context)
@@ -120,8 +121,17 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                 return;
                               }
 
-                              final success = await auth
-                                  .forgotPassword(_emailController.text);
+                              final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                              if (!emailRegex.hasMatch(email)) {
+                                CustomSnackBar.show(
+                                  context: context,
+                                  message: AppLocalizations.of(context).enterValidEmail,
+                                  isError: true,
+                                );
+                                return;
+                              }
+
+                              final success = await auth.forgotPassword(email);
 
                               if (success && context.mounted) {
                                 CustomSnackBar.show(
@@ -130,7 +140,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                       .otpSentSuccessfully,
                                   isError: false,
                                 );
-                                navigateToOtp();
+                                navigateToOtp(email);
                               } else if (context.mounted) {
                                 CustomSnackBar.show(
                                   context: context,
@@ -160,12 +170,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     );
   }
 
-  void navigateToOtp() {
+  void navigateToOtp(String email) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => OtpVerifyScreen(
-          email: _emailController.text,
+          email: email,
           isPasswordReset: true,
         ),
       ),

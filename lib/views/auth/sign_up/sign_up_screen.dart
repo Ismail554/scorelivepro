@@ -242,15 +242,48 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       onPressed: auth.isLoading
                           ? null
                           : () async {
-                              // Basic validation
-                              if (_firstNameController.text.isEmpty ||
-                                  _lastNameController.text.isEmpty ||
-                                  _emailController.text.isEmpty ||
-                                  _passwordController.text.isEmpty ||
-                                  _confirmPasswordController.text.isEmpty) {
+                              final firstName = _firstNameController.text.trim();
+                              final lastName = _lastNameController.text.trim();
+                              final email = _emailController.text.trim();
+                              final password = _passwordController.text.trim();
+                              final confirmPassword = _confirmPasswordController.text.trim();
+
+                              if (firstName.isEmpty ||
+                                  lastName.isEmpty ||
+                                  email.isEmpty ||
+                                  password.isEmpty ||
+                                  confirmPassword.isEmpty) {
                                 CustomSnackBar.show(
                                   context: context,
-                                  message: "Please fill all fields",
+                                  message: AppLocalizations.of(context).pleaseFillAllFields,
+                                  isError: true,
+                                );
+                                return;
+                              }
+
+                              final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                              if (!emailRegex.hasMatch(email)) {
+                                CustomSnackBar.show(
+                                  context: context,
+                                  message: AppLocalizations.of(context).enterValidEmail,
+                                  isError: true,
+                                );
+                                return;
+                              }
+
+                              if (password.length < 6) {
+                                CustomSnackBar.show(
+                                  context: context,
+                                  message: AppLocalizations.of(context).passwordTooShort,
+                                  isError: true,
+                                );
+                                return;
+                              }
+
+                              if (password != confirmPassword) {
+                                CustomSnackBar.show(
+                                  context: context,
+                                  message: AppLocalizations.of(context).passwordsDoNotMatch,
                                   isError: true,
                                 );
                                 return;
@@ -259,18 +292,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               if (!_agreeToTerms) {
                                 CustomSnackBar.show(
                                   context: context,
-                                  message: "Please agree to terms",
+                                  message: AppLocalizations.of(context).pleaseAgreeToTerms,
                                   isError: true,
                                 );
                                 return;
                               }
 
                               final successMessage = await auth.register(
-                                _emailController.text,
-                                _firstNameController.text,
-                                _lastNameController.text,
-                                _passwordController.text,
-                                _confirmPasswordController.text,
+                                email,
+                                firstName,
+                                lastName,
+                                password,
+                                confirmPassword,
                               );
 
                               if (successMessage != null && context.mounted) {
@@ -280,7 +313,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => OtpVerifyScreen(
-                                        email: _emailController.text),
+                                        email: email),
                                   ),
                                 );
                               } else if (context.mounted) {

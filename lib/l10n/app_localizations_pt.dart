@@ -328,6 +328,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get pleaseEnterYourEmail => 'Insira seu email';
 
   @override
+  String get enterValidEmail => 'Por favor insira um endereço de e-mail válido';
+
+  @override
+  String get passwordTooShort => 'A senha deve ter pelo menos 6 caracteres';
+
+  @override
   String get otpSentSuccessfully => 'OTP enviado com sucesso';
 
   @override

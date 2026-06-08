@@ -329,6 +329,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pleaseEnterYourEmail => 'Please enter your email';
 
   @override
+  String get enterValidEmail => 'Please enter a valid email address';
+
+  @override
+  String get passwordTooShort => 'Password must be at least 6 characters';
+
+  @override
   String get otpSentSuccessfully => 'OTP sent successfully';
 
   @override

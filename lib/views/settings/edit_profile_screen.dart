@@ -251,44 +251,86 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     return ElevatedButton(
                       onPressed: auth.isLoading
                           ? null
-                          : () async {
+                            : () async {
                               bool profileUpdated = false;
                               bool passwordUpdated = false;
 
-                              // 1. Update Profile if names changed or image selected
-                              if (_firstNameController.text !=
-                                      (auth.user?.firstName ?? "") ||
-                                  _lastNameController.text !=
-                                      (auth.user?.lastName ?? "") ||
-                                  _selectedImage != null) {
-                                final success = await auth.updateProfile(
-                                    _firstNameController.text,
-                                    _lastNameController.text,
-                                    _selectedImage?.path); // Pass image path
-                                if (success) profileUpdated = true;
-                              }
+                              final firstName = _firstNameController.text.trim();
+                              final lastName = _lastNameController.text.trim();
 
-                              // 2. Change password if fields are filled
-                              if (_currentPassController.text.isNotEmpty &&
-                                  _newPassController.text.isNotEmpty &&
-                                  _confirmPassController.text.isNotEmpty) {
-                                if (_newPassController.text !=
-                                    _confirmPassController.text) {
+                              final hasProfileChanges = firstName != (auth.user?.firstName ?? "") ||
+                                  lastName != (auth.user?.lastName ?? "") ||
+                                  _selectedImage != null;
+
+                              if (hasProfileChanges) {
+                                if (firstName.isEmpty || lastName.isEmpty) {
                                   if (context.mounted) {
                                     CustomSnackBar.show(
                                       context: context,
-                                      message: AppLocalizations.of(context)
-                                          .newPasswordsDoNotMatch,
+                                      message: AppLocalizations.of(context).pleaseFillAllFields,
+                                      isError: true,
+                                    );
+                                  }
+                                  return;
+                                }
+                              }
+
+                              final currentPass = _currentPassController.text.trim();
+                              final newPass = _newPassController.text.trim();
+                              final confirmPass = _confirmPassController.text.trim();
+
+                              final hasPasswordInput = currentPass.isNotEmpty || newPass.isNotEmpty || confirmPass.isNotEmpty;
+
+                              if (hasPasswordInput) {
+                                if (currentPass.isEmpty || newPass.isEmpty || confirmPass.isEmpty) {
+                                  if (context.mounted) {
+                                    CustomSnackBar.show(
+                                      context: context,
+                                      message: AppLocalizations.of(context).pleaseFillAllFields,
                                       isError: true,
                                     );
                                   }
                                   return;
                                 }
 
+                                if (newPass.length < 6) {
+                                  if (context.mounted) {
+                                    CustomSnackBar.show(
+                                      context: context,
+                                      message: AppLocalizations.of(context).passwordTooShort,
+                                      isError: true,
+                                    );
+                                  }
+                                  return;
+                                }
+
+                                if (newPass != confirmPass) {
+                                  if (context.mounted) {
+                                    CustomSnackBar.show(
+                                      context: context,
+                                      message: AppLocalizations.of(context).newPasswordsDoNotMatch,
+                                      isError: true,
+                                    );
+                                  }
+                                  return;
+                                }
+                              }
+
+                              // 1. Update Profile if names changed or image selected
+                              if (hasProfileChanges) {
+                                final success = await auth.updateProfile(
+                                    firstName,
+                                    lastName,
+                                    _selectedImage?.path); // Pass image path
+                                if (success) profileUpdated = true;
+                              }
+
+                              // 2. Change password if fields are filled
+                              if (hasPasswordInput) {
                                 final success = await auth.changePassword(
-                                    _currentPassController.text,
-                                    _newPassController.text,
-                                    _confirmPassController.text);
+                                    currentPass,
+                                    newPass,
+                                    confirmPass);
                                 if (success) passwordUpdated = true;
                               }
 

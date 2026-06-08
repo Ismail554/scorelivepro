@@ -44,7 +44,7 @@ class GoogleAuthService {
 
       // 3. Obtain idToken
       debugPrint("${yellow}GoogleAuthService: Obtaining authentication tokens...$reset");
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth = googleUser.authentication;
       final String? idToken = googleAuth.idToken;
 
       debugPrint(

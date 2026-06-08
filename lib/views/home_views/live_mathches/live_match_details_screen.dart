@@ -552,8 +552,16 @@ class _LiveMatchDetailsScreenState extends State<LiveMatchDetailsScreen>
             [];
 
         final Set<String> types = {};
-        for (var s in homeStats) if (s.type != null) types.add(s.type!);
-        for (var s in awayStats) if (s.type != null) types.add(s.type!);
+        for (var s in homeStats) {
+          if (s.type != null) {
+            types.add(s.type!);
+          }
+        }
+        for (var s in awayStats) {
+          if (s.type != null) {
+            types.add(s.type!);
+          }
+        }
 
         int parseValue(dynamic value) {
           if (value == null) return 0;

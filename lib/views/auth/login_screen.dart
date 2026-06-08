@@ -170,13 +170,23 @@ class _LoginScreenState extends State<LoginScreen> {
                           ? null
                           : () async {
                               final email = _emailController.text.trim();
-                              final password = _passwordController.text;
+                              final password = _passwordController.text.trim();
 
                               if (email.isEmpty || password.isEmpty) {
                                 CustomSnackBar.show(
                                   context: context,
                                   message: AppLocalizations.of(context)
                                       .emailPasswordEmpty,
+                                  isError: true,
+                                );
+                                return;
+                              }
+
+                              final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                              if (!emailRegex.hasMatch(email)) {
+                                CustomSnackBar.show(
+                                  context: context,
+                                  message: AppLocalizations.of(context).enterValidEmail,
                                   isError: true,
                                 );
                                 return;

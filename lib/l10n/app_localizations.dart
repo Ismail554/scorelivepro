@@ -718,6 +718,18 @@ abstract class AppLocalizations {
   /// **'Please enter your email'**
   String get pleaseEnterYourEmail;
 
+  /// No description provided for @enterValidEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid email address'**
+  String get enterValidEmail;
+
+  /// No description provided for @passwordTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 6 characters'**
+  String get passwordTooShort;
+
   /// No description provided for @otpSentSuccessfully.
   ///
   /// In en, this message translates to:

@@ -102,6 +102,8 @@
   "pleaseFillAllFields": "Preencha todos os campos",
   "pleaseAgreeToTerms": "Aceite os termos",
   "pleaseEnterYourEmail": "Insira seu email",
+  "enterValidEmail": "Por favor insira um endereço de e-mail válido",
+  "passwordTooShort": "A senha deve ter pelo menos 6 caracteres",
   "otpSentSuccessfully": "OTP enviado com sucesso",
   "passwordsDoNotMatch": "As senhas não coincidem",
   "noFavoriteTeams": "Nenhum time favorito adicionado.",
