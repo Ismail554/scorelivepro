@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/assets_manager.dart';
 import 'package:scorelivepro/core/font_manager.dart';
+import 'package:scorelivepro/app.dart';
 
 /// Favorite team card widget
 class FavoriteTeamCard extends StatelessWidget {
@@ -47,21 +48,23 @@ class FavoriteTeamCard extends StatelessWidget {
               color: AppColors.greyE8.withValues(alpha: 0.5),
               shape: BoxShape.circle,
             ),
-            child: logoUrl != null
-                ? Image.network(
-                    logoUrl!,
-                    fit: BoxFit.contain,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Image.asset(
+            child: PlatformUtils.isIOS
+                ? Image.asset(IconAssets.soccer_icon, fit: BoxFit.contain)
+                : (logoUrl != null
+                    ? Image.network(
+                        logoUrl!,
+                        fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Image.asset(
+                            IconAssets.soccer_icon,
+                            fit: BoxFit.contain,
+                          );
+                        },
+                      )
+                    : Image.asset(
                         IconAssets.soccer_icon,
                         fit: BoxFit.contain,
-                      );
-                    },
-                  )
-                : Image.asset(
-                    IconAssets.soccer_icon,
-                    fit: BoxFit.contain,
-                  ),
+                      )),
           ),
 
           SizedBox(width: 16.w),

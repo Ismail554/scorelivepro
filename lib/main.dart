@@ -13,6 +13,7 @@ import 'package:scorelivepro/services/dio_service.dart';
 import 'package:provider/provider.dart';
 import 'package:scorelivepro/provider/team_provider.dart';
 import 'package:scorelivepro/services/firebase_service.dart';
+import 'package:scorelivepro/services/att_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
@@ -24,6 +25,9 @@ void main() async {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+    // Request ATT permission on iOS BEFORE initializing ads.
+    // Ensures Apple's consent dialog appears first. No-op on Android.
+    await ATTService().requestTrackingPermission();
     // Initialize the Mobile Ads SDK.
     await MobileAds.instance.initialize();
     await Firebase.initializeApp(

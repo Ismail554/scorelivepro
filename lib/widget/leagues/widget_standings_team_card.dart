@@ -4,6 +4,7 @@ import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/app_spacing.dart';
 import 'package:scorelivepro/core/assets_manager.dart';
 import 'package:scorelivepro/core/font_manager.dart';
+import 'package:scorelivepro/app.dart';
 
 class StandingsTeamCard extends StatelessWidget {
   final int rank;
@@ -102,18 +103,23 @@ class StandingsTeamCard extends StatelessWidget {
                       ),
                       padding: EdgeInsets.all(6.w),
                       clipBehavior: Clip.antiAlias,
-                      child: logoUrl != null
-                          ? Image.network(
-                              logoUrl!,
-                              fit: BoxFit.contain,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  Image.asset(IconAssets.soccer_icon,
-                                      fit: BoxFit.contain),
-                            )
-                          : Image.asset(
+                      child: PlatformUtils.isIOS
+                          ? Image.asset(
                               IconAssets.soccer_icon,
                               fit: BoxFit.contain,
-                            ),
+                            )
+                          : (logoUrl != null
+                              ? Image.network(
+                                  logoUrl!,
+                                  fit: BoxFit.contain,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      Image.asset(IconAssets.soccer_icon,
+                                          fit: BoxFit.contain),
+                                )
+                              : Image.asset(
+                                  IconAssets.soccer_icon,
+                                  fit: BoxFit.contain,
+                                )),
                     ),
                     AppSpacing.w12,
                     // Team Name

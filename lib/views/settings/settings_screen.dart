@@ -11,7 +11,6 @@ import 'package:scorelivepro/views/settings/profile_screen.dart';
 import 'package:scorelivepro/config/storage/secure_storage_helper.dart';
 import 'package:scorelivepro/services/firebase_service.dart';
 import 'package:scorelivepro/provider/notification_provider.dart';
-import 'package:scorelivepro/views/settings/terms_conditon_view.dart';
 import 'package:scorelivepro/widget/custom_snackbar.dart';
 import 'package:scorelivepro/provider/language_provider.dart';
 import 'package:scorelivepro/core/language_manager.dart';
@@ -177,11 +176,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     // Save state locally.
                     await SecureStorageHelper.saveNotificationStatus(val);
 
-                    // Update notification preferences on the backend
+                    // Update notification preferences on the backend via PATCH endpoint
                     if (context.mounted) {
                       context
                           .read<NotificationProvider>()
-                          .toggleNotificationSettings(val);
+                          .updateNotificationPreferences(val, val);
                     }
                   },
                 ),
@@ -303,19 +302,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => AppInfoScreen()));
-                  },
-                ),
-                _buildDivider(),
-                _buildSettingsTile(
-                  icon: Icons.lock_outline,
-                  title: AppLocalizations.of(context).termsOfService,
-                  showChevron: true,
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                const TermsAndConditionsView()));
                   },
                 ),
               ],

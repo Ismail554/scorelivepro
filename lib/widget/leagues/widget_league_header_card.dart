@@ -6,6 +6,7 @@ import 'package:scorelivepro/core/app_spacing.dart';
 import 'package:scorelivepro/core/assets_manager.dart';
 import 'package:scorelivepro/core/font_manager.dart';
 import 'package:scorelivepro/widget/mini_widget/mw_notification_bell.dart';
+import 'package:scorelivepro/app.dart';
 
 /// Reusable League Header Card Widget
 /// Displays league information with stadium background, flag, league name, and season
@@ -117,23 +118,8 @@ class LeagueHeaderCard extends StatelessWidget {
                     ),
                     clipBehavior: Clip.antiAlias,
                     child: Center(
-                      child: logoUrl != null
-                          ? Image.network(
-                              logoUrl!,
-                              fit: BoxFit.contain,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  flagEmoji != null
-                                      ? Text(
-                                          flagEmoji!,
-                                          style: TextStyle(fontSize: 40.sp),
-                                        )
-                                      : Icon(
-                                          Icons.flag,
-                                          color: AppColors.white,
-                                          size: 40.sp,
-                                        ),
-                            )
-                          : flagEmoji != null
+                      child: PlatformUtils.isIOS
+                          ? (flagEmoji != null
                               ? Text(
                                   flagEmoji!,
                                   style: TextStyle(fontSize: 40.sp),
@@ -142,7 +128,33 @@ class LeagueHeaderCard extends StatelessWidget {
                                   Icons.flag,
                                   color: AppColors.white,
                                   size: 40.sp,
-                                ),
+                                ))
+                          : (logoUrl != null
+                              ? Image.network(
+                                  logoUrl!,
+                                  fit: BoxFit.contain,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      flagEmoji != null
+                                          ? Text(
+                                              flagEmoji!,
+                                              style: TextStyle(fontSize: 40.sp),
+                                            )
+                                          : Icon(
+                                              Icons.flag,
+                                              color: AppColors.white,
+                                              size: 40.sp,
+                                            ),
+                                )
+                              : flagEmoji != null
+                                  ? Text(
+                                      flagEmoji!,
+                                      style: TextStyle(fontSize: 40.sp),
+                                    )
+                                  : Icon(
+                                      Icons.flag,
+                                      color: AppColors.white,
+                                      size: 40.sp,
+                                    )),
                     ),
                   ),
 

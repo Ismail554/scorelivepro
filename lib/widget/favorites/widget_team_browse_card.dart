@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/assets_manager.dart';
 import 'package:scorelivepro/core/font_manager.dart';
+import 'package:scorelivepro/app.dart';
 
 /// Team browse card widget for Browse Teams screen
 class TeamBrowseCard extends StatelessWidget {
@@ -56,19 +57,25 @@ class TeamBrowseCard extends StatelessWidget {
               shape: BoxShape.circle,
               border: Border.all(color: AppColors.greyE8, width: 0.5),
             ),
-            child: logoUrl != null
-                ? Image.network(
-                    logoUrl!,
-                    fit: BoxFit.contain,
-                    errorBuilder: (context, error, stackTrace) => Image.asset(
-                      IconAssets.soccer_icon,
-                      fit: BoxFit.contain,
-                    ),
-                  )
-                : Image.asset(
+            child: PlatformUtils.isIOS
+                ? Image.asset(
                     IconAssets.soccer_icon,
                     fit: BoxFit.contain,
-                  ),
+                  )
+                : (logoUrl != null
+                    ? Image.network(
+                        logoUrl!,
+                        fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) =>
+                            Image.asset(
+                          IconAssets.soccer_icon,
+                          fit: BoxFit.contain,
+                        ),
+                      )
+                    : Image.asset(
+                        IconAssets.soccer_icon,
+                        fit: BoxFit.contain,
+                      )),
           ),
 
           SizedBox(width: 16.w),

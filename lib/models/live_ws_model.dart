@@ -1,3 +1,6 @@
+import 'package:scorelivepro/app.dart';
+import 'package:scorelivepro/core/utils/string_sanitizer.dart';
+
 class LiveScoreModel {
   String? type;
   List<Data>? data;
@@ -205,7 +208,9 @@ class League {
 
   League.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    name = json['name'];
+    name = PlatformUtils.isIOS
+        ? StringSanitizer.sanitize(json['name'])
+        : json['name'];
     country =
         json['country'] != null ? Country.fromJson(json['country']) : null;
     logo = json['logo'];

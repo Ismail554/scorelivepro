@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/font_manager.dart';
+import 'package:scorelivepro/app.dart';
 
 /// Favorite league card widget
 class FavoriteLeagueCard extends StatelessWidget {
@@ -48,23 +49,29 @@ class FavoriteLeagueCard extends StatelessWidget {
               color: AppColors.greyE8,
               shape: BoxShape.circle,
             ),
-            child: logoUrl != null
-                ? Image.network(
-                    logoUrl!,
-                    fit: BoxFit.contain,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Icon(
-                        Icons.emoji_events,
-                        color: AppColors.warning,
-                        size: 24.sp,
-                      );
-                    },
-                  )
-                : Icon(
+            child: PlatformUtils.isIOS
+                ? Icon(
                     Icons.emoji_events,
                     color: AppColors.warning,
                     size: 24.sp,
-                  ),
+                  )
+                : (logoUrl != null
+                    ? Image.network(
+                        logoUrl!,
+                        fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Icon(
+                            Icons.emoji_events,
+                            color: AppColors.warning,
+                            size: 24.sp,
+                          );
+                        },
+                      )
+                    : Icon(
+                        Icons.emoji_events,
+                        color: AppColors.warning,
+                        size: 24.sp,
+                      )),
           ),
 
           SizedBox(width: 16.w),

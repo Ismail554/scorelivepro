@@ -3,7 +3,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 class ApiEndPoint {
   static String get _baseUrl =>
       dotenv.env['BASE_URL'] ?? "https://api.scorelivepro.it";
-  // "https://api.scorelivepro.it";
   static String get baseUrl =>
       dotenv.env['BASE_URL'] ?? "https://api.scorelivepro.it";
 
@@ -95,4 +94,7 @@ class ApiEndPoint {
       "$_baseUrl/notifications/test-push/?token=$token"; // body: { "token": "fcm_token"}
   static String toggleNotification() =>
       "$_baseUrl/auth/profile/settings/"; // Method: PUT , body : { "receive_live_notifications": false, "receive_news_updates": false }
+  static String notificationToggle(
+          bool receiveLiveNotifications, bool receiveNewsUpdates) =>
+      "$_baseUrl/auth/profile/settings/"; // Method: PATCH , body : { "receive_live_notifications": false, "receive_news_updates": false }
 }

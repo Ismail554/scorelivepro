@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/app_colors.dart';
+import 'package:scorelivepro/app.dart';
 import 'package:scorelivepro/core/app_padding.dart';
 import 'package:scorelivepro/core/app_spacing.dart';
 import 'package:scorelivepro/l10n/app_localizations.dart';
@@ -656,14 +657,18 @@ class _DetailedLeaguesScreenState extends State<DetailedLeaguesScreen>
                   shape: BoxShape.circle,
                 ),
                 clipBehavior: Clip.antiAlias,
-                child: team.logo != null && team.logo!.isNotEmpty
-                    ? Image.network(
-                        team.logo!,
-                        fit: BoxFit.contain,
-                        errorBuilder: (context, error, stackTrace) =>
-                            Icon(Icons.shield, size: 62.sp, color: Colors.grey),
-                      )
-                    : Icon(Icons.shield, size: 62.sp, color: Colors.grey),
+                child: PlatformUtils.isIOS
+                    ? Icon(Icons.shield, size: 62.sp, color: Colors.grey)
+                    : (team.logo != null && team.logo!.isNotEmpty
+                        ? Image.network(
+                            team.logo!,
+                            fit: BoxFit.contain,
+                            errorBuilder: (context, error, stackTrace) =>
+                                Icon(Icons.shield,
+                                    size: 62.sp, color: Colors.grey),
+                          )
+                        : Icon(Icons.shield,
+                            size: 62.sp, color: Colors.grey)),
               ),
 
               AppSpacing.h12,

@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/core/font_manager.dart';
+import 'package:scorelivepro/app.dart';
 
 /// League icon type
 enum LeagueIconType {
@@ -119,6 +120,22 @@ class LeagueCard extends StatelessWidget {
   }
 
   Widget _buildIcon() {
+    // iOS: avoid third-party league logos (Apple compliance) → use trophy icon.
+    if (PlatformUtils.isIOS) {
+      return Container(
+        width: 48.w,
+        height: 48.w,
+        decoration: BoxDecoration(
+          color: AppColors.greyE8,
+          shape: BoxShape.circle,
+        ),
+        child: Icon(
+          Icons.emoji_events,
+          color: AppColors.warning,
+          size: 24.sp,
+        ),
+      );
+    }
     if (logoUrl != null && logoUrl!.isNotEmpty) {
       return Container(
         width: 48.w,

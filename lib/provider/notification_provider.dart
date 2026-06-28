@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:scorelivepro/services/notification_service.dart';
@@ -126,37 +125,14 @@ class NotificationProvider extends ChangeNotifier {
 
   Future<bool> registerDevice(bool active) async {
     try {
-      // 1. Fetch real FCM Token
+      // Fetch real FCM Token
       String? fcmToken = await FirebaseMessaging.instance.getToken();
       if (fcmToken == null || fcmToken.isEmpty) {
         debugPrint("Failed to get FCM token");
         return false;
       }
 
-      // 2. Detect OS
-      String osType = Platform.isAndroid ? 'android' : 'ios';
-
-      final result = await DioManager.apiRequest(
-        url: ApiEndPoint.registerDevice(),
-        methods: Methods.post,
-        body: {
-          "registration_id": fcmToken,
-          "type": osType,
-          "active": active,
-        },
-      );
-
-      return result.fold(
-        (error) {
-          debugPrint("Error registering device notifications: $error");
-          return false;
-        },
-        (data) {
-          debugPrint(
-              "Successfully registered device notifications ($osType): $active");
-          return true;
-        },
-      );
+      return await NotificationService.registerDevice(fcmToken, active);
     } catch (e) {
       debugPrint("Exception registering device: $e");
       return false;
@@ -189,6 +165,13 @@ class NotificationProvider extends ChangeNotifier {
       debugPrint("Exception toggling notification settings: $e");
       return false;
     }
+  }
+
+  /// Update notification preferences via PATCH endpoint (newer API).
+  Future<bool> updateNotificationPreferences(
+      bool receiveLiveNotifications, bool receiveNewsUpdates) async {
+    return await NotificationService.updateNotificationSettings(
+        receiveLiveNotifications, receiveNewsUpdates);
   }
 
   /// Trigger a test push notification to this device

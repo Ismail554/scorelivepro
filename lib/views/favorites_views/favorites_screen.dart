@@ -20,6 +20,8 @@ import 'package:scorelivepro/widget/custom_snackbar.dart';
 import 'package:scorelivepro/widget/home/match_card.dart';
 import 'package:scorelivepro/widget/home/section_header.dart';
 import 'package:scorelivepro/widget/mini_widget/mw_notification_bell.dart';
+import 'package:scorelivepro/services/firebase_service.dart';
+import 'package:scorelivepro/ads/floating_banner_ad.dart';
 import 'package:scorelivepro/provider/match_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:scorelivepro/models/team_model.dart';
@@ -54,6 +56,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   @override
   void initState() {
     super.initState();
+    FirebaseService.logScreenView('Favorites Screen', 'FavoritesScreen');
   }
 
   Future<void> _fetchFavorites() async {
@@ -483,6 +486,13 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             ),
           ),
 
+          // Floating banner ad
+          const Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: FloatingBannerAd(),
+          ),
         ],
       ),
     );

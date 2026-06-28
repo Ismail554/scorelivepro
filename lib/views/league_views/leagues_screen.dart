@@ -10,7 +10,6 @@ import 'package:scorelivepro/services/league_service.dart';
 import 'package:scorelivepro/services/api_service.dart';
 import 'package:scorelivepro/views/league_views/detailed_leagues_screen.dart';
 import 'package:scorelivepro/widget/leagues/widget_league_card.dart';
-import 'package:scorelivepro/widget/leagues/widget_premium_upgrade_card.dart';
 import 'package:scorelivepro/widget/mini_widget/mw_notification_bell.dart';
 import 'package:scorelivepro/widget/favorites/widget_add_to_favorites_dialog.dart';
 import 'package:scorelivepro/core/assets_manager.dart';
@@ -492,22 +491,13 @@ class _LeaguesScreenState extends State<LeaguesScreen> {
         controller: _scrollController,
         physics: const AlwaysScrollableScrollPhysics(),
         padding: EdgeInsets.only(top: 8.h, bottom: 60.h),
-        itemCount: _filteredLeagues.length + 1 + (_isMoreLoading ? 1 : 0),
+        itemCount: _filteredLeagues.length + (_isMoreLoading ? 1 : 0),
         itemBuilder: (context, index) {
           // Loading indicator at the bottom
-          if (index == _filteredLeagues.length + 1) {
+          if (index == _filteredLeagues.length) {
             return Padding(
               padding: EdgeInsets.symmetric(vertical: 16.h),
               child: const Center(child: CircularProgressIndicator()),
-            );
-          }
-
-          // Premium upgrade card (now at second to last position if loading)
-          if (index == _filteredLeagues.length) {
-            return PremiumUpgradeCard(
-              onUpgradeTap: () {
-                // TODO: Navigate to upgrade screen
-              },
             );
           }
 

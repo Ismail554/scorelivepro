@@ -41,7 +41,7 @@ class SocketService {
 
     try {
       final String wsUrl =
-          dotenv.env['SOCKET_URL'] ?? "https://api.scorelivepro.it/ws/live/";
+          dotenv.env['SOCKET_URL'] ?? "wss://api.scorelivepro.it/ws/live/";
       final uri = Uri.parse(wsUrl);
 
       Map<String, dynamic> headers = {};
@@ -104,8 +104,11 @@ class SocketService {
     try {
       if (message is String) {
         final data = jsonDecode(message);
-        // Log the full socket response as requested
-        print("📌 WebSocket Message (Full Response): $message");
+        // Log a truncated version of the socket response (avoid log spam)
+        final String truncated = message.length > 200
+            ? '${message.substring(0, 200)}...'
+            : message;
+        debugPrint("📌 WebSocket Message: $truncated");
 
         // Parse specific event types
         if (data is Map<String, dynamic>) {

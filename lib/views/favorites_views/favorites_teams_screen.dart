@@ -5,6 +5,7 @@ import 'package:scorelivepro/core/app_colors.dart';
 import 'package:scorelivepro/l10n/app_localizations.dart';
 import 'package:scorelivepro/core/font_manager.dart';
 import 'package:scorelivepro/core/assets_manager.dart';
+import 'package:scorelivepro/app.dart';
 import 'package:scorelivepro/widget/favorites/widget_add_to_favorites_dialog.dart';
 import 'package:scorelivepro/widget/favorites/widget_team_browse_card.dart';
 import 'package:scorelivepro/widget/mini_widget/mw_notification_bell.dart';
@@ -279,21 +280,26 @@ class _FavoritesTeamsScreenState extends State<FavoritesTeamsScreen> {
                                     .id, // Assuming id is non-nullable in model, or handle null
                                 name: "${team.name}",
                                 subtitle: "",
-                                logo: team.logo != null
-                                    ? Image.network(
-                                        team.logo!,
-                                        fit: BoxFit.contain,
-                                        errorBuilder:
-                                            (context, error, stackTrace) =>
-                                                Image.asset(
-                                          IconAssets.soccer_icon,
-                                          fit: BoxFit.contain,
-                                        ),
-                                      )
-                                    : Image.asset(
+                                logo: PlatformUtils.isIOS
+                                    ? Image.asset(
                                         IconAssets.soccer_icon,
                                         fit: BoxFit.contain,
-                                      ),
+                                      )
+                                    : (team.logo != null
+                                        ? Image.network(
+                                            team.logo!,
+                                            fit: BoxFit.contain,
+                                            errorBuilder:
+                                                (context, error, stackTrace) =>
+                                                    Image.asset(
+                                              IconAssets.soccer_icon,
+                                              fit: BoxFit.contain,
+                                            ),
+                                          )
+                                        : Image.asset(
+                                            IconAssets.soccer_icon,
+                                            fit: BoxFit.contain,
+                                          )),
                                 isLeague: false,
                               ),
                             );

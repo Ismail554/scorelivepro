@@ -91,5 +91,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>This identifier will be used to show you personalized ads and measure ad performance. You can change this at any time in Settings.</string>
 </dict>
 </plist>
